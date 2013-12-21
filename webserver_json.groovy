@@ -30,10 +30,14 @@ public class Server {
 			JSONObject json = new JSONObject();
 			System.out.println("2");
 			try {
-				String contents = FileUtils.readFileToString(new File(iFilePath));
+				File f = new File(iFilePath);
+				if (!f.exists()) {
+					throw new RuntimeException();
+				}
+				String contents = FileUtils.readFileToString(f);
 				json.put("foo", contents);
 				System.out.println("3");
-			} catch (Exception e) {
+			} catch (IOException e) {
 				System.out.println(e);
 			}
 			return Response.ok().header("Access-Control-Allow-Origin", "*").entity(json.toString())
