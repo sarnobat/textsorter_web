@@ -1,29 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html>
 <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <title>wiki2html - De-wiki</title>
-    <style type="text/css" media="screen">
 
-    </style>
-
-    <script src="http://remysharp.com/downloads/wiki2html.js" type="text/javascript" charset="utf-8"></script>
+    <script src="http://remysharp.com/downloads/wiki2html.js" type="text/javascript" ></script>
 
     <script type="text/javascript" charset="utf-8">
-    function dewiki() {
-        document.getElementById('debug').innerHTML = document.getElementById('wiki').value.wiki2html();
+    function convert() {
+        document.getElementById('output').innerHTML = document.getElementById('myTextArea').value.wiki2html();
     }
 
-    //-->
     </script>
 </head>
 <body>
-    <h1>Live-Wiki</h1>
-    <p>Working demo of wiki2html - <a href="http://remysharp.com/2008/04/01/wiki-to-html-using-javascript/">read about it and download</a></p>
-    <h2>Wiki Text</h2>
-    <textarea rows="10" cols="100" id="wiki"> this is an example of some code.
+    <textarea rows="10" cols="100" id="myTextArea"> this is an example of some code.
 
 Another line of text...
 
@@ -33,11 +22,10 @@ And now a list:
 ** Some more, but in '''bold'''
 *More again...
 </textarea>
-    <h2>HTML Preview</h2>
-    <div id="debug"></div>
+    <div id="output"></div>
 <script type="text/javascript">
-    document.getElementById('wiki').onkeyup = dewiki;
-    dewiki();
+    document.getElementById('myTextArea').onkeyup = convert;
+    convert();
 </script>
 </body>
 </html>
