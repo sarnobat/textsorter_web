@@ -21,6 +21,9 @@ jQuery.noConflict();
 				$.each(result, function(i, field){
 					$("div").append(i + " " + field + " ");
 				});
+			})
+			.fail(function() {
+				alert('Failed');
 			});
 	});
 });
