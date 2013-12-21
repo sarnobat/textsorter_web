@@ -19,7 +19,7 @@ jQuery(document).ready(function(){
 function loadFile(){
 		jQuery.getJSON("http://localhost:9099/helloworld/json?param1=" 
 				+ document.getElementById("myTextArea").innerHTML,
-			function(result) {				
+			function(result) {
 				jQuery.each(result, function(i, field){
 					jQuery("div").append(i + " " + field + " ");
 				});
@@ -101,7 +101,7 @@ Desk side lamp
 
 	</textarea>
 
-	<select id="dir" name="sometext" onchange="">		
+	<select id="dir" name="sometext" onchange="loadFile()">		
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/productivity-cheat-sheet.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/programming-tips.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/technology.mwk</option>
