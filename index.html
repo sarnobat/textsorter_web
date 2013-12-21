@@ -33,20 +33,12 @@ jQuery.noConflict();
     <script src="http://remysharp.com/downloads/wiki2html.js" type="text/javascript" ></script>
 
     <script type="text/javascript" charset="utf-8">
-    function clearToc() {
-    
-    }
-       
       
     function convert() {
-
         document.getElementById('output').innerHTML = ('= =\n== ==\n' + document.getElementById('myTextArea').value).wiki2html();
-
-
     }
     
-    // This is expensive so cannot be done all the time
-    
+    // This is expensive so cannot be done every time the text changes
     function regenerateToc() {
     
         var tocParents = document.getElementsByClassName('DG-toc-parent');
@@ -64,7 +56,6 @@ jQuery.noConflict();
 				enabled: false,
 			}
 		});
-     
     }
 
     </script>
