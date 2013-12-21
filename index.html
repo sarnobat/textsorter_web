@@ -25,9 +25,9 @@ function loadFile(){
 		jQuery.getJSON("http://localhost:9099/helloworld/json?filePath=" 
 				+ encodeURIComponent(jQuery("#dir option:selected").val()))
 			.done(function(result) {
-				console.debug("Success: " + result['foo']);
+				console.debug("Success: " + result['entireFile']);
 				jQuery("#myTextArea").val("");
-				jQuery("#myTextArea").val(result['foo']);
+				jQuery("#myTextArea").val(result['entireFile']);
 //				jQuery.each(result, function(i, field){
 //					jQuery("#myTextArea").append(i + " " + field + " ");
 //				});

@@ -35,7 +35,7 @@ public class Server {
 					throw new RuntimeException();
 				}
 				String contents = FileUtils.readFileToString(f);
-				json.put("foo", contents);
+				json.put("entireFile", contents);
 				System.out.println("3");
 			} catch (IOException e) {
 				System.out.println(e);
