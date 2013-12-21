@@ -5,22 +5,24 @@
 <script src="jquery/jquery-1.9.1.js">
 </script>
 <script>
-	//no conflict jquery
-		jQuery.noConflict();
-		//jquery stuff
-		(function($) {
-$(document).ready(function(){
-
-  convert();
-  regenerateToc()
-
-  $("button").click(function(){
-    $.getJSON("http://localhost:9099/helloworld/json?param1=" + document.getElementById("myTextArea").innerHTML,function(result){
-      $.each(result, function(i, field){
-        $("div").append(i + " " + field + " ");
-      });
-    });
-  });
+//no conflict jquery
+jQuery.noConflict();
+//jquery stuff
+(function($) {
+	$(document).ready(function(){
+	
+	convert();
+	regenerateToc()
+	
+	$("button").click(function(){
+		$.getJSON("http://localhost:9099/helloworld/json?param1=" 
+				+ document.getElementById("myTextArea").innerHTML,
+			function(result) {				
+				$.each(result, function(i, field){
+					$("div").append(i + " " + field + " ");
+				});
+			});
+	});
 });
 
 		})(jQuery);
