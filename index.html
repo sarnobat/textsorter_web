@@ -27,12 +27,12 @@ $(document).ready(function(){
     function convert() {
         document.getElementById('output').innerHTML = document.getElementById('myTextArea').value.wiki2html();
         var toc = new DG.TableOfContents({
-	el : 'myWalkthrough',
+	el : 'myTableOfContents',
 	tocDepth : 3,
 	heading: 'Table of Contents',
 	numbering : {
 		enabled : true,
-		format : '1ai'
+//		format : '1ai'
 	}
 });
     }
@@ -44,8 +44,9 @@ $(document).ready(function(){
 	
 </head>
 <body>
-<div class="DG-toc-container" id="myWalkthrough">
-
+<sup>
+<div id="myTableOfContents">
+</sup>
 
 
 <script type="text/javascript">
