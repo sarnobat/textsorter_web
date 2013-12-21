@@ -9,19 +9,19 @@
 jQuery.noConflict();
 //jQuery stuff
 jQuery(document).ready(function(){
-
 	convert();
 	regenerateToc()
-
-	jQuery("button").click(loadFile);
+	
+	loadFile()
 });
 
 function loadFile(){
-		jQuery.getJSON("http://localhost:9099/helloworld/json?param1=" 
-				+ document.getElementById("dir").innerHTML,
+		
+		jQuery.getJSON("http://localhost:9099/helloworld/json?filePath=" 
+				+ jQuery("#dir option:selected").val(),
 			function(result) {
 				jQuery.each(result, function(i, field){
-					jQuery("div").append(i + " " + field + " ");
+					jQuery("#myTextArea").append(i + " " + field + " ");
 				});
 			})
 			.fail(function() {
