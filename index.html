@@ -36,14 +36,10 @@ $(document).ready(function(){
 
         document.getElementById('output').innerHTML = ('= =\n== ==\n' + document.getElementById('myTextArea').value).wiki2html();
 
-//document.getElementsByDG-toc-parent
+
         var tocParents = document.getElementsByClassName('DG-toc-parent');
-            			console.debug(tocParents);
         for (var i = 0; i<tocParents.length; i++) {
         	var tocParent = tocParents[i];
-			if (tocParent.parentNode == null) {
-				console.debug(tocParent);
-			}
         	tocParent.parentNode.removeChild(tocParent);
         }
             var toc = new DG.TableOfContents({
