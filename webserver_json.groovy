@@ -26,20 +26,14 @@ public class Server {
 		@Produces("application/json")
 		public Response json(@QueryParam("filePath") String iFilePath) throws JSONException,
 				IOException {
-			System.out.println("1");
 			JSONObject json = new JSONObject();
-			System.out.println("2");
-			try {
-				File f = new File(iFilePath);
-				if (!f.exists()) {
-					throw new RuntimeException();
-				}
-				String contents = FileUtils.readFileToString(f);
-				json.put("entireFile", contents);
-				System.out.println("3");
-			} catch (IOException e) {
-				System.out.println(e);
+			File f = new File(iFilePath);
+			if (!f.exists()) {
+				throw new RuntimeException();
 			}
+			String contents = FileUtils.readFileToString(f);
+			json.put("entireFile", contents);
+
 			return Response.ok().header("Access-Control-Allow-Origin", "*").entity(json.toString())
 					.type("application/json").build();
 		}
