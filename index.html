@@ -10,6 +10,7 @@
 		//jquery stuff
 		(function($) {
 $(document).ready(function(){
+  convert();
   $("button").click(function(){
     $.getJSON("http://localhost:9099/helloworld/json?param1=" + document.getElementById("myTextArea").innerHTML,function(result){
       $.each(result, function(i, field){
@@ -25,8 +26,8 @@ $(document).ready(function(){
 
     <script type="text/javascript" charset="utf-8">
     function convert() {
-    
-        document.getElementById('output').innerHTML = document.getElementById('myTextArea').value.wiki2html();
+        document.getElementById('output').innerHTML = '';    
+        document.getElementById('output').innerHTML = ('= =\n== ==\n' + document.getElementById('myTextArea').value).wiki2html();
 
         
         var toc = new DG.TableOfContents({
@@ -53,7 +54,8 @@ $(document).ready(function(){
 
 
 
-	<textarea id="myTextArea" rows=20 cols=150>
+	<textarea id="myTextArea" rows=20 cols=150 onkeyup="convert()">
+
 === Most natural parent ===
 if the majority fall in the category but some do not, but they have a strong relationship with items that do fall in that category, it's okay to put them there. Remember the main goal is economies of scale
 e.g. Put the Mona Khan mp3s I have with all the StepZ ones (better would be to modify the category, but this only makes sense after a critical mass)
@@ -108,18 +110,10 @@ Desk side lamp
 	
 	
 	<div id="myTableOfContents">
-		
-		<h1></h1>
-		<h2></h2>
-	
+
 	
 		<div id="output">
 		</div>
-	
-		<script type="text/javascript">
-			document.getElementById('myTextArea').onkeyup = convert;
-			convert();
-		</script>
 	
 		<div></div>
 	
