@@ -12,6 +12,7 @@
 $(document).ready(function(){
 
   convert();
+  regenerateToc()
 
   $("button").click(function(){
     $.getJSON("http://localhost:9099/helloworld/json?param1=" + document.getElementById("myTextArea").innerHTML,function(result){
@@ -37,12 +38,18 @@ $(document).ready(function(){
         document.getElementById('output').innerHTML = ('= =\n== ==\n' + document.getElementById('myTextArea').value).wiki2html();
 
 
+    }
+    
+    // This is expensive so cannot be done all the time
+    
+    function regenerateToc() {
+    
         var tocParents = document.getElementsByClassName('DG-toc-parent');
         for (var i = 0; i<tocParents.length; i++) {
         	var tocParent = tocParents[i];
         	tocParent.parentNode.removeChild(tocParent);
         }
-            var toc = new DG.TableOfContents({
+		var toc = new DG.TableOfContents({
 			el : 'myTableOfContents',
 			tocDepth : 3,
 			heading: 'Table of Contents',
@@ -110,8 +117,9 @@ Desk side lamp
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/new.mwk</option>
 	</select>
 
-	<button>Sort this file</button>
-	<button>Save Changes</button>
+	<button onclick="alert('unimplemented')">Sort this file</button>
+	<button onclick="regenerateToc()">Regenerate Contents</button>
+	<button onclick="alert('unimplemented')">Save Changes, Regenerate Contents</button>
 
 
 
