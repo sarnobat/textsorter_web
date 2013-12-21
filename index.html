@@ -18,7 +18,7 @@ jQuery(document).ready(function(){
 
 function loadFile(){
 		jQuery.getJSON("http://localhost:9099/helloworld/json?param1=" 
-				+ document.getElementById("myTextArea").innerHTML,
+				+ document.getElementById("dir").innerHTML,
 			function(result) {
 				jQuery.each(result, function(i, field){
 					jQuery("div").append(i + " " + field + " ");
