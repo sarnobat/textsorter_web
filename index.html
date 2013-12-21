@@ -31,6 +31,8 @@ function loadFile(){
 //				jQuery.each(result, function(i, field){
 //					jQuery("#myTextArea").append(i + " " + field + " ");
 //				});
+				convert();
+				regenerateToc();
 			})
 			.fail(function() {
 				alert('Failed. Is the server running?');
