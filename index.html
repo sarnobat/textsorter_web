@@ -25,17 +25,20 @@ $(document).ready(function(){
 
     <script type="text/javascript" charset="utf-8">
     function convert() {
+    
         document.getElementById('output').innerHTML = document.getElementById('myTextArea').value.wiki2html();
+
+        
         var toc = new DG.TableOfContents({
-	el : 'myTableOfContents',
-	tocDepth : 3,
-	heading: 'Table of Contents',
-	numbering : {
-		enabled : true,
-		format : '1ai',
-		enabled: false,
-	}
-});
+			el : 'myTableOfContents',
+			tocDepth : 3,
+			heading: 'Table of Contents',
+			numbering : {
+				enabled : true,
+				format : '1ai',
+				enabled: false,
+			}
+		});
     }
 
     </script>
