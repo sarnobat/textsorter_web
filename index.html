@@ -11,23 +11,22 @@ jQuery.noConflict();
 (function($) {
 	$(document).ready(function(){
 	
-	convert();
-	regenerateToc()
+		convert();
+		regenerateToc()
 	
-	$("button").click(function(){
-		$.getJSON("http://localhost:9099/helloworld/json?param1=" 
-				+ document.getElementById("myTextArea").innerHTML,
-			function(result) {				
-				$.each(result, function(i, field){
-					$("div").append(i + " " + field + " ");
+		$("button").click(function(){
+			$.getJSON("http://localhost:9099/helloworld/json?param1=" 
+					+ document.getElementById("myTextArea").innerHTML,
+				function(result) {				
+					$.each(result, function(i, field){
+						$("div").append(i + " " + field + " ");
+					});
+				})
+				.fail(function() {
+					alert('Failed');
 				});
-			})
-			.fail(function() {
-				alert('Failed');
 			});
 		});
-	});
-
 })(jQuery);
 </script>
     <script src="http://remysharp.com/downloads/wiki2html.js" type="text/javascript" ></script>
@@ -65,9 +64,6 @@ jQuery.noConflict();
 	
 </head>
 <body>
-
-
-
 
 
 	<textarea id="myTextArea" rows=20 cols=150 onkeyup="convert()">
