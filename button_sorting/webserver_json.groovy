@@ -46,7 +46,7 @@ public class Server {
 		@Produces("application/json")
 		public Response read(@QueryParam("filePath") String iFilePath)
 				throws JSONException, IOException {
-
+try{
 			JSONObject mwkFileAsJson = new JSONObject();
 			File mwkFile = new File(iFilePath);
 			if (!mwkFile.exists()) {
@@ -58,6 +58,10 @@ public class Server {
 			return Response.ok().header("Access-Control-Allow-Origin", "*")
 					.entity(mwkFileAsJson.toString()).type("application/json")
 					.build();
+					} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+					}
 		}
 
 		@SuppressWarnings("unused")
@@ -284,8 +288,7 @@ public class Server {
 		}
 		ret.put("heading", heading);
 		// first get free text
-		String startingPattern = "^" + StringUtils.repeat('=', levelBelow)
-				+ "\\s.*";
+		String startingPattern = "^" + StringUtils.repeat('=', levelBelow) + "\\s.*";
 		StringBuffer freeTextSb = new StringBuffer();
 		JSONArray subsections = new JSONArray();
 		for (; start < subList.size(); start++) {
