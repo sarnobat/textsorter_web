@@ -1,0 +1,2373 @@
+ 
+= =
+==  ==
+
+=== Git ===
+==== Creating and cloning a new repo ====
+
+ # it is good practice to use a bare repo on the server
+ git init --bare
+
+works on linux
+ git clone ssh://sarnobat@netgear.rohidekar.com:2222/home/sarnobat/Desktop/oracle.git
+
+works on windows (does it?)
+ git clone ssh://sarnobat@netgear.rohidekar.com:2222/sarnobat.git
+
+first git push will have a problem, so do this:
+
+ git push origin master
+
+(http://stackoverflow.com/questions/6157730/why-cant-i-push-to-this-bare-repository)
+
+==  ==
+
+=== Fuse ===
+ sudo port install py-fuse
+
+/usr/local/Cellar/python/2.7.2/lib/python2.7
+/Library/Frameworks/Python.framework/Versions/2.x/lib/python2.x/site-packages/
+/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/fuse.py
+==  ==
+
+ svn switch --username admin --relocate "https://24.130.108.165:8443/svn/mac-sync/" "https://67.161.71.24:8443/svn/mac-sync/"  .
+
+ svn switch --username admin --relocate "https://67.161.71.24:8443/svn/mac-sync/" "https://67.161.70.51:8443/svn/mac-sync/" .
+ svn switch --username admin --relocate "https:////67.161.70.151:8443/svn/mac-sync/" "https://netgear.rohidekar.com:8443/svn/mac-sync/" .
+
+SVN old version http access
+
+http://www.example.com/svnrepository/!svn/bc/3/
+==  ==
+
+svn co --username admin https://67.161.70.51:8443/svn/mac-sync/dotfiles_and_scripts/bin
+==  ==
+=== Code writing ===
+The more pieces of your program are stateless (i.e. use static methods), the more ways there are to put pieces together without having anything break.
+
+==  ==
+data is how software breathes (as humans breathe oxygen)
+
+good visualizations are those that aid cognition (and thus memorability) of data
+==  ==
+
+=== code writing ===
+test functionality, not methods
+==  ==
+
+=== git linux ===
+
+
+ cd /home/sarnobat/Desktop/
+ mkdir git-repo
+ git init
+ # git protocol is on 9418
+ # you get ocnnection refused if you forget to start the daemon
+
+ # Start the server
+ nohup git daemon --export-all --base-path=/home/sarnobat/Desktop/
+
+ # Clone to client (you get connection refused if the daemon isn't running)
+ git clone "ssh://netgear.rohidekar.com:2222/sarnobat.git"
+ git clone "ssh://sarnobat@netgear.rohidekar.com:2222/sarnobat.git"
+
+=== git windows setup ===
+
+1. Install msysgit
+
+2. Set up user
+git\etc\git-config
+
+ [user]
+     name = Your Name
+     email = email@example.com
+
+3. in regular cmd.exe
+ # base path should be one level about your repo
+ git daemon --export-all --base-path=E:/
+
+You can then do 
+ git clone "git://foo/my-repo"
+Using with http is harder. You can't do it with instaweb
+=== gitweb ===
+
+ sudo port install lighttpd
+ git instaweb
+ touch .git/git-daemon-export-ok
+ echo "Short project's description" > .git/description
+ git instaweb
+
+== ==
+
+
+
+== ==
+==== ffmpeg ====
+* one-liners http://rodrigopolo.com/ffmpeg/cheats.html
+* http://www.webupd8.org/2009/08/ffmpeg-cheat-sheet-19-best-practices.html
+
+===== Basic conversion (lossy) =====
+ ffmpeg -i Animals.webm Animals2.mp4
+
+===== Lossless conversion =====
+ ffmpeg -i Animals.webm -sameq Animals2.mp4
+
+ When converting video files, you can use the '-sameq' option which 
+ uses the same quality factor in the encoder as in the decoder.  
+ It allows almost lossless encoding.
+
+===== Ubuntu installation =====
+ apt-get install youtube-dl wget ffmpeg lame
+==== Truncate/Splice ====
+ # First 30 seconds
+ ffmpeg -i Animals.webm -ss 0:0:0.0 -t 30.0 Animals2.webm
+
+ ffmpeg -i Tumhi\ Ho\ Bandhu\ cocktail\ song\ Saif\ Ali\ Khan\ Deepika\ Padukone\ Diana\ Penty.webm -ss 0:0:10.3 -t 2.2 deepika_shakes_butt.webm
+ ffmpeg -i Tumhi\ Ho\ Bandhu\ cocktail\ song\ Saif\ Ali\ Khan\ Deepika\ Padukone\ Diana\ Penty.webm  -ss 0:0:16.0 -t 1.07 deepika_slaps_diana_butt.webm
+ ffmpeg -i Jhak\ Maar\ Ke\ Full\ Song\ Desi\ Boyz\ Deepika\ Padukone\ John\ Abraham.webm  -ss 0:0:59 -t 1.12 deepika_flicks_hip.webm 
+===== screen capture =====
+
+ ffmpeg -vframes 1 -i 00035.MTS -f image2 output_single_frame.png
+
+ # Once every 5 seconds
+ ffmpeg -vframes 20 -i 00035.MTS -s 1600x900 -f image2 -r 1/5  show%d.png
+
+
+
+===== video to mp3 =====
+Extracting sound from a video, and save it as Mp3
+ ffmpeg -i source_video.avi -vn -ar 44100 -ac 2 -ab 192 -f mp3 sound.mp3
+
+Explanations :
+
+* Source video : source_video.avi
+* Audio bitrate : 192kb/s
+* output format : mp3
+* Generated sound : sound.mp3
+http://www.webupd8.org/2009/08/ffmpeg-cheat-sheet-19-best-practices.html
+
+==== VOB conversion ====
+ ffmpeg -i /Volumes/DVD_VR/VIDEO_TS/VTS_01_1.VOB  ~/Desktop/out.mp4
+
+== ==
+Checking out from SVN:
+ svn export http://jtmt.svn.sourceforge.net/svnroot/jtmt
+NOT:
+ svn export http://jtmt.svn.sourceforge.net/viewvc/jtmt/
+
+== Tech ==
+
+Form factor = physical dimensions
+== Technology ==
+
+=== book search ===
+network hacks
+printing hacks
+== Technology ==
+GWT client-side exception
+IllegalStateException
+
+== Technology ==
+
+=== Code comprehension ===
+My biggest problem is I want to do static analysis rather than dynamic analysis.
+Why?
+* because I'm comfortable with command line
+* my wrists are in pain
+* I don't like to ask people how to launch an app or run the workflow
+
+== Technology ==
+
+=== neo4j quick start ===
+
+==== Cypher over rest ====
+ # keys
+ curl -H Accept:application/json -H Content-Type:application/json -X POST -d '{"query" : "start n=node(*) where has(n.name) and has (n.key) return n.name,n.key", "params" : {}}' localhost:7474/db/data/cypher
+ # all nodes (w/links)
+ curl -H Accept:application/json -H Content-Type:application/json -X POST -d '{"query" : "start x  = node(4,6,7) return x order by x.datestart", "params" : {}}' localhost:7474/db/data/cypher
+
+===== Cypher (also in neo4j-shell) =====
+You may need to remove the ';' in later versions of neo4j
+
+Print all nodes
+ START n=node(*) RETURN n;
+
+Node with property/attribute
+ start n=node(*) MATCH n WHERE has(n.type) and n.type='categoryNode' RETURN n;
+
+Print all relationships:
+ START n=node(*) MATCH (n)-[r] ->(c) RETURN distinct n,r,c;
+ START n=node(*) MATCH (n)-[r?]->(c) RETURN distinct n,r,c;
+ START n=node(*) MATCH (n)-[r] ->(c) RETURN distinct n.name?,r,c.name?;
+ START n=node(*) MATCH (n)-->(c) RETURN distinct n.name?,c.name?;
+ START n=node(*) MATCH (n)-[r] ->(c) RETURN distinct n.name?,type(r),c.name?;
+ START n=node(*) MATCH (n)-[r] ->(c) RETURN distinct n.name? + ' ' + type(r) + ' ' + c.name?;
+ START n=node(*) MATCH (n)-[r] ->(c) RETURN distinct id(n),type(r),c.name?; 
+* ? is like an outer join
+* Do not use * instead of ?, you'll get a cartesian product
+
+
+
+Print all relationships of type "owns" (note: owns is case sensitive)
+ START n=node(*) MATCH (n)-[r:owns]->(c) RETURN n,r,c;
+
+
+Create node
+ create n;
+
+Create relationship
+ start a=node(4),b=node(5) create a-[r:RELTYPE]->b;
+
+
+Note: 'me' is the pwd (current working node). It is not a real node
+The ID of a node is 0,1,2...
+
+ neo4j info
+
+ Neo4j Server is running at pid 10272
+ Using Java version: CurrentJDK
+ NEO4J_HOME:        /usr/local/Cellar/neo4j/community-1.5/libexec
+ NEO4J_SERVER_PORT: 7474
+ NEO4J_INSTANCE:    /usr/local/Cellar/neo4j/community-1.5/libexec
+ JAVA_HOME:         /System/Library/Frameworks/JavaVM.framework/Home/
+ JAVA_OPTS:         -server -XX:+DisableExplicitGC -Dorg.neo4j.server.properties=conf/neo4j-server.properties -Djava.util.logging.config.file=conf/logging.properties -Xms3m -Xmx64m
+ CLASSPATH:
+
+ neo4j stop
+
+
+ neo4j-shell -path /usr/local/Cellar/neo4j/community-1.5/libexec/data/graph.db
+
+==== Export graph to graphml ====
+ brew install gremlin
+
+ gremlin
+
+ help
+
+ # you must stop the server first
+ neo4j stop
+ ./gremlin.sh
+
+ gremlin> g = new Neo4jGraph('/Users/sarnobat/neo4j-community-1.8.2/data/graph.db');
+ ==>neo4jgraph[EmbeddedGraphDatabase [/Users/sarnobat/neo4j-community-1.8.2/data/graph.db]]
+ gremlin> g.saveGraphML('mygraph.graphml');
+ ==>null
+
+mygraph.xml will be in the current working directory. But it doesn't show much in yEd
+
+This also works:
+
+ Graph graph = new Neo4jGraph("/tmp/mygraph");
+ GraphMLWriter.outputGraph(graph, new FileOutputStream("mygraph.xml"));
+
+But doesn't terminate for some reason
+
+==== files ====
+/usr/local/Cellar/neo4j/community-1.5/bin/neo4j
+/usr/local/Cellar/neo4j/community-1.5/bin/neo4j-shell
+/usr/local/Cellar/gremlin/1.3/bin/gremlin
+/usr/local/Cellar/neo4j/community-1.5/libexec/conf/neo4j.properties
+==== indexing all nodes so rest can fetch all ====
+
+http://stackoverflow.com/questions/16442425/neo4j-auto-indexing-issues/17204874#17204874
+
+I also had this issue with version 1.7-SNAPSHOT.
+
+It seems there are 2 properties, one being a duplicate of the other:
+
+node_autoindexing_enabled=true # Commented out in neo4j.properties - but has no effect
+node_auto_indexing=true        # Not in the file at all, but when added did index new nodes
+node_keys_indexable=name,_id
+It seems the 2nd one enables indexing but the 1st one does not. Hopefully if this is a bug it will get addressed (or has been addressed since the version I downloaded).
+==== Installation ====
+ # do not use sudo, for some reason it doesn't work
+ brew install neo4j && neo4j start
+ http://localhost:7474
+http://docs.neo4j.org/chunked/stable/server-installation.html
+
+==== Launching server ====
+neo4j start
+neo4j info
+
+Linux
+  /home/sarnobat/neo4j-community-1.9.3/bin/neo4j-shell
+ vi /var/lib/neo4j/conf/neo4j-server.properties
+ #/var/lib/neo4j/bin/neo4j start
+ /home/sarnobat/neo4j-community-1.9.3/bin/neo4j start
+Mac
+ /Users/sarnobat/neo4j-community-1.8.2/bin/neo4j
+
+org.neo4j.server.database.location=/home/sarnobat/Desktop/new/github/yurl_bookmarklet/yurl.db
+==== Launching Shell ====
+ neo4j-shell 
+
+http://technoracle.blogspot.com/2012/04/neo4j-installing-running-and-shell.html
+
+ /usr/local/bin/neo4j-shell -path yurl.db 
+ /usr/local/bin/neo4j-shell -path /Users/sarnobat/Desktop/sshfs2/home/sarnobat/Desktop/new/github/yurl_list/yurl.db
+ /usr/bin/neo4j-shell -path /home/sarnobat/Desktop/new/github/yurl_bookmarklet/yurl.db 
+==== Session (neo-shell) ====
+
+This is way more insightful:
+http://docs.neo4j.org/chunked/milestone/shell-matrix-example.html
+
+
+ help
+ set name root
+ # I'm not sure what happens to the node name. It doesn't seem like an ID or a property
+ mknode sridhar
+ cd -a 1
+ set name sridhar
+ cd -a 0
+ mkrel -t owns -d 1
+ ls
+ trav
+
+== Technology ==
+
+
+== Technology ==
+
+=== Java ===
+Unchecked exceptions are those that extend RuntimeException class. Compiler will never force you to catch such exception or force you to declare it in the method using throws keyword. All other exception types (that do not extend RuntimeException) are checked and therefore must be declared to be thrown and/or catched.
+
+== Technology ==
+
+=== Code writing ===
+
+In an object dependency graph, If you see a class "skipping" the indirection, see if you can remove the skip
+
+In an object dependency graph, if you see a class used by multiple parents, move it to a "common" subpackage
+
+A Manager class does the creation, printing and modifying of an object
+== Technology ==
+
+=== Design patterns ===
+
+Is there such a thing as a manager design pattern?
+
+Sounds like you're after the mediator pattern - which can be thought of as a 'manager' of the objects that it deals with.
+
+Behavioral object patterns use object composition rather thaninheritance. Some describe how a group of peer objects cooperate toperform a task that no single object can carry out by itself. Animportant issue here is how peer objects know about each other. Peerscould maintain explicit references to each other, but that wouldincrease their coupling. In the extreme, every object would knowabout every other. The Mediator (305) pattern avoidsthis by introducing a mediator object between peers. The mediatorprovides the indirection needed for loose coupling.
+
+The mediator serves as an intermediary that keeps objects in the groupfrom referring to each other explicitly. The objects only know themediator, thereby reducing the number of interconnections.
+
+Mediator (305) is similar to Facade in that it abstracts functionality of existing 
+classes. However, Mediator's purpose is to abstract arbitrary communication 
+between colleague objects, often centralizing functionality that doesn't belong 
+in any one of them.
+== Technology ==
+
+youtube_download verify_age fix - replace youtube.com with nsfwyoutube.com
+
+ find -L $PWD -maxdepth 50 -type f -iname "**mwk" | xargs grep --color=always --binary-files=without-match -ni "verify_age" | perl -pe 's{.*watch.3.....(.{11}).*}{http://www.nsfwyoutube.com/watch?v=$1}g' | xargs -n 1 youtube_download
+== Technology ==
+
+Computer terms
+cache = ram
+
+
+== Technology ==
+=== Guiceberry ===
+JUnit and most other test frameworks are well-designed to handle simple tests -- those that exercise one or a small number of classes in isolation, and don't need setup of complex external dependencies. But once you need to write fully automated tests that depend on starting servers, setting up databases, and the like, these frameworks do very little to help you.  You're left to build your own framework -- usually in the form of layers upon layers of base classes for test cases to extend.
+== Technology ==
+=== Code writing ===
+
+==== Redability vs Performance ====
+# Make it work.
+# Make it clear.
+# Test the performance.
+# If there are meaningful performance issues: refactor for speed.
+http://stackoverflow.com/questions/30754/performance-vs-readability
+
+== Technology ==
+=== More snippets to put in cheat sheets ===
+vi - use plugin
+vi - user defined syntax mode
+
+== Technology ==
+=== Linux ===
+2 letter linux commands
+
+	ls /bin/?? /usr/bin/?? /sbin/?? /usr/sbin/??
+
+And looked them all up.
+
+From /bin we get:
+
+	cp - copy files and directories
+	dd - convert and copy a file
+	df - report file system disk space usage
+	ex - start vim in ex mode
+	ln - make links between files
+	ls - list directory contents
+	mv - move (rename) files
+	ps - report a snapshot of the current processes.
+	rm - remove files or directories
+	sh - Bourne shell (linked to Bash for me)
+	su - run a shell with substitute user and group IDs
+	vi - I made this a link to vim
+
+From /usr/bin we get:
+
+	ab - Apache HTTP server benchmarking tool
+	ar - create, modify, and extract from archives
+	as - the portable GNU assembler.
+	cc - link to gcc on my box
+	du - estimate file space usage
+	ex - start vim in ex mode
+	gs - Ghostscript (PostScript and PDF language interpreter and pre- viewer)
+	id - print user identity
+	ld - The GNU linker
+	lp - print files
+	m4 - macro processor
+	nl - number lines of files
+	nm - list symbols from object files
+	od - dump files in octal and other formats
+	pr - convert text files for printing
+	rb - receive with Ymodem
+	rx - receive with XModem
+	rz - receive with ZModem
+	sb - send with YModem
+	sg - execute command as different group ID (an alias for newgrp)
+	sm - Jabber IM session manager
+	sx - send with XModem
+	sz - send with ZModem
+	tr - translate or delete characters
+	ul - do underlining
+	wc - print newline, word, and byte counts for each file
+
+From /sbin we get:
+
+	ip - show / manipulate routing, devices, policy routing and tunnels
+	iw - show / manipulate wireless devices and their configuration
+	tc - show / manipulate traffic control settings
+
+From /usr/sbin we get:
+
+	ss - Show sockets
+
+So now you know.
+	sg was a cool discovery for me.
+
+	Also don't forget the one character commands...
+	[ - test - check file types and compare values
+	w - Show who is logged on and what they are doing.
+	X - X Windows
+
+http://www.davekb.com/browse_computer_tips:linux_two_letter_commands:txt
+
+== Technology ==
+=== Linux ===
+pstree for linux
+ ps -auxf
+=== Macports ===
+==== not needed ====
+moreutils
+==== pstree ====
+ sudo port install pstree
+==== tree (sysutils) ====
+ sudo port install tree
+== Technology ==
+
+=== CSS 3 ===
+
+==== Gradient (box) ====
+ <div style="background: -webkit-linear-gradient(top, blue 0%, magenta 100%)">You can use the overflow property when you want to have better</div>
+
+
+ background: -moz-radial-gradient(center top, ellipse farthest-side,#fff 0%, #000 100%);height: 0.5em;margin-bottom: 0.4em;
+
+==== Rounded corners ====
+ <div style="border-radius: 15px;background-color:#FF1DCE">You can use the overflow property when you want to have better</div>
+
+==== Shadow (box) ====
+ <div style="-webkit-box-shadow: 10px 10px 5px #888;background-color:#FF1DCE">You can use the overflow property when you want to have better</div>
+
+==== Shadow (text) ====
+ <div style="text-shadow: 2px 2px 2px #000">You can use the overflow property when you want to have better</div>
+
+== Technology ==
+===   ===
+The shell is a hierarchy traversal language. FUSE file systems are so powerful because you can browse any hierarchy. The more FUSE file systems you can implement for abstract concepts, the greater your productivity.
+
+=== perl ===
+stands for Practical Extraction/Report Language
+
+ -p   causes perl to assume the following loop around  your
+          script,  which  makes  it iterate over filename argu-
+          ments somewhat like sed:
+
+               while (<>) {
+                    ...       # your script goes here
+               } continue {
+                    print;
+
+          suppress  printing use the -n switch.  A -p overrides
+          a -n switch.
+
+
+       -e commandline
+            may be used to enter one line of script.  Multiple -e
+            commands may  be  given  to  build  up  a  multi-line
+            script.   If  -e  is  given, perl will not look for a
+            script filename in the argument list.
+
+==== perl special variables ====
+http://www.perlmonks.org/?node_id=353259
+=== xterm, xdefaults, xresources ===
+word boundary (double click behavior)
+XTerm*charClass: 0-32:1,33-126:2,127-160:3,161-255:2
+
+== Technology ==
+
+=== openfire ===
+admin/admin
+or admin/regular password
+(i.e. username is 'admin', not your email address)
+
+http://localhost:9090/
+http://localhost:7070/
+
+== Technology ==
+
+JavaScript is an event-driven language
+
+
+== Technology ==
+=== Software architectural patterns ===
+* Blackboard
+* Client???server model (2-tier, n-tier, cloud computing all use this model)
+* Database-centric architecture (broad division can be made for programs which have database at its center and applications which don't have to rely on databases, E.g. desktop application programs, utility programs etc.)
+* Distributed computing
+* Event-driven architecture (Implicit invocation)
+* Front end and back end
+* Monolithic application
+* Peer-to-peer
+* Pipes and filters
+* Plug-in (computing)
+* Representational State Transfer
+* Rule evaluation
+* Search-oriented architecture
+* Service-oriented architecture (A pure SOA implements a service for every data access point.)
+* Shared nothing architecture
+* Software componentry
+* Space based architecture
+* Structured (Module-based but usually monolithic within modules)
+* Three-tier model (An architecture with Presentation, Business Logic and Database tiers)
+
+http://en.wikipedia.org/wiki/Software_architecture#Examples_of_architectural_styles_and_patterns
+
+== Technology ==
+
+=== grep files without match ===
+ grep -L "foo" *
+<!-- http://stackoverflow.com/questions/1748129/using-grep-to-find-files-that-doesnt-contain-a-given-string-pattern -->
+ 
+== Web ==
+* "Original Series" wireless usb
+* usb wireless server
+== Web ==
+Big Table (Google)
+== Web ==
+Command line javascript / javascript interpreter / interpreted java (groovy?)
+= =
+ 
+= =
+== ==
+
+== Apps ==
+=== Application candidate (not actually proven yet) ===
+
+DVD Ripping for Mac (and Windows)
+http://handbrake.fr/details.php
+
+=== Apps - Mac ===
+ sudo port install py26-chm2pdf
+
+
+==== duff ====
+ install in Mac
+==== INSTALL on mac ====
+Graphviz 
+
+
+=== Apps ===
+TightVNC allows multiple viewers, RealVNC does not
+
+
+=== command line - Mac ===
+ sudo cpan Mail::IMAPClient
+
+ sudo port install py27-gdata
+ sudo port install googlecl
+
+* Note: as of February 2, 2012, docs are broken with the .tar.gz versions of GoogleCL. If you need docs support, checkout GoogleCL from svn.
+ svn checkout http://googlecl.googlecode.com/svn/trunk/ googlecl-read-only
+ sudo python setup.py install
+
+ hg clone https://code.google.com/p/gdata-python-client/
+ sudo python setup.py install
+
+export PYTHONPATH=$PYTHONPATH:/Library/Python/2.7/site-packages/gdata/
+
+
+=== mac ===
+macports install these (in order)
+* //pkgconfig
+* macfuse  pcre bzip2 readline zlib
+* procfs
+* Macports
+* http://pdftk.darwinports.com/
+* http://ffmpeg.darwinports.com/
+
+
+=== Mac OS X ===
+==== Mail  ====
+==== OSX  ====
+==== Safari ====
+
+=== Programs that do not need to be reinstalled ===
+* Winamp
+* XEmacs
+* Picasaweb (but you need to put back the data from C:\Documents and Settings\Sridhar\Local Settings\Application Data\Google\Picasa2)
+* windirstat
+
+=== Recommended software app ===
+* Hijackthis
+* Piriform CCleaner
+
+=== Software app ===
+* Places Bar: http://melloware.com/products/placesbarv1/
+
+
+=== Tech - Mac apps ===
+==== Recommended Free Software app ====
+* [http://code.google.com/p/picasa-webalbums-assistant/downloads/list Picasa Web Albums Assistant]
+* [http://www.brothersoft.com/xentient-thumbnails-107971.html Xentient Thumbnails]
+
+
+==== TextMate configured key bindings ====
+
+=== Windows ===
+==== Programs that forcefully install on drive C ====
+
+==== Programs that need to be reinstalled ====
+* Acrobat
+* Natural Wireless Multimedia Keyboard + F-lock switch
+* Printer Software
+* Symantec Antivirus
+* (Access 2003) - use Office 2003
+* Office 2003 
+* WinRar
+* Folder Size
+* who locks me
+* places bar
+* extender box
+* Logitech drivers: C:\Program Files\Common Files\Logitech\QCDRV\winnew\pro2 or E:\Sridhar\Applications\Hardware\Logitech QuickCam Zoom (full CD)\Drivers\WinNew\PRO2
+* Tweak XP
+* Norton Utilities
+* Roxio
+* Picasa Desktop
+* Outlook Express Address Book (see wiki for location)
+* MSN Chat History: J:\Format Backup 2008-08-16\Dochttp://www.littleindiacuisine.com/uments and Settings\Sridhar\My Documents\My Received Files\sarnobat680994753\History
+
+
+== Business Idea ==
+TNS string to jdbcUrl
+
+
+== Cheat Sheet - Latex ==
+
+===  Wiki to Latex fix ===
+
+	w2lHelper.php::
+		w2lCore.php::onUnknownAction
+			w2lParser.php::setConfig
+			
+			w2lCore.php::onTextArea()
+				w2lParser.php::parse()
+					w2lLaTeXCompiler.php::runLaTeX			
+			
+			w2lHelper.php::onGetPreferences
+			
+
+=== Latex - dummy text ===
+ \documentclass{book}
+ \usepackage{lipsum}
+ \begin{document}
+ \chapter{Sample}
+ \lipsum[1-4]
+ \end{document}
+
+=== Latex ===
+Keep all intermediate and output files away from the tex files
+ pdflatex -output-directory=/Users/sarnobat/Windows/usb/tex/aux 
+Problem: in TeXShop the preview pdf window doesn't open
+
+=== Latex garamond ===
+	wget http://tug.org/fonts/getnonfreefonts/install-getnonfreefonts
+	texlua install-getnonfreefonts		
+	getnonfreefonts-sys -a
+
+
+
+=== Latex wiki template ===
+	
+	==LaTeX-Template==
+	
+	\input{include/cheat_sheet_begin}
+	
+	\begin{center}
+		 \Large{((PAGENAME))}
+	\end{center}
+	
+	\input{include/cheat_sheet_document_begin}
+	((W2L_CONTENT))
+	\input{include/cheat_sheet_end}
+
+
+
+=== Math symbols ===
+
+== Command Line ==
+=== Change encoding of a file ===
+ iconv -f UTF-32 -t MACROMAN interface.sql >test.txt
+http://macibuki.blogspot.com/2008/04/mac-os-x-text-file-encoding-conversion.html
+
+
+==== Colored terminal output by regex ====
+ tail -f file | perl -pe 's/keyword/\e[1;31/g'
+
+This only works on ANSI terminals, but all others have become virtually
+extinct
+
+http://fixunix.com/unix/83044-tail-color.html
+
+==== Less highlight ====
+Type "less /var/log/mail.log". Then type "/foo", where "foo" is
+a regular expression matching whatever you want to highlight, and
+hit return. Now type "F".
+
+http://fixunix.com/unix/83044-tail-color.html
+
+=== CRON jobs ===
+
+This is the correct way to do it:
+
+ crontab -e
+
+Write your commands.
+
+Check it contains it:
+
+ crontab -l
+
+Check cron is running:
+
+ ps auwx | grep cron
+
+If cron isn't running, try this:
+
+ /etc/rc.d/cron start
+
+The log:
+
+ tail -f /var/log/cro
+
+Example file:
+
+ /var/spool/cron/root
+
+
+===== Cron fields =====
+
+ minute hour dom month dow user cmd
+
+ minute	This controls what minute of the hour the command will run on,
+ 	 and is between '0' and '59'
+ hour	This controls what hour the command will run on, and is specified in
+          the 24 hour clock, values must be between 0 and 23 (0 is midnight)
+ dom	This is the Day of Month, that you want the command run on, e.g. to
+ 	 run a command on the 19th of each month, the dom would be 19.
+ month	This is the month a specified command will run on, it may be specified
+ 	 numerically (0-12), or as the name of the month (e.g. May)
+ dow	This is the Day of Week that you want a command to be run on, it can
+ 	 also be numeric (0-7) or as the name of the day (e.g. sun).
+ user	This is the user who runs the command.
+ cmd	This is the command that you want run. This field may contain 
+ 	 multiple words or spaces.
+
+ If you don't wish to specify a value for a field, just place a * in the 
+ field.
+
+ e.g.
+ 01 * * * * root echo "This command is run at one min past every hour"
+ 17 8 * * * root echo "This command is run daily at 8:17 am"
+ 17 20 * * * root echo "This command is run daily at 8:17 pm"
+ 00 4 * * 0 root echo "This command is run at 4 am every Sunday"
+ * 4 * * Sun root echo "So is this"
+ 42 4 1 * * root echo "This command is run 4:42 am every 1st of the month"
+ 01 * 19 07 * root echo "This command is run hourly on the 19th of July"
+
+=== diff ===
+
+ diff -r 
+Diff directory files and corresponding contents
+
+
+=== ffmpeg ===
+http://www.itbroadcastanddigitalcinema.com/ffmpeg_howto.html#Generic_Syntax
+
+
+
+
+=== Files in Linux OS ===
+==== Forget about this stuff ====
+
+/usr/sbin/crond
+/usr/bin/crontab
+/etc/cron.d
+/etc/cron.daily
+/etc/cron.daily.random
+/etc/cron.hourly
+/etc/cron.monthly
+/etc/cron.weekly
+/etc/amanda/crontab.sample
+/etc/cron.deny
+/etc/crontab
+/etc/httpd/run/crond.pid
+/etc/init.d/crond
+/etc/pam.d/crond
+/etc/rc.d/init.d/crond
+/etc/sysconfig/crond
+
+
+Log:
+
+ wram@frankm:/var/mail$ crontab -e
+ crontab: installing new crontab
+
+ crontab -l outputs:
+ wram@frankm:/var/mail$ crontab -l
+ 56 * * * * /usr/bin/vlc /home/wram/music/mp3/nine\ inch\ nails/\(2007\)\ Year\ Zero/Nine\ Inch\ Nails\ -\ 03\ -\ Survivalism.mp3
+
+ /var/log/syslog
+
+ Aug  7 06:53:53 frankm crontab[17399]: (wram) BEGIN EDIT (wram)
+ Aug  7 06:54:49 frankm crontab[17399]: (wram) REPLACE (wram)
+ Aug  7 06:54:49 frankm crontab[17399]: (wram) END EDIT (wram)
+ Aug  7 06:55:01 frankm /usr/sbin/cron[15559]: (wram) RELOAD (crontabs/wram)
+ Aug  7 06:55:02 frankm crontab[17460]: (wram) LIST (wram)
+ Aug  7 06:56:02 frankm /USR/SBIN/CRON[17523]: (wram) CMD (/usr/bin/vlc /home/wram/music/mp3/nine\ inch\ nails/\(2007\)\ Year\ Zero/Nine\ Inch\ Nails\ -\ 03\ -\ Survivalism.mp3)
+ Aug  7 06:56:03 frankm postfix/sendmail[17525]: fatal: open /etc/postfix/main.cf: No such file or directory
+
+ ps aux | grep cron
+
+ wram@frankm:/etc$ ps aux |grep cron
+ root     15559  0.0  0.1   3444  1004 ?        Ss   06:23   0:00 /usr/sbin/cron
+ wram     18431  0.0  0.1   2884   752 pts/0    R+   07:12   0:00 grep cron
+
+ /etc/crontab:
+
+ wram@frankm:/etc$ cat crontab
+ # /etc/crontab: system-wide crontab
+ # Unlike any other crontab you don't have to run the `crontab'
+ # command to install the new version when you edit this file
+ # and files in /etc/cron.d. These files also have username fields,
+ # that none of the other crontabs do.
+
+ SHELL=/bin/sh
+ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+ # m h dom mon dow user  command
+ 17 *    * * *   root    cd / && run-parts --report /etc/cron.hourly
+ 25 6    * * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+ 47 6    * * 7   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+ 52 6    1 * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly ) 
+
+
+
+
+http://ubuntuforums.org/showthread.php?t=519631
+
+
+If cron isn't running, try this:
+
+ /etc/rc.d/cron start
+
+http://lists.freebsd.org/pipermail/freebsd-questions/2006-March/116897.html
+
+
+==== scp ====
+scp myusername@hostname:/scratch/myfriend/remotefile.txt .
+
+=== grc ===
+Ubuntu
+install grc (from software center)
+grc ping www.yahoo.com
+  
+
+
+ mkdir ~/.grc
+
+ vi ~/.grc/conf.ssarnobat
+ # Add the following to this file:
+ ##  regexp=TODO
+ ##  colours=cyan
+ ##  count=more
+
+ # From any directory
+ grc -c conf.ssarnobat echo TODO 
+
+ grc --config=conf.ssarnobat grep gc gcomp2012-07-31.txt  
+ grc --config=conf.ssarnobat cat gcomp2012-08-01.txt    
+
+ # If you make changes to your conf file
+ grc --config=conf.ssarnobat cat gcomp2012-08-02.txt > colored.txt     
+ less  colored.txt                                                                                                                                                                                     /home/ssarnobat/my/usb/Professional/call_graph_text_generator
+
+Colors that work on xterm:
+ Colours are one of: 
+        none, default, bold, underline, blink, reverse, concealed, 
+        black, green, yellow, blue, magenta, cyan, white,
+        on_black, on_green, on_yellow, on_blue, on_magenta, on_cyan, on_white
+        beep   
+
+
+Directories  ~/.grc/, /usr/local/share/grc/, /usr/share/grc/ are searched
+for the file (in this order). If the file is not found, it is assumed to be
+an absolute path of a configuration file located elsewhere.
+
+=== iTerm configuration ===
+
+This will allow Alt combinations
+Manage Profiles
+    Global
+        +Esc
+
+=== less (useful for grc) ===
+colored output:
+ less -r
+
+
+
+
+=== Linux Commands ===
+
+
+
+
+==== rsync ====
+ rsync rsync-src rsync-dest  -r
+
+
+==== slocate ====
+
+slocate's database should be updated on a regular basis. In
+/opt/local/etc/daily.slocate, you'll find some lines to put in
+/etc/daily.local to update the database on a daily basis (for example).
+If you want to disable the weekly update of the system's built-in locate,
+edit the file /etc/weekly.
+
+=== Live code ===
+Javascript live code
+http://jsfiddle.net/8zuBj/
+jsbin.com
+html live code
+http://www.w3schools.com/cssref/tryit.asp?filename=trycss_display_inline
+
+svg
+http://www.w3schools.com/svg/tryit.asp?filename=trysvg_myfirst
+---
+
+=== Mac command line clipboard ===
+
+e.g. find -name ...  | pbcopy
+
+
+=== maven run tests ===
+ mvn test
+
+
+=== Mocking concepts ===
+Stub
+Mock
+
+Mockito
+* Mock
+* Matchers.isA
+* Matchers.eq
+* when
+* verify
+* anyBoolean
+
+Hamcrest
+* is
+* equalTo
+* notNullValue
+
+EasyMock
+* MockingTestCase
+* Mocks
+* eq
+* isA
+* notNull
+* MockWrangler
+* expect
+* createMock
+* verify
+* andReturn
+* replay
+
+=== Perl ===
+Cpan
+ sudo cpan Mail::IMAPClient
+
+=== Perl regex from command line ===
+Perl
+ perl -pe 's{set_(.)}{set.uc($1)}eg' 
+ # Changes set_employeeId() to setEmployeeId()
+
+
+
+=== Python install problem ===
+env ARCHFLAGS="-arch i386 -arch x86_64" python setup.py install
+http://stackoverflow.com/questions/5256397/python-easy-install-fails-with-assembler-for-architecture-ppc-not-installed-on
+---
+
+
+
+=== strings ===
+ strings "my search string" slides.ppt
+
+==== passwordless ssh ====
+ sudo port install openssh +ssh_copy_id
+ ssh-copy-id -i ~/.ssh/id_rsa.pub username@remote_host
+
+
+
+==== sendmail ====
+ echo "hello"  | mail -s "Disk usage "`hostname -s` ssarnobat@apple.com
+sarnobat@Sridhars-MacBook-Air.local
+
+Won't work from an arbitrary machine, only inside network it seems. Check logfile to see if unsuccessful:
+ /var/log/mail.log 
+(this is present on Mac OS X)
+Not to be confused with:
+ /var/mail/sarnobat
+I'm not sure what this is.
+
+
+=== Technology (Linux) ===
+
+Unix command to see who is logged in on a machine
+ w
+ (w -- display who is logged in and what they are doing)
+
+Linux command to see what services are running
+ service --list
+
+==== Data Mining ====
+ java -Xmx1024m -classpath /Users/sarnobat/trash/jatetoolkit-read-only/dist/:/Users/sarnobat/trash/jatetoolkit-read-only/libs/apache-log4j-1.2.15/log4j-1.2.15.jar:/Users/sarnobat/trash/jatetoolkit-read-only/libs/apache-opennlp-1.51/jwnl-1.3.3.jar:/Users/sarnobat/trash/jatetoolkit-read-only/libs/apache-opennlp-1.51/opennlp-maxent-3.0.1-incubating.jar:/Users/sarnobat/trash/jatetoolkit-read-only/libs/apache-opennlp-1.51/opennlp-tools-1.5.1-incubating.jar:/Users/sarnobat/trash/jatetoolkit-read-only/libs/dragon/dragontool.jar:/Users/sarnobat/trash/jatetoolkit-read-only/libs/hsqldb2.2.3/hsqldb.jar:/Users/sarnobat/trash/jatetoolkit-read-only/libs/hsqldb2.2.3/sqltool.jar:/Users/sarnobat/trash/jatetoolkit-read-only/libs/wit-commons/wit-commons.jar: uk.ac.shef.dcs.oak.jate.test.AlgorithmTester /Users/sarnobat/trash/jatetoolkit-read-only/nlp_resources/  test/example/ test/output
+
+ java maui.main.Examples tagging -jar maui-1.0.jar 
+
+
+==== Hadoop tutorial that works on mac ====
+http://hadoop.apache.org/common/docs/r0.15.2/quickstart.html
+
+==== Perl ====
+
+count occurrences of every word in file
+ cat /Users/sarnobat/new-macbook-air.txt | perl -pe 's{\b}{\n}g' |  tr '[:upper:]' '[:lower:]'  | grep '^[a-zA-Z]*$'  | sort | uniq -c  | sort -h 
+ cat /Users/sarnobat/new-macbook-air.txt | tr " " "\n" | sort | uniq -c  | sort -h
+
+perl one liner using module
+ # What I haven't worked out - replacing the "tags" literal with a piped argument
+ perl -M"Lingua::EN::PluralToSingular 'to_singular'" -e 'print(to_singular("tags"))'
+ perl -MMIME::Base64 -e 'print encode_base64("string")' 
+
+
+
+the "-p" switch. Specifying "-p" to a Perl program causes it to assume the following loop around your program:
+
+ while (<>) {
+    # your program goes here
+ } continue {
+    print or die "-p failed: $!\n";
+ }
+
+$_ is an implicit local variable which holds the result of the last function/builtin called. 
+
+
+
+
+
+=== uname ===
+get operating system information
+ uname -s
+ uname -a
+http://www.unix.com/unix-dummies-questions-answers/33129-bash-command-get-name-os-installed.html
+
+
+=== wget ===
+ wget -r -A.pdf --no-check-certificate --user=ss401533@gmail.com --password=aize2F https://www.jungledisk.com/secure/account/invoices.aspx
+
+
+
+=== zsh ===
+ cd -<TAB> gives you a directory stack
+
+==== Redirect Standard Error to null ====
+
+
+
+== Concepts ==
+=== blogs vs wikis (Sridhar Sarnobat) ===
+Blogs & twitter only organize by date
+Wikis can be organized by category
+Accessing old knowledge in time-based repositories requires very sophisticated search input and search tools
+
+
+=== Computer Science ===
+* OLTP
+* OLAP
+
+
+=== Dance sorting algorithm ===
+http://www.youtube.com/user/AlgoRythmics
+
+=== Hadoop concepts (just to job memory) ===
+coins
+combiner is handled by framework. You only need to identify the key
+streaming - command line
+script can be shipped to each machine as part of task submission
+ssh + xargs = poor man's hadoop
+Input - e.g. 1-1000
+Splits of the input - e.g. 1-50, 51-100, 101-150
+Records of a split - e.g. 1, 2, 3 ... 50
+WordCount outputs text files, which are great for human readers, but what if you want to read the output from one Map-Reduce job as the input for a second Map-Reduce job? Use SequenceFileInputFormat and SequenceFileOutputFormat to write and read key-value pairs without worrying about serialization. 
+
+=== Map Reduce foolproof explanations ===
+
+a) (library one was good)
+
+b) a huge collection of coins
+Divide the coins into a few unsorted batches
+map phase: ask 1 friend (server) to determine the value of each coin
+put the coin into his coin sorter (but it's dumb - you have to tell it what the value is)
+shuffle phase: the coin sorter will accumulate all coins into a barrel for that particular coin
+hand the stacks of each coin value to the master
+reduce: The master discards all copper coins, and saves the silver ones in separate collections.
+By the end of the reduce phase, the master will have a subtotal of quarters, of nickels, and of dimes
+
+
+
+=== Tech Analogies with life ===
+your environment - System.getProperties() (environment variables)
+your genes - the person object
+you = method(environment, genes)
+
+
+
+
+=== Text vs Binary ===
+Text - cross-compatible (syntactically) - i.e. human readable
+Text - not always cross-compatible (semantically)
+Binary - not always cross compatible (syntactically) - i.e. not human readable
+Binary - never cross-compatible (semantically)
+
+http://freemind.sourceforge.net/FreeMind-computer-knowledge.png
+http://webcache.googleusercontent.com/search?q=cache:bhcbLuXgAa0J:www.evdbt.com/SuperChargingStarTransformations.doc+star+transformation&cd=1&hl=en&ct=clnk&gl=us
+
+== Doc ==
+=== EC2 windows ===
+ec2-23-22-65-113.compute-1.amazonaws.com
+Administrator
+usual
+// (3PCF8wtFf
+// (sarnobat.pem)
+
+
+
+== latex ==
+=== tex reorganization ===
+
+move includes to subfolder
+use standard include header
+Don't bother: create book of document inclusions
+
+
+== Linux ==
+===  ===
+diff -r 
+Diff directory files and corresponding contents
+
+===  ===
+
+ ./configure --prefix=/scratch/ssarnoba/trash/apache --enable-rewrite=shared --enable-proxy=shared
+
+== Programming ==
+
+
+=== [Java] Easy way to initialize collections in 1 line ===
+Use an 'instance initializer'. For example:
+
+ Map<Integer, String> stateTimes = new HashMap<Integer, String>()
+ {
+   {
+     this.put(State.IDLE, 0);
+     this.put(State.BEGIN, 0);
+     this.put(State.DB, 0);
+     this.put(State.DTRT, 0);
+     this.put(State.IO, 0);
+     this.put(State.END, 0);
+     this.put(State.VALIDATION, 0);
+     this.put(State.DELETE, 0);
+   }
+ };
+
+http://stackoverflow.com/questions/1005073/initialization-of-an-arraylist-in-one-line
+
+=== [SQL] Item class hierarchy displayed as tree ===
+
+SELECT
+  CONCAT
+  (
+     LPAD
+     (
+        ' ',
+        LEVEL*3-3
+     ),
+     category_code
+  ) category
+FROM
+  fnd_ef_categories_vl
+CONNECT BY
+  PRIOR category_code = parent_category_code
+START WITH
+  parent_category_code IS NULL;
+
+
+CATEGORY
+------------------------------------------
+ROOT_ICC
+  Electronics_Computers
+     Computer_Parts_Components
+        Computer_Systems
+           Desktops
+           Laptops
+              Gaming_Laptops
+           Servers
+        Motherboards
+        Power_Supplies
+  QA_Level1
+     QA_Level2
+        QA_Level3
+  RootIcc
+     CRM_BOOKS
+     CRM_CELLPHONES
+     CRM_COMPUTERS
+     CRM_PRINTERS
+     CRM_TV
+     ClothingICC
+     ELECTRONICS
+        TV
+           CRT_TV
+           HD_TV
+           LCD_TV
+           PLASMA_TV
+           REG_TV
+     ShirtsICC
+     ZCX_DUMMY_CATEGORY
+
+29 rows selected.
+
+http://www.dba-oracle.com/t_advanced_sql_hierarchical_queries.htm
+
+
+=== Acceptable coding abbreviations ===
+
+src
+dest
+pkg
+
+
+=== cscope ===
+Run cscope in the dir that contains cscope.files
+
+exit cscope
+^d
+
+Line-oriented
+ cscope -d -L -4 main < cscope.files  
+ cscope -d -L -4 getAttributes /Users/sarnobat/usb/Professional/GWT/tomcat-src/org/apache/tomcat/util/threads/ThreadWithAttributes.java 
+
+
+=== cscope ===
+
+Build a cscope database
+
+=== Doxygen ===
+Generate a DoxyFile
+ doxygen -g
+Run doxygen
+ cd src
+ doxygen Doxyfile
+
+
+
+
+=== Eclipse ===
+* stop debugger
+* relaunch last
+* disable all breakpoints
+* continue execution
+
+
+
+=== Eclipse productivity tips  ===
+* Hide fields in Outline View
+
+=== Java ===
+==== Useful classes & Methods ====
+
+ Commons multimap
+ StringUtils.isBlank()
+ Collections.sort()
+ Arrays.toArray()
+ ConcurrentMap.put(k, v)
+
+==== Useful code ====
+See 'programming tips' doc
+=== Log4j ===
+
+==== Sample configuration file ====
+
+=== maven archetypes ===
+ mvn archetype:generate  
+filter to either:
+ 		spring-mvc-archetype (not spring-mvc-webapp)
+		cometd-archetype-spring-jquery-jetty7 (see below to install the archetype locally first)
+		
+or, touchlessly (the spring-mvc ones don't work)
+ mvn archetype:generate -DgroupId=com.rohidekar.app -DartifactId=my-webapp -Dversion=1.0 -DarchetypeArtifactId=maven-archetype-webapp
+ mvn archetype:generate -DgroupId=com.rohidekar.app -DartifactId=springJquery -Dversion=1.0 -DarchetypeArtifactId=cometd-archetype-spring-jquery-jetty7 -DarchetypeVersion=2.5.0
+
+ mvn compile 
+add jetty plugin to pom.xml
+ mvn jetty:run
+
+this works fine
+
+=== Maven jetty plugin ===
+<build>
+ <plugins>
+
+  <plugin>
+     <groupId>org.mortbay.jetty</groupId>
+     <artifactId>jetty-maven-plugin</artifactId>
+     <version>7.1.2.v20100523</version>
+     <configuration>
+       <webAppConfig>
+         <contextPath>/${project.name}</contextPath>
+       </webAppConfig>
+     </configuration>
+   </plugin>
+
+ </plugins>
+</build>
+
+=== Maven repositories ===
+See settings.xml; do a grep of all possible locations
+
+=== Maven sample settings.xml ===
+add this too
+
+
+=== Mockito ===
+
+==== Why can't you verify a return value? ====
+It's pointless. Only mocks can be verified. If it's a mock, it means you have stubbed the return value yourself (or Mockito has provided nice defaults)
+
+
+
+=== Netscaler ===
+=== Oracle Coherence ===
+For caching scheme
+ coherence-cache-config.xml
+For nodes
+ tangosol-cache-config.xml
+
+=== Oracle SQL ===
+
+==== Hierarchical query ====
+
+==== Merge statement ====
+
+ merge into my_stats_cache rd 
+ using (
+ 	select ? as qry, sysdate as last_modified , null as dta 
+ 	from dual) rs 
+ on (rs.qry = rd.qry )  
+ when matched then 
+ 	update set last_modified = rs.last_modified   
+ when not matched then 
+ 	insert (rd.qry , rd.dta) values (rs.qry,?)
+
+
+==== PL/SQL stored procedure block ====
+==== View database connections/sessions ====
+
+ select machine from v$session where machine like 'vp2a02a-dhcp10.apple.com';
+
+=== packet sniffing ===
+
+ sudo tcpdump -s0 -X -i en0 'port 80' | less
+
+<!-- http://stackoverflow.com/questions/7315617/tcpdump-vs-tcpflow-or-why-isnt-tcpdump-ascii-packet-data-human-readable -->
+* Network port connections
+** There should now be a connection between the ports.  Anything typed at the second console will be concatenated to the first, and vice-versa. 
+
+=== Regexp replace Oracle ===
+update fnd_df_adfbc_usages set application_module = regexp_replace (application_module, '(.*)1','\1')   where application_module like '%AM1' and table_usage_code like 'EG%';
+
+
+
+==== Oracle Connect by ====
+SELECT
+  CONCAT
+  (
+ LPAD
+ (
+' ',
+LEVEL*3-3
+ ),
+ category_code
+  ) category
+FROM
+  fnd_ef_categories_vl
+CONNECT BY
+  PRIOR category_code = parent_category_code
+START WITH
+  parent_category_code IS NULL;
+ 
+ 
+CATEGORY
+------------------------------------------
+ROOT_ICC
+  Electronics_Computers
+ Computer_Parts_Components
+Computer_Systems
+Desktops
+Laptops
+  Gaming_Laptops
+Servers
+Motherboards
+Power_Supplies
+  QA_Level1
+ QA_Level2
+QA_Level3
+  RootIcc
+ CRM_BOOKS
+ CRM_CELLPHONES
+ CRM_COMPUTERS
+ CRM_PRINTERS
+ CRM_TV
+ ClothingICC
+ ELECTRONICS
+TV
+CRT_TV
+HD_TV
+LCD_TV
+PLASMA_TV
+REG_TV
+ ShirtsICC
+ ZCX_DUMMY_CATEGORY
+ 
+29 rows selected.
+ 
+http://www.dba-oracle.com/t_advanced_sql_hierarchical_queries.htm
+
+
+
+
+=== spring maven project through eclipse ===
+==== jsp ====
+STS
+new maven project
+archetype maven webapp
+add jetty plugin to pom.xml
+edit "name" in the pom.xml to be your webapp name
+mvn jetty:run
+http://localhost:8080/mywebappname/
+should get "hello world"
+(e.g. /Users/sarnobat/Windows/usb/Professional/Spring_workspace/c/a1/)
+
+==== servlet ====
+
+=== SQLite ===
+create new DB
+ sqlite3 new.sdb
+Print the database structure
+ .schema
+Quit
+ Ctrl-D
+issue statement directly from shell 
+ sqlite3 my_wiki.sdb 'select * from text;'
+View table description
+ .table
+Align cells
+ .mode column
+
+=== Subversion svn ===
+ svn list --recursive http://repository/SVNROOT/path/to/files
+
+
+== Software Installation and Usage tips ==
+
+=== RazorSQL ===
+==== mdb conversion ====
+Use RazorSQL to export mdb to sqlite
+
+ now() -> sysdate
+ false -> 0
+
+* Preferences -- execute sql fetch size : change to more than count
+* Preferences -- fetch all rows fetch size : change to more than count
+
+
+
+==== Sqlite with RazorSQL ====
+
+Driver class
+ com.hxtt.sql.access.AccessDriver
+
+Driver Location
+ /Users/sarnobat/Windows/usb/Professional/RazorSQL/Access_JDBC30.jar
+JDBC URL
+ jdbc:Access:////Volumes/documents/docs/reminders/tasks.mdb
+
+
+
+=== Registry auto login to windows ===
+ HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+ AutoAdminLogon=1
+
+
+=== Remapping keys in Linux ===
+Start terminal window and run xev. Now it's active and what's for you pressing a key. Then press a key, it's behaviour you want to change. i.e. PgUp.
+
+xev will output some information on the pressed key. Important is the third line. it should look similar like this
+
+state 0x10, keycode 110 (keysym 0xff55, Prior), same_screen YES,
+in this example Prior is the name of the behaviour the key is assigned to at the moment, the number keycode is the internal id to recognize the key. Now do this with another key i.e. PgDown give this output
+
+state 0x10, keycode 115 (keysym 0xff56, Next), same_screen YES,
+again here what's interesting for us is keycode 115 and Next - the name of the behaviour.
+
+now when you want to swap this both keys use xmodmap.
+
+ xmodmap -e "keycode 110 = Next"
+changes the key with keycode 110 on your keyboard to the action Next. It's pretty simple.
+http://askubuntu.com/questions/24916/how-do-i-remap-certain-keys
+
+Modern systems don't generally use xmodmap to configure the keyboard, though. setxkbmap is the modern way to do it; and that does reset bindings when run. So you may be able to use setxkbmap -layout us 
+http://askubuntu.com/questions/29603/how-do-i-clear-xmodmap-settings
+
+
+=== TextMate ===
+==== ====
+Close HTML tag
+ command-option-.
+Format
+ control-shift-h 
+
+==== Textmate commands ====
+This isn't ideal, but it's the only thing that works in all cases
+
+===== Headingize existing line (e.g. Sridhar - heading 2) =====
+* type: command
+* command: perl -pe 's{^(.*)$}{== $1 ==}g'
+* input: selected text or line
+* output: replace selected text
+
+===== Insert heading (e.g. Sridhar - heading 2 - Business) =====
+* command:
+* echo "== Business =="
+* input: selected text or line
+* output: insert as text
+
+<!--
+	=== insert heading (works - except when current line is blank you get too many blank lines. A trim command would fix this) ===
+	echo "== Productivity ==
+	$TM_CURRENT_LINE"
+
+	==== make current line a heading (works) ====
+	Input: selected text or line
+	output: replace selected text
+	perl -pe 's{^(.*)$}{== $1 ==}g'
+
+
+	==== Textmate snippet - DOESN'T WORK (doesn't erase existing line) ====
+	(yes, textmate snippets can be unix commands. But don't make a 'command'. Make a 'snippet')
+	`echo $TM_CURRENT_LINE | perl -pe 's{^(.*)$}{=== $1 ===}g'`
+
+	==== insert heading (works EXCEPT you can't have a blank line) ====
+	Input: selected text or line
+	output: replace selected text
+	perl -pe 's{^(.*)$}{== Academic ==
+	$1}g'
+-->
+==== Textmate snippet syntax Summary ====
+
+
+   Variables        $TM_FILENAME, $TM_SELECTED_TEXT
+   Fallback Values  ${TM_SELECTED_TEXT:$TM_CURRENT_WORD}
+   Substitutions    ${TM_FILENAME/.*/\U$0/}
+   
+   Tab Stops        $1, $2, $3,  $0 (optional)
+   Placeholders     ${1:default value}
+   Mirrors          <${2:tag}></$2>
+   Transformations  <${3:tag}></${3/(\w*).*/\U$1/}>
+
+   Shell Code       `date`, `pwd`
+
+   Escape Codes     \$ \` \\
+
+
+=== Tip - test your hard disk speed  ===
+
+
+[s1 pim_uptake_vc] ~/log> sudo hdparm -t /dev/sda
+Password:
+
+/dev/sda:
+ Timing buffered disk reads:  260 MB in  3.00 seconds =  86.63 MB/sec
+[s1 pim_uptake_vc] ~/log>
+
+
+=== Ubuntu + VMWare ===
+
+
+Use VMWare Player, not server
+
+==== enable alt key in xterm (works for zsh too) ====
+
+See http://www.humbug.in/2010/enable-alt-key-in-xterm/
+
+==== getting a working web connection ====
+
+*  VMWare: settings -> NAT 
+*  Guest: Network settings: shared to other computers // not sure if this mwatters. DHCP worked too
+*  Guest: sudo dhclient eth0
+*  Uninstall and reinstall the VMWare protocol in your MAIN network connection (Local Area Connection)
+*  Make sure you restart your computer
+
+
+==== install zsh ====
+See https://launchpad.net/ubuntu/+source/zsh
+
+==== Installing Ubuntu ====
+In your sources.list file replace every instance of http://archive.ubuntu.com/ubuntu/ with http://old-releases.ubuntu.com/ubuntu/ <!-- http://ubuntuforums.org/archive/index.php/t-1078737.html -->
+
+==== tkdiff ====
+install tkdiff with add/remove
+
+== Technology ==
+===  ===
+The startup scripts are often referred to as 'files' because of the way they are named; the 'rc' stands for 'runcom' or 'run command' a historical remnant of the CTSS operating system circa 1965.
+
+
+===  ===
+
+Alt-Esc
+Minimize current window
+
+===  ===
+
+The real reason m3u playlists have problems in iTunes
+Make sure you save the playlist through m3u and don't hand-edit it. While Winamp can still read your hand-edits, iTunes cannot so it skips them.
+
+===  ===
+
+Excel
+Pivot table = Group By
+===  ===
+
+facebook picture photo viewer
+just press F5 once ur on the new pic viewer and it will take you back to the old one... or remove the "&theater" url parameter and reload the page....
+
+===  ===
+Preformatted text is indicated in the mediawiki format by the fact that each line starts with a space character.
+
+===  ===
+Line-oriented (task, grep) vs screen oriented (e.g. mutt, pine, cscope)
+
+
+===  ===
+
+Drives D and Y need thoroguh scanning still (/R)
+ chkdsk D: /R
+ chkdsk Y: /R
+ chkdsk G: /R
+
+
+===  ===
+
+Operating systems are difficult to debug with traditional
+cyclic debugging. They are non-deterministic; they run
+for long periods of time; they interact directly with hard-
+ware devices; and their state is easily perturbed by the act
+of debugging.
+
+Under Unix based operating systems non interactive server applications are called daemons and are controlled by the operating system with a set of specified signals. Under Windows such programs are called services and are controlled by appropriate calls to specific functions defined in the application binary,
+
+
+
+===  ===
+
+teletype - typeface used when transmitting text over long distances
+
+===  ===
+A shell script is a "quick and dirty" method of prototyping a complex application
+
+===  ===
+
+Rabbi
+-----
+ASP
+
+Andonis
+--------
+CSS
+
+Jim Terry
+---------
+Perl
+
+
+===  ===
+Mohamed Zait
+------------
+
+Use assertions
+
+===  ===
+Pete Belknap
+------------
+
+O'Reilly books are great for learning computer related tricks
+
+
+===  ===
+Emil Lupu
+----------
+System.exit
+
+Adam Brinley Codd
+-----------------
+"this dot" is more readable
+
+
+
+===  ===
+Rob Moffat
+----------
+Non ANSI Join syntax
+
+===  ===
+Rahul Baptista
+-------------- 
+Ctrl+f5 for full web page refresh
+
+===  ===
+Gabrielle - tab complete
+
+
+
+===  ===
+
+
+advantages of hosted environment rather than local
+	web sharing is easier (you can have a personal apache instance)
+
+===  ===
+Adding a file to Picasa desktop
+Just drag and drop
+
+
+===  ===
+Files with the extension msf are not message (mail) files at all. They are message summary files, indexes for lack of a better term. If you are accessing an IMAP server the messages remain on the email server, not on the local computer, so there is no mbox file. There will still be an msf file so that Thunderbird an keep track of various status values relating to the messages on the server.
+
+
+
+===  ===
+
+.zshrc windows
+bindkey -s   'ls -lrt --color=always --classify --almost-all --reverse --human-readable \n'
+
+
+===  ===
+
+Mozilla Prism and other similar platforms are useless because
+* they don't allow extensions like lastpass
+* there is no tab browsing
+* you can't set icons based on the favico.ico it seems (e.g. Google Docs)
+
+===  ===
+Wikitext is designed to be much easier to use than XML. Even if it's not much easier to write, it's much easier to read, and therefore much easier to edit.
+http://comments.gmane.org/gmane.science.linguistics.wikipedia.wikitext/80
+
+
+=== ===
+
+ Put the CD in the drive. Go to System -> Administration -> Synaptic Package Manager. Click Settings -> Repositories and check that the CD is in the list (or add it if it's not). Click OK to close the Repositories dialog and click the Update button on the main interface. If you do not have internet, synapic may complain that it could not get to a bunch of repositories. Don't worry about that.
+
+ Then, hit Ctrl + F, enter "tcsh" and Search. A new list of packages comes up. Right-click on tcsh, select "Mark for installation", click teh dialog away and hit the "Apply" button on the main screen. Synaptic will install tcsh for you and report any problems.
+
+ It you cannot install tcsh this way, try the csh package.
+http://www.gamedev.net/community/forums/topic.asp?topic_id=390057
+
+=== add to .zshrc-misc ===
+
+iterm sequences to add: 
+
+	Key: 		cursor right
+	Modifier:	option
+	Action:		send escape sequence
+				[1;3C
+	High Interception priority 
+	
+Change login shell: 
+
+		chsh -s /bin/zsh
+		
+
+=== Apache commons ===
+
+* Configuration
+* Dbutils
+* Email
+* Daeomon
+* VFS
+
+ svn co http://svn.apache.org/repos/asf/commons/proper/configuration/trunk/
+
+==== Persisitent file config storage ====
+/Users/sarnobat/src/apache_configuration/src/test/java/org/apache/commons/configuration/TestFileConfiguration.java
+
+ FileConfiguration config = new PropertiesConfiguration(OUT_FILE);
+ config.save();
+
+=== Apache setup troubleshooting ===
+All parent dirs need to have the right permissions otherwise you won't be able to read out of the dir.
+
+
+
+=== AWS Amazon S3 fuse ===
+s3-simple-fuse ~/s3 -o AWS_ACCESS_KEY_ID=03PKJYQF3BWHK63NN5R2,AWS_SECRET_ACCESS_KEY=Ni+BfF+ehW+tCev8kR3CVJr7EuWWBMO8xmlL8fcP,bucket=stepz
+ 
+=== Before formatting ===
+Save AutoComplete Firefox Extension text
+
+
+
+
+
+
+=== Book database ===
+Create if non-existent, update it if you have one
+
+=== CCTree (Mac) ===
+0) cd ~/cscope/
+0) vi ~/usb/Professional/GWT/tomcat-src/org/apache/catalina/ha/deploy/FileMessageFactory.java
+1) :CCTreeLoadDB
+2) cscope.out
+3) open a source file
+4) 
+ :CCTreeTraceReverse 
+ :CCTreeTraceForward
+
+Show/Hide left tree
+ CCTreeKeyToggleWindow = '<C-\>w
+
+
+Change tree depth
+ CCTreeRecurseDepthPlus     
+ CCTreeRecurseDepthMinus
+
+
+
+=== Cheat sheet - my web presences ===
+Picasa accounts
+Twitter
+Facebook profiles
+Google accounts
+
+
+
+
+=== Cheat sheet technical ===
+Console2
+  "E:\new\applications 2\ansi140\x86\ansicon.exe" "E:\new\applications 2\zsh for Windows\bin\zsh.exe"
+
+Chrome from command line in Mac
+  open /Applications/Google\ Chrome.app/ --args --disable-web-security"
+
+
+=== development tools ===
+cscope
+cflow
+cbrowser (not command line)
+indent
+whocalls
+
+
+=== E-Mail ===
+Make instruction page for GMail forwarding
+
+=== Emacs tips ===
+
+==== Align regexp - repeat ====
+
+M-x fundamental mode
+
+Now just use align-repeat
+
+---
+
+ M-x universal-argument
+ 1
+ M-x align-regepx
+ ||
+ 1 (prefilled)
+ 1 (prefilled)
+ y
+
+"(Emacs) How do I align several whitespace-separated columns","http://www.emacswiki.org/emacs/AlignCommands#toc7"
+
+
+
+=== Emule web portal ===
+http://192.168.1.101:4711/
+(you can set up port forwarding)
+
+
+
+=== Firefox addon ===
+---
+
+"Open Image in New Tabs" extension.
+
+  https://addons.mozilla.org/en-US/firefox/addon/2248
+
+Adds right-click context menu item for opening images in new tabs.
+There is an option to focus the new tab or not.
+http://imagezoom.yellowgorilla.net/forums/viewtopic.php?id=425
+
+---
+
+"Text Area Resizer & Mover :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/8287"
+"Rapidshare Bundle for Greasemonkey","http://userscripts.org/scripts/show/9116"
+"Gui:config Gives Easy Access to Hidden Firefox Settings","http://lifehacker.com/5137655/guiconfig-gives-easy-access-to-hidden-firefox-settings"
+"Featured Firefox Extension: Greasefire Finds Greasemonkey Scripts for the Site You're Visiting","http://lifehacker.com/5111431/greasefire-finds-greasemonkey-scripts-for-the-site-youre-visiting"
+"Featured Firefox Extension: Check4Change Monitors Pages for Activity","http://lifehacker.com/5129572/check4change-monitors-pages-for-activity"
+"20+ Great Greasemonkey Scripts for Improving Your Facebook Experience | Whoehoe","http://whoehoe.com/?p=923"
+"Amazon.com - Wish List bookmarklet","http://www.amazon.com/gp/wishlist/get-button"
+"Featured Firefox Extension: MLB Supercharges Mouseless Browsing","http://lifehacker.com/5125564/mlb-supercharges-mouseless-browsing"
+"Featured Firefox Extension: Automatic Save Folder Remembers Your Download Preferences","http://lifehacker.com/5116648/automatic-save-folder-remembers-your-download-preferences"
+"Featured Firefox Extension: FireTorrent Adds BitTorrent Powers to Firefox","http://lifehacker.com/5119552/firetorrent-adds-bittorrent-powers-to-firefox"
+"Featured Firefox Extension: Greasefire Finds Greasemonkey Scripts for the Site You're Visiting","http://lifehacker.com/5111431/greasefire-finds-greasemonkey-scripts-for-the-site-youre-visiting"
+"Featured Firefox Extension: Open IT Online Adds Image Editing, Other Online Document Options","http://lifehacker.com/5111319/open-it-online-adds-image-editing-other-online-document-options"
+"INTSPEI Search Cloudlet","http://www.getcloudlet.com/"
+"Greasefire :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/8352"
+"AutoPager :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/4925"
+"Firefox Text To Speech","http://www.ghacks.net/2008/12/20/firefox-text-to-speech/"
+"FoxyProxy :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/2464"
+"Google Calendar Day Fader - Userscripts.org","http://userscripts.org/scripts/show/35408"
+"De-ad Facebook - Userscripts.org","http://userscripts.org/scripts/show/34483"
+"Facebook - View All Photos Userscripts.org","http://userscripts.org/scripts/show/11218"
+"Facebook All Images Userscripts.org","http://userscripts.org/scripts/show/9129"
+"Facebook Fixer (& Show Album images big in one page) - Userscripts.org","http://userscripts.org/scripts/show/8861"
+"Featured Greasemonkey User Script: Add Google Calendar and Reader to Your Gmail","http://lifehacker.com/5066544/add-google-calendar-and-reader-to-your-gmail"
+"Featured Greasemonkey User Script: Mark Until Current As Read in Google Reader","http://lifehacker.com/5066533/mark-until-current-as-read-in-google-reader"
+"Labs/Ubiquity - MozillaWiki","https://wiki.mozilla.org/Labs/Ubiquity"
+"Download of the Day: PageAddict (Firefox)","http://lifehacker.com/software/firefox/download-of-the-day-pageaddict-firefox-212958.php"
+"Form Saver :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/1490"
+"pageaddict :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/3685"
+"Open link in... Version History :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addons/versions/379"
+"Cache Status :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/1881"
+"Open Image In New Tab :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/2248"
+"removetabs :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/4227"
+"CopyAllURLs :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/934"
+"Closy :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/1849"
+
+"CopyAllURLs :: Firefox Add-ons","https://addons.mozilla.org/en-US/firefox/addon/934"
+"Featured Firefox Extension: WebChunks Puts Dynamic Information from Any Web Site in Your Toolbar","http://lifehacker.com/5046925/webchunks-puts-dynamic-information-from-any-web-site-in-your-toolbar"
+"Featured Firefox Extension: Tabs Open Relative Puts New Tabs Next to Your Current Tab","http://lifehacker.com/5046795/tabs-open-relative-puts-new-tabs-next-to-your-current-tab"
+"Yahoo Search","https://addons.mozilla.org/en-US/firefox/addon/4616"
+"Wikipedia Search","https://addons.mozilla.org/en-US/firefox/addon/4614"
+"FlickR","https://addons.mozilla.org/en-US/firefox/addon/4602"
+"Del.Icio.Us","https://addons.mozilla.org/en-US/firefox/addon/4599"
+"Cache Status 0.7.3 (Clears RAM)","https://addons.mozilla.org/en-US/firefox/addon/1881"
+"NoScript","http://www.ghacks.net/2008/08/12/yesscript-is-noscripts-antagonist/"
+"Time Tracker","https://addons.mozilla.org/en-US/firefox/addons/versions/1887#version-1.2.4"
+
+
+==== Greasemonkey ====
+"Textarea Backup - Userscripts.org","http://userscripts.org/scripts/show/7671"
+"Google Reader Filter","http://userscripts.org/scripts/show/23671"
+"Apple Trailer Download - Userscripts.org","http://userscripts.org/scripts/show/2484"
+"Featured User Style: Google Reader Absolutely Compact Gets More On-Screen","http://lifehacker.com/5103818/google-reader-absolutely-compact-gets-more-on+screen"
+
+=== gcalcli ===
+ gcalcli list	
+ gcalcli --help
+ gcalcli agenda
+
+
+=== gedit ===
+Move line up
+ alt-up
+=== GMail filters and queries ===
+
+from:(reminders@email.manilla.com) OR from:(adwords-noreply@google.com) OR from:(manilla@email.manilla.com) OR from:(appointment@sunitabajajdds.com) OR (to:shamaji AND subject:(birthday OR welcome OR notifications)) OR from:(news@linkedin.com) OR from:(noreply@youtube.com) OR itpio OR ((sipa OR from:privacy-noreply) AND -meetup) OR (to:(soccer@parc.com)) OR ("Indian IT Professionals Network" OR from:info.gitpro@gmail.com OR from:itpio) OR  from:(location-noreply@google.com) OR (from:(facebookmail.com) AND subject:(birthday OR birthdays)) OR (from:(marketplace-messages@amazon.com) AND subject:("rate your transaction")) OR (((to:shamaji.rohidekar@gmail.com OR to:chimpu95@gmail.com) AND from:facebook)) OR  from:(btwmerchandise@hotmail.com) OR (from:Manilla AND subject:"needs attention" ) OR from:("PWTorch.com VIP Forum") OR (from:("amazon marketplace") AND subject:("will you rate")) OR (from:Facebook AND subject:("photo tag")) OR from:("google+ team") OR "your credit score on Mint is out of date" OR subject:("Tell us what you think")
+
+
+
+
+(from:scu or to:scu) -from:"sridhar sarnobat" -label:2---SCU---mass -label:2---SCU---specific -label:2---SCU---not-interested -label:SCU---specific---system-generated -label:SCU---mass---system-generated -label:LinkedIn-Group-Digests -label:SCU---specific---system-generated -label:SCU-forwarded
+
+
+
+Matches: from:(scu.edu -sridhar) to:(scu.edu) subject:(-"from the desk of" -"all course students")
+Do this: Skip Inbox, Apply label "2 - SCU - not interested"	edit     delete
+	Matches: from:(-"sridhar sarnobat") to:(ss401533+scu) subject:(-notification -refund -reminder -evaluation) from:(scu.edu) -"All course"
+Do this: Skip Inbox, Apply label "2 - SCU - not interested"
+
+
+
+
+==== Urls ====
+* Learnability: http://en.wikipedia.org/wiki/Learnability
+=== Godaddy.com dns pointing ===
+Both of the following steps:
+
+* Web Host
+** Domains
+** Add domain
+
+* Domain manager
+** Subdomain
+
+
+
+=== Google App Engine ===
+/opt/local/share/java/appengine-java-sdk/bin/appcfg.sh update /opt/local/share/java/appengine-java-sdk/demos/guestbook/war
+mvn gae:run
+
+=== Groovy ===
+ls ~/.groovy/lib/commons-lang-2.6.jar
+groovysh
+import   org.apache.commons.lang.StringUtils
+StringUtils.capitalize("foobar")
+
+org.apache.commons.lang.StringUtils.capitalize("foobar")
+
+
+
+=== GWT Compiler generate source ===
+-gen path/to/output/folder
+
+=== Gwt Grails ===
+ sudo grails create-app g3wt && cd g3wt && sudo grails install-plugin gwt && sudo grails create-gwt-module g3wt.Application && sudo grails create-gwt-page main/index.gsp g3wt.Application
+
+Grails home
+ /opt/local/share/java/grails
+ GWT_HOME=/Users/sarnobat/Windows/usb/Professional/GWT/gwt-2.4.0
+
+
+
+
+
+=== Javascript (command line) ===
+ jsc  -e "print('hello world')"
+
+=== javascript Hsbc for statements - failed ===
+document.getElementsByName('EStatementsAccountStatement1')[0].submit()
+document.getElementsByTagName('a')[40].onclick()
+javascript:createURL('/1/2/3/personal/online-services/personal-internet-banking/estatements/estatement-pdf?isUrlRedirect=yes&urlRedirectCommand=cmd_EStatementDisplayPDFOnly&AccountNumber=3', document.EStatementsAccountStatement3)
+
+
+=== language ownership ===
+Java - Sun/Oracle
+Adobe - Actionscript/Flex/Flash/Air
+Apple - 
+svg
+
+
+
+=== Library ===
+Economics of Strategy
+  photocopy section on cost vs quality (disruptive technologies?) mp3 vs CD
+
+=== Linux command line ===
+You can consider command line options as input fields like on web forms and windows dialogs (e.g. file search dialog)
+
+=== macports update ===
+ sudo port -v selfupdate
+
+=== mediawiki troubleshooting ===
+error:
+ 8: attempt to write a readonly database
+cause:
+ jungledisk conflicts
+solution:
+ sudo chown _www /Users/sarnobat/Windows/usb/WebServer/sqllitedata/my_wiki.sqlite 
+
+
+
+=== mediawiki upgrade steps ===
+undocumented - remove LocalSettings.php from config dir so a new one can be generated
+
+=== MS Access ===
+Article DB - Rename import tables as src and destination
+Add separate people memos for employment, geography, education
+Add house columns
+  Close to school
+  Good size lot
+  low-end price
+Link address book to MS Access
+Variables?
+OnFormat
+Lookup Wizard
+
+
+
+=== Netgear WAN connectivity troubleshooting ===
+It seems like updating the firmware fixed the problem (from 1.0.66 to 1.0.88)
+Before that I tried auto setup which alone did nothing
+
+
+
+=== Oracle ===
+VO
+EO
+JBO
+=== Perl CPAN ===
+Installing a package
+ install HTML::Template 
+
+=== personal Technology stack ====
+Chinese person from Ajax course
+-------------------------------------
+You can do everything from javascript + java.
+
+=== Ports to be open for SMB ===
+You can get list of ports from file called /etc/services. For your ease of use here are ports you need to open for two-way samba communication with Windows and Linux desktop systems.
+
+netbios-ns - 137/tcp # NETBIOS Name Service
+netbios-dgm - 138/tcp # NETBIOS Datagram Service
+netbios-ssn - 139/tcp # NETBIOS session service
+microsoft-ds - 445/tcp # if you are using Active Directory
+
+<!-- http://www.cyberciti.biz/faq/what-ports-need-to-be-open-for-samba-to-communicate-with-other-windowslinux-systems/ -->
+
+=== Router ===
+
+=== Ruby ===
+gem environment
+ruby -r rubygems -e "p Gem.path"
+/Users/sridharsarnobat/.gem/ruby/1.8/doc/gedcom-0.9.0/rdoc
+
+=== Ruby on Rails ===
+rails new blog
+
+routes.rb
+rails g model Post name:string title:string content:text
+
+Create operation
+  /Users/sridharsarnobat/usb/Professional/rails/blog/db/migrate/20100711214111_create_posts.rb
+
+Keeps DB and java in sync?
+  /Users/sridharsarnobat/usb/Professional/rails/blog/db/seeds.rb
+
+irb
+  useful for experimenting
+
+rails db
+
+show databases
+
+rake db:migrate
+
+rake automates a lot of developer tasks (type rake -T at the command line to see all tasks)
+  - eg creating your database
+  
+  
+rails console
+  -launches irb for your dev environment
+  
+  
+yaml method dumps all class content - I think
+
+validates : titles, :presence => true
+
+p = Post.new
+p.save
+
+
+
+ rails g controller posts
+ rails g controller home index
+ 
+ # HTTP_VERB + URL = Rails method
+ # e.g. POST /posts/2133243431 = create blog entry 
+#           GET    /posts(.:format)          {:action=>"index", :controller=>"posts"}
+#     posts POST   /posts(.:format)          {:action=>"create", :controller=>"posts"}
+#  new_post GET    /posts/new(.:format)      {:action=>"new", :controller=>"posts"}
+#           GET    /posts/:id(.:format)      {:action=>"show", :controller=>"posts"}
+#           PUT    /posts/:id(.:format)      {:action=>"update", :controller=>"posts"}
+#      post DELETE /posts/:id(.:format)      {:action=>"destroy", :controller=>"posts"}
+# edit_post GET    /posts/:id/edit(.:format) {:action=>"edit", :controller=>"posts"}
+# home_index GET    /home/index               {:controller=>"home", :action=>"index"}
+#      root        /                         {:controller=>"home", :action=>"index"}
+      
+ rake routes
+ 
+ resources :posts
+ glib909@gmail.com
+ john.ac.27@gmail.com
+ 
+<%= link_to "My Blog", posts_path %>
+
+
+=== Scandisk log file location ===
+ look in Event Viewer (rightclick on My Computer and choose Manage. Click on Application), the information will be there - Source Winlogon, Event ID 1001. It will look something like this:
+
+==== Javascript - closure ====
+A closure is formed when one of those inner functions is made accessible outside of the function in which it was contained, so that it may be executed after the outer function has returned. At which point it still has access to the local variables, parameters and inner function declarations of its outer function. 
+
+=== Scandisk without restarting windows ===
+ chkdsk /R
+
+
+
+=== Settings to be changed ===
+Firefox - Change History Duration from default of 20 days
+Firefox - copy over old profile C:\Documents and Settings\Sridhar\Application Data\Mozilla\Firefox\Profiles\dgtcimhx.default
+Flashget - double click on torrent files to resume the jobs (it shouldn't lose the existing data)
+MS Access - Add 'Remove Filter/Sort' Button
+MS Access - remove security warning
+TWeak XP - Classic Windows Search
+TWeak XP = Remove 'shortcut to' Prefix
+
+==== Windows XP Registry ====
+
+=== slocate ===
+Update index
+
+
+=== Svn personal file server ===
+
+
+https://67.161.71.24:8443/svn/mac-sync/
+admin/usual
+
+==== Old ====
+https://24.130.108.165:8443/svn/mac-sync/
+https://192.168.1.41:8443/svn/mac-sync/
+https://192.168.1.4:8443/svn/mac-sync/
+
+
+=== Technology Language ownership ===
+Adobe - SVG
+
+=== Useful key bindings ===
+Cmd+I - enable Insomnia
+
+==== TCSH/shell/command line productivity tips ====
+use 
+* implicitcd
+* cdpath
+* dirstack
+* tab completion
+** complete.tcsh
+* repeat
+
+=== Using an archetype  ===
+
+git clone https://github.com/cometd/cometd.git
+cd  /Users/sarnobat/trash/cometd
+git checkout 2.5.0
+cd /Users/sarnobat/trash/cometd/cometd-archetypes/spring-jquery-jetty7
+mvn install
+mvn install:install-file -DgroupId=org.apache.maven.archetypes -DartifactId=cometd-archetype-spring-jquery-jetty7 -Dversion=2.5.0  -Dpackaging=jar -Dfile=/Users/sarnobat/trash/cometd/cometd-archetypes/spring-jquery-jetty7/target/cometd-archetype-spring-jquery-jetty7-2.5.0.jar
+cd /Users/sarnobat/Desktop/mac-sync/src/java/tutorials
+mvn archetype:generate -DgroupId=com.rohidekar.app -DartifactId=springJquery -Dversion=1.0 -DarchetypeArtifactId=cometd-archetype-spring-jquery-jetty7 -DarchetypeVersion=2.5.0
+cd springJquery
+mvn compile && mvn jetty:run
+
+needed to fix compile errors, still page not loading
+
+=== Vim cscope ===
+add to cheatsheet
+CTRL-\
+
+    "
+    "   's'   symbol: find all references to the token under cursor
+    "   'g'   global: find global definition(s) of the token under cursor
+    "   'c'   calls:  find all calls to the function name under cursor
+    "   't'   text:   find all instances of the text under cursor
+    "   'e'   egrep:  egrep search for the word under cursor
+    "   'f'   file:   open the filename under cursor
+    "   'i'   includes: find files that include the filename under cursor
+    "   'd'   called: find functions that function under cursor calls
+    "
+
+
+
+=== Web ===
+
+==== GMail ====
+Search
+ /
+Undo
+ z
+
+==== Google Docs ====
+search
+ / 
+new text document
+ Shift-t
+
+==== Google Reader ====
+next
+ n
+previous
+ p
+open
+ o
+star
+ s
+tag
+ t
+mark read/unread
+ m
+
+=== What is Ajax? ===
+- it's the web equivalent of '&' (making a background job) from the command line
+
+
+=== Windows Registry changes you could make using VBScript or INF (like a UNIX Dotfile) ===
+
+=== XQuery ===
+
+
+=== zsh ===
+* Key bindings
+* Tab completion
+
