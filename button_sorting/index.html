@@ -113,33 +113,6 @@ function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
 	
 }
 
-function getCategoriesAtLevel(rootTree, maxLevel) {
-	var categories = [];
-	for (var i = 0; i < rootTree.length; i++) {
-		var categoriesBelow = getCategoriesAtLevel2(rootTree[i], 1, maxLevel);
-		if (categoriesBelow !=null) {
-			jQuery.merge(categories, categoriesBelow);
-		} 
-	}
-	return categories;
-}
-
-function getCategoriesAtLevel2(subTree, currentLevel, maxLevel) {
-	
-	if (currentLevel > maxLevel) {
-		return;
-	}
-	var categories = [ subTree.heading ];
-	
-	for (var i = 0; i < subTree.subsections.length; i++) {
-		var categoriesBelow = getCategoriesAtLevel2(subTree.subsections[i], currentLevel+1, maxLevel);
-		if (categoriesBelow !=null) {
-			categories = jQuery.merge(categories, categoriesBelow);
-		}
-	}
-	return categories;
-}
-
 function dump(result)
 {
 	var text = "";
