@@ -137,43 +137,86 @@ public class ButtonSorterServer {
 
 		}
 
+		// TODO: why do we need the top level array?
 		private JSONObject removeObject(final String iIdOfObjectToRemove,
 				JSONArray topLevelArray, JSONObject snippetOriginalParent) {
-			System.out.println("snippetOriginalParent - " + snippetOriginalParent.getString("id"));
+			JSONObject rDesiredSnippet = null;
+			if (snippetOriginalParent == null) {
+				throw new IllegalArgumentException();
+			}
+			JSONArray subsectionsOfParent = snippetOriginalParent
+					.getJSONArray("subsections");
+			for (int i = 0; i < subsectionsOfParent.length(); i++) {
+				JSONObject aSubsection = subsectionsOfParent.getJSONObject(i);
+				if (aSubsection.getString("id")
+						.equals(iIdOfObjectToRemove)) {
+					rDesiredSnippet = (JSONObject) subsectionsOfParent.remove(i);
+				}
+			}
+			if (rDesiredSnippet == null) {
+				throw new RuntimeException("Did not find snippet in parent");
+			}
+			return rDesiredSnippet;
+		}
+
+		@Deprecated
+		private JSONObject notWorking(final String iIdOfObjectToRemove,
+				JSONArray topLevelArray, JSONObject snippetOriginalParent) {
+			System.out.println("snippetOriginalParent - "
+					+ snippetOriginalParent.getString("id"));
 			System.out.println("IdOfObjectToRemove - " + iIdOfObjectToRemove);
 			System.out.println();
-			JSONObject snippet = null;
+			JSONObject rDesiredSnippet = null;
 			JSONArray subsectionsArray = (JSONArray) snippetOriginalParent
 					.get("subsections");
 			for (int i = 0; i < topLevelArray.length(); i++) {
+				if (rDesiredSnippet != null) {
+					throw new RuntimeException(
+							"Bug. We already found the snippet. We don't want to keep searching");
+				}
 				if (topLevelArray.get(i) != null) {
 					for (int j = 0; j < subsectionsArray.length(); j++) {
+						if (rDesiredSnippet != null) {
+							throw new RuntimeException(
+									"Bug. We already found the snippet. We don't want to keep searching");
+						}
 						JSONObject subtreeRootJsonObject = subsectionsArray
 								.getJSONObject(j);
-						JSONObject desiredSnippet = findSnippetById(
+						JSONObject aParentSnippet = findSnippetById(
 								iIdOfObjectToRemove, subtreeRootJsonObject);
-						if (desiredSnippet != null) {
-							snippet = desiredSnippet;
-							JSONArray a = snippetOriginalParent.getJSONArray("subsections");
-							boolean found = false;
-							for (int k = 0; i < a.length();i++) {
-								System.out.println(a.getJSONObject(k).getString("id"));
-								if (iIdOfObjectToRemove.equals(a.getJSONObject(k).getString("id"))){
-									a.remove(k);
-									found = true;
+						if (aParentSnippet != null) {
+
+							rDesiredSnippet = aParentSnippet;
+							JSONArray allParentSubsections = snippetOriginalParent
+									.getJSONArray("subsections");
+							boolean foundParent = false;
+							for (int k = 0; i < allParentSubsections.length(); i++) {
+								System.out.println(allParentSubsections
+										.getJSONObject(k).getString("id"));
+								if (iIdOfObjectToRemove
+										.equals(allParentSubsections
+												.getJSONObject(k).getString(
+														"id"))) {
+									allParentSubsections.remove(k);
+									foundParent = true;
+									break;
 								}
 							}
-							if (!found){
-								throw new RuntimeException("Not removed:" + iIdOfObjectToRemove);
+							if (foundParent) {
+								break;
+							} else {
+								throw new RuntimeException(
+										"Found parent but did not remove snippet.");
 							}
-							break;
+						} else {
+							throw new RuntimeException(
+									"Parent Snippet not found");
 						}
 					}
 					break;
 				}
 			}
-
-			return snippet;
+			return rDesiredSnippet;
 		}
 
 		private JSONObject findParentOfSnippetById(String iIdOfObjectToMove,
@@ -194,19 +237,22 @@ public class ButtonSorterServer {
 				JSONObject jsonObject) {
 			JSONArray a = jsonObject.getJSONArray("subsections");
 			for (int i = 0; i < a.length(); i++) {
-				if (iIdOfObjectToMove.equals(a.getJSONObject(i).getString("id"))){
+				if (iIdOfObjectToMove
+						.equals(a.getJSONObject(i).getString("id"))) {
 					return jsonObject;
 				} else {
-					JSONObject parentCandidate = findParentOfSnippetById(iIdOfObjectToMove, a.getJSONObject(i));
+					JSONObject parentCandidate = findParentOfSnippetById(
+							iIdOfObjectToMove, a.getJSONObject(i));
 					if (parentCandidate != null) {
 						return parentCandidate;
 					}
 				}
-//				JSONObject jsonObject2 = a.getJSONObject(i);
-//				JSONObject o = findSnippetById(iIdOfObjectToMove, jsonObject2);
-//				if (o != null) {
-//					return jsonObject2;
-//				}
+				// JSONObject jsonObject2 = a.getJSONObject(i);
+				// JSONObject o = findSnippetById(iIdOfObjectToMove,
+				// jsonObject2);
+				// if (o != null) {
+				// return jsonObject2;
+				// }
 			}
 			return null;
 		}
@@ -303,7 +349,8 @@ public class ButtonSorterServer {
 		}
 		ret.put("heading", heading);
 		// first get free text
-		String startingPattern = "^" + StringUtils.repeat('=', levelBelow) + "\\s.*";
+		String equals = StringUtils.repeat('=', levelBelow);
+		String startingPattern = "^" + equals + "\\s.*";
 		StringBuffer freeTextSb = new StringBuffer();
 		JSONArray subsections = new JSONArray();
 		for (; start < subList.size(); start++) {
