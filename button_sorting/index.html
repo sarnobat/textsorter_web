@@ -22,8 +22,6 @@ jQuery(document).ready(function(){
 		url = decodeURIComponent(window.location.search.replace('?filePath=',''));
 	}
 	loadFile(url);
-	convert();
-	regenerateToc()
 	
 });
 
@@ -43,8 +41,6 @@ function loadFile(docUrl){
 			jQuery("#myTextArea").val("");
 			jQuery("#myTextArea").val(result['entireFile']);
 			loadedTextLength = jQuery("#myTextArea").val().length;
-			convert();
-			regenerateToc();
 		})
 		.fail(function() {
 			alert('Failed. Is the server running?');
@@ -70,8 +66,6 @@ function persistChanges() {
          }).done(function() {
 			console.debug("successfully written");
 			loadedTextLength = latestTextLength;
-         	convert();
-			regenerateToc()
          }).fail(function(){alert("fail")});
 }
 
