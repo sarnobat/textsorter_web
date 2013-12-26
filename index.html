@@ -9,10 +9,20 @@
 jQuery.noConflict();
 //jQuery stuff
 jQuery(document).ready(function(){
-	convert();
-	regenerateToc()
+
+//	jQuery.getJSON("http://localhost:9099/helloworld/json?filePath=foobar")
+
+   jQuery.ajax({          
+            type:  'POST',
+            url:   'http://localhost:9099/helloworld/persist',
+//            dataType: 'json',      
+			 data: { name: "John", location: "Boston" }
+         }).done(function() {alert("hi");}).fail(function(){alert("fail")});
+
+//	convert();
+//	regenerateToc()
 	
-	loadFile()
+//	loadFile()
 });
 
 function clearTextArea() {
@@ -35,7 +45,15 @@ function loadFile(){
 }
 
 function persistChanges() {
-	jQuery.post("http://localhost:9099/helloworld/persist?filePath=" 
+
+   jQuery.ajax({          
+            type:  'POST',
+            url:   'http://localhost:9099/helloworld/persist',
+//            dataType: 'json',      
+			 data: { name: "John", location: "Boston" }
+         });
+  
+	/*jQuery.post("http://localhost:9099/helloworld/persist?filePath=" 
 			+ encodeURIComponent(jQuery("#dir option:selected").val()), { "foo" : "bar" })
 		.done(function(result) {
 			convert();
@@ -43,7 +61,7 @@ function persistChanges() {
 		})
 		.fail(function() {
 			alert('Not persisted. Your changes will be lost on refresh');
-		});
+		});*/
 }
 
 </script>

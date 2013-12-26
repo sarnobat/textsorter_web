@@ -27,6 +27,7 @@ public class Server {
 		@Produces("application/json")
 		public Response json(@QueryParam("filePath") String iFilePath) throws JSONException,
 				IOException {
+				System.out.println("readFile() - begin");
 			JSONObject json = new JSONObject();
 			File f = new File(iFilePath);
 			if (!f.exists()) {
@@ -43,10 +44,14 @@ public class Server {
 		@Path("persist")
 		@Consumes("application/json")
 		@Produces("application/json")
-		public Response persist(final String bar) throws JSONException,
+		public Response persist(
+		final String bar
+		//, @QueryParam("filePath") String iFilePath
+		) throws JSONException,
 				IOException {
+			//System.out.println(iFilePath);
 			System.out.println(bar);
-		
+		//FileUtils.write
 			return Response.ok().header("Access-Control-Allow-Origin", "*").entity("")
 					.type("application/json").build();
 		}
