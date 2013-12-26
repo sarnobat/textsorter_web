@@ -50,7 +50,7 @@ public class Server {
 			System.out.println("persist() - begin");
 			System.out.println(body);
 			// Save the changes to the file
-			{
+			save: {
 				List<NameValuePair> params = URLEncodedUtils.parse(new URI("http://www.fake.com/?"
 						+ body), "UTF-8");
 				Map<String, String> m = new HashMap();
