@@ -55,11 +55,12 @@ public class Server {
 						+ body), "UTF-8");
 				Map<String, String> m = new HashMap();
 				for (NameValuePair param : params) {
-					System.out.println(param.getName() + " : "
-							+ URLDecoder.decode(param.getValue(), "UTF-8"));
+//					System.out.println(param.getName() + " : "
+//							+ URLDecoder.decode(param.getValue(), "UTF-8"));
 					m.put(param.getName(), URLDecoder.decode(param.getValue(), "UTF-8"));
 				}
 				FileUtils.write(new File(m.get("filePath")), m.get("newFileContents"));
+				System.out.println("persist() - write successful");
 			}
 			return Response.ok().header("Access-Control-Allow-Origin", "*")
 					.entity(new JSONObject().toString()).type("application/json").build();
