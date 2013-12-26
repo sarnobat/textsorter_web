@@ -82,7 +82,7 @@ public class Server {
 		HttpServer server = JdkHttpServerFactory.createHttpServer(
 				new URI("http://localhost:9099/"), new ResourceConfig(HelloWorldResource.class));
 	}
-	
+
 	static class Defragmenter {
 
 		public static final String PUBLISHING = "publishing";
@@ -95,10 +95,11 @@ public class Server {
 			List<String> lines = TextSorterControllerUtils.readFile(fileToOrganizePath);
 			MyTreeNode treeRootNode = TreeCreator.createTreeFromLines(lines);
 			MyTreeNode.validateTotalNodeCount(treeRootNode);
-			MyTreeNode.printTreeToStringBuffer(treeRootNode, fileToOrganizePath, Utils.countNonHeadingLines(lines), new StringBuffer());
+			MyTreeNode.printTreeToStringBuffer(treeRootNode, fileToOrganizePath,
+					Utils.countNonHeadingLines(lines), new StringBuffer());
 			MyTreeNode.resetValidationStats();
 		}
-		
+
 		static class Utils {
 			public static int determineHeadingLevel(String headingLine) {
 				int headingLevel = 0;
@@ -127,7 +128,7 @@ public class Server {
 				return fragmentedFilePath.replace(".mwk", "-sorted.mwk");
 			}
 		}
-		
+
 		static class TextSorterControllerUtils {
 			public static List<String> readFile(String inputFilePath) {
 				List<String> theLines = null;
@@ -139,12 +140,12 @@ public class Server {
 				}
 				// To ensure we don't lose text before the first heading
 				if (!theLines.get(0).startsWith("=")) {
-				  theLines.add(0,"= =");
+					theLines.add(0, "= =");
 				}
 				return new CopyOnWriteArrayList<String>(theLines);
 			}
 		}
-		
+
 		static class TreeCreator {
 			@SuppressWarnings("unchecked")
 			public static MyTreeNode createTreeFromLines(List<String> lines) {
@@ -154,7 +155,8 @@ public class Server {
 					// Find the parent node
 					MyTreeNode parentNode = null;
 					{
-						// rewind up the path until we find a snippet 1 higher than the
+						// rewind up the path until we find a snippet 1 higher
+						// than the
 						// current snippet
 						MyTreeNode highestNodeInExistingTree = popStackToHighest((Stack<MyTreeNode>) snippetTreePath
 								.clone());
@@ -166,7 +168,8 @@ public class Server {
 							// push a virtual node
 							int parentHeadingLevel = snippet.getLevelNumber() - 1;
 							parentNode = VirtualNodeCreator.createVirtualNode(parentHeadingLevel,
-									(Stack<MyTreeNode>) snippetTreePath.clone(), highestNodeInExistingTree);
+									(Stack<MyTreeNode>) snippetTreePath.clone(),
+									highestNodeInExistingTree);
 							snippetTreePath.push(parentNode);
 						}
 					}
@@ -201,8 +204,8 @@ public class Server {
 					++firstHeadingLine;
 				}
 				int nextSnippetStart = 0;
-				for (int start = firstHeadingLine; nextSnippetStart < lines.size() - 1; start = Math.max(
-						start + 1, nextSnippetStart)) {
+				for (int start = firstHeadingLine; nextSnippetStart < lines.size() - 1; start = Math
+						.max(start + 1, nextSnippetStart)) {
 					nextSnippetStart = findNextHeadingLineAfter(start, lines);
 					if (nextSnippetStart < lines.size() - 1) {
 						validate3(lines, nextSnippetStart, start);
@@ -255,10 +258,12 @@ public class Server {
 			private static void validate(final int start, List<String> lines, int nextSnippetStart,
 					String nextHeadingLine) {
 				if (!isHeadingLine(nextHeadingLine) && !isEndOfFile(nextSnippetStart, lines)) {
-					throw new RuntimeException("Developer error: [" + start + "] = " + nextHeadingLine);
+					throw new RuntimeException("Developer error: [" + start + "] = "
+							+ nextHeadingLine);
 				}
 				if (nextSnippetStart <= start) {
-					throw new RuntimeException("Developer error: [" + start + ", " + nextSnippetStart + "]");
+					throw new RuntimeException("Developer error: [" + start + ", "
+							+ nextSnippetStart + "]");
 				}
 				if (nextSnippetStart < lines.size() - 1) {
 					if (!lines.get(nextSnippetStart).matches("^=+.*=+")) {
@@ -294,7 +299,8 @@ public class Server {
 					} else if (highestNodeInExistingTree.level() < iHeadingLevel) {
 						parentNode = findFosterParent(iHeadingLevel, snippetTreePath);
 					} else if (highestNodeInExistingTree.level() > iHeadingLevel) {
-						// attach the highest node as a child to the new virtual node
+						// attach the highest node as a child to the new virtual
+						// node
 						// (is it necessary to create a virtual node then?)
 						attachExistingTreeToNewNode = true;
 					}
@@ -306,7 +312,8 @@ public class Server {
 				return n;
 			}
 
-			private static void attachExistingTreeToNode(MyTreeNode highestNodeInExistingTree, MyTreeNode n) {
+			private static void attachExistingTreeToNode(MyTreeNode highestNodeInExistingTree,
+					MyTreeNode n) {
 				if (highestNodeInExistingTree.level() + 1 != n.level()) {
 					System.err.println("Ideally this should never happen");
 				}
@@ -331,7 +338,7 @@ public class Server {
 				return snippetTreePathClone.peek();
 			}
 		}
-		
+
 		static class Snippet implements Comparable {
 			final int levelNumber;
 			final List<String> snippetLines;
@@ -345,7 +352,8 @@ public class Server {
 
 			public Snippet(int start, int nextSnippetStart, List<String> allFileLines) {
 				this(getSnippetLines(start, nextSnippetStart, allFileLines), getHeadingLine(start,
-						allFileLines), Utils.determineHeadingLevel(getHeadingLine(start, allFileLines)));
+						allFileLines), Utils.determineHeadingLevel(getHeadingLine(start,
+						allFileLines)));
 			}
 
 			public static String getHeadingLine(int start, List<String> allFileLines) {
@@ -355,7 +363,8 @@ public class Server {
 
 			private static void validateIsHeadingLine(String headingLine) {
 				if (!headingLine.matches("^=+.*=+")) {
-					throw new RuntimeException("Developer error: Not a heading line: " + headingLine);
+					throw new RuntimeException("Developer error: Not a heading line: "
+							+ headingLine);
 				}
 			}
 
@@ -370,7 +379,8 @@ public class Server {
 						Math.max(start + 1, nextSnippetStart)));
 			}
 
-			private static void validateSnippetStartAndNextAreNotSame(int start, int nextSnippetStart) {
+			private static void validateSnippetStartAndNextAreNotSame(int start,
+					int nextSnippetStart) {
 				if (start == nextSnippetStart) {
 					throw new RuntimeException("end should be the start of the next");
 				}
@@ -398,10 +408,12 @@ public class Server {
 				return sb;
 			}
 
-//			@Override
+			// @Override
 			public int compareTo(Object o) {
 				Snippet that = (Snippet) o;
-				return this.headingLine.toLowerCase().compareTo(that.headingLine.toLowerCase());
+				String thisHeading = this.headingLine.toLowerCase();
+				String thatHeading = that.headingLine.toLowerCase();
+				return thisHeading.compareTo(thatHeading);
 			}
 
 			@Override
@@ -416,7 +428,7 @@ public class Server {
 				return thisText.equals(thatText);
 			}
 		}
-		
+
 		static class MyTreeNode implements Comparable {
 			final ListMultimap<String, MyTreeNode> childNodes = LinkedListMultimap.create();
 			final MyTreeNode parentNode;
@@ -434,8 +446,10 @@ public class Server {
 				System.out.println(currentSnippet.getHeadingLine());
 			}
 
-			// Only necessary for virtual nodes. Otherwise there's no need to call this.
-			// Child-parent relationships should be established in the constructor
+			// Only necessary for virtual nodes. Otherwise there's no need to
+			// call this.
+			// Child-parent relationships should be established in the
+			// constructor
 			// itself
 			void addChild(MyTreeNode currentNode) {
 				validateIsNotParentOf(currentNode);
@@ -461,8 +475,8 @@ public class Server {
 				int sizeAfter = childNodes.get(currentNode.getSnippetHeadingLine()).size();
 				if (sizeBefore == sizeAfter) {
 					System.out.println("####################################");
-					System.out.println(childNodes.get(currentNode.getSnippetHeadingLine()).iterator()
-							.next().getSnippetText());
+					System.out.println(childNodes.get(currentNode.getSnippetHeadingLine())
+							.iterator().next().getSnippetText());
 					System.out.println("##################");
 					System.out.println(currentNode.getSnippetText());
 					throw new RuntimeException("Developer Error");
@@ -491,13 +505,25 @@ public class Server {
 					l.addAll(nodesWithSameHeading);
 				}
 				if (!preserveOriginalOrder(this)) {
+					printSortedHeadings(l);
 					Collections.sort(l);
 				}
 				return ImmutableList.copyOf(l);
 			}
 
+			public void printSortedHeadings(List<MyTreeNode> l) {
+				if (l.size() > 1) {
+					System.out.println("SORTING: -------------- begin -----------------");
+					for (MyTreeNode n : l) {
+						System.out.println("SORTING: " + n.getHeadingText());
+					}
+					System.out.println("SORTING: ---------------- end ---------------");
+				}
+			}
+
 			private static boolean preserveOriginalOrder(MyTreeNode myTreeNode) {
-				boolean preserveOriginalOrder = myTreeNode.getSnippetHeadingLine().contains("do not sort")
+				boolean preserveOriginalOrder = myTreeNode.getSnippetHeadingLine().contains(
+						"do not sort")
 						|| myTreeNode.getSnippetHeadingLine().contains(Defragmenter.PUBLISHING);
 				if (preserveOriginalOrder) {
 					return true;
@@ -518,12 +544,13 @@ public class Server {
 			// return parentNode;
 			// }
 
-			//@Override
+			 //@Override
 			public int compareTo(Object other) {
 				MyTreeNode that = (MyTreeNode) other;
 				int ret = this.snippet.compareTo(that.snippet);
 				if (ret == 0) {
-					// throw new RuntimeException("snippets should never be equal");
+					// throw new
+					// RuntimeException("snippets should never be equal");
 				}
 				return ret;
 			}
@@ -602,12 +629,13 @@ public class Server {
 				try {
 					String outputPath = Utils.getDeragmentedFilePath(fileToOrganizePath);
 					FileUtils.write(new File(outputPath), sb.toString());
-					int after = Utils.countNonHeadingLines(TextSorterControllerUtils.readFile(outputPath));
+					int after = Utils.countNonHeadingLines(TextSorterControllerUtils
+							.readFile(outputPath));
 					if (nonHeadinglinesInOriginalFile > after) {
 						throw new RuntimeException("Lines lost");
 					} else {
-						System.out.println("Before, after: [" + nonHeadinglinesInOriginalFile + ", "
-								+ after + "]");
+						System.out.println("Before, after: [" + nonHeadinglinesInOriginalFile
+								+ ", " + after + "]");
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -625,7 +653,7 @@ public class Server {
 			public static void validateCount(MyTreeNode parentNode) {
 				if (MyTreeNode.countAllNodesInTree(parentNode) < MyTreeNode.totalNodeCount) {
 					throw new RuntimeException("Disconnected from parent: " + parentNode);
-				}		
+				}
 			}
 
 			public static void validateTotalNodeCount(MyTreeNode root) {
@@ -639,11 +667,9 @@ public class Server {
 			public static void resetValidationStats() {
 				totalNodeCount = 0;
 			}
-			
 
 		}
 
 	}
 
 }
-
