@@ -70,7 +70,6 @@ function printSnippet2(snippet, level, rootTree) {
 	text += "</table>";
 	jQuery.each(snippet.subsections, function(i, item) {
 		text += printSnippet2(item, level + 1, rootTree);
-		//text += "<br>";
 	});
 	return text;
 }
