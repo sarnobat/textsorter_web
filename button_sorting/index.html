@@ -51,22 +51,23 @@ function loadFile(docUrl){
 }
 
 function printTreeAsHtml(response) {
+	var level = 0;
 	jQuery("#snippets").val();
 	var tree = response.tree;	
 	var text = "";
 	for (var i = 0; i < tree.length; i++) {
 		var snippet = tree[i];
-		text += printSnippet2(snippet);		
+		text += printSnippet2(snippet, level + 1, tree);
 	}
 	jQuery("#snippets").append(text);
 }
 
-function printSnippet2(snippet) {
+function printSnippet2(snippet, level, rootTree) {
 	var text = ""; 
-	text += snippet.heading + "<br>";
-	text += snippet.freetext + "<br>";
+	text += snippet.heading + "(" + level+")<br>";
+	text += "<textarea cols=80 rows=3>" + snippet.freetext + "</textarea><br>";
 	jQuery.each(snippet.subsections, function(i, item) {
-		text += printSnippet2(item);
+		text += printSnippet2(item, level + 1, rootTree);
 		//text += "<br>";
 	});
 	return text;
