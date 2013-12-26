@@ -78,7 +78,7 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	var text = "";
 	var text = "<div id="+snippet.id+"><table><tr><td>"; 
 	text += snippet.heading + "(" + level+", "+snippet.id+", "+parentSnippet.heading+")<br>";
-	if (level > 2)
+	if (level > 2 && level < 4) // Level 4 is also best left alone
 	{
 		text += "<textarea cols=80 rows=5>" + snippet.freetext + "</textarea><br></td><td>";
 	
