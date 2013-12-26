@@ -52,7 +52,7 @@ public class Server {
 			if (!mwkFile.exists()) {
 				throw new RuntimeException();
 			}
-			JSONArray o = MwkReader.toJson(iFilePath);
+			JSONArray o = toJson(iFilePath);
 			mwkFileAsJson.put("tree", o);
 
 			return Response.ok().header("Access-Control-Allow-Origin", "*")
@@ -95,7 +95,7 @@ public class Server {
 				throws JSONException, IOException, URISyntaxException {
 
 			try {
-				JSONArray topLevelArray = MwkReader.toJson(iFilePath);
+				JSONArray topLevelArray = toJson(iFilePath);
 
 				JSONObject destination = findSnippetById(iIdOfLocationToMoveTo,
 						topLevelArray);
@@ -121,7 +121,7 @@ public class Server {
 				destination.getJSONArray("subsections").put(snippetToMove);
 
 				try {
-					String string = MwkReader.asString(topLevelArray)
+					String string = asString(topLevelArray)
 							.toString();
 					FileUtils.writeStringToFile(new File(iFilePath), string);
 				} catch (Exception e) {
@@ -221,15 +221,7 @@ public class Server {
 				new URI("http://localhost:9097/"), new ResourceConfig(
 						HelloWorldResource.class));
 	}
-
-}
-
-public class MwkReader {
-
-	private MwkReader() {
-
-	}
-
+	
 	public static JSONArray toJson(String iFilePath) throws JSONException,
 			IOException {
 		List<String> _lines;
@@ -352,4 +344,5 @@ public class MwkReader {
 		}
 		return sb;
 	}
+
 }
