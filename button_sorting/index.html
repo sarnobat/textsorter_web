@@ -6,16 +6,16 @@
 </script>
 
 <script>
-
+var jq = jQuery;
 var loadedTextLength;
 //no conflict jQuery
-jQuery.noConflict();
+jq.noConflict();
 //jQuery stuff
-jQuery(document).ready(function(){
+jq(document).ready(function(){
 
 	var url = "";
 	if (window.location.search.length == 0) {
-		url = jQuery("#dir").val();
+		url = jq("#dir").val();
 	} 
 	// Textbox
 	else {
@@ -26,14 +26,14 @@ jQuery(document).ready(function(){
 });
 
 function clearTextArea() {
-	jQuery("#snippets").text("");
+	jq("#snippets").text("");
 }
 
 function loadFile(docUrl){
 	var url = docUrl;
-	jQuery("#dir").val(url);
+	jq("#dir").val(url);
 	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url));
-	jQuery.getJSON("http://localhost:9097/helloworld/json?filePath=" 
+	jq.getJSON("http://localhost:9097/helloworld/json?filePath=" 
 			+ encodeURIComponent(url))
 		.done(function(result) {
 			printTreeAsHtml(result);			
@@ -45,7 +45,7 @@ function loadFile(docUrl){
 
 function printTreeAsHtml(response) {
 	var level = 0;
-	jQuery("#snippets").val();
+	jq("#snippets").val();
 	var tree = response.tree;	
 	tree.heading = "-root-"
 	var text = "";
@@ -69,7 +69,7 @@ function printTreeAsHtml(response) {
 		var snippet = tree[i];
 		text += printSnippet2(snippet, level + 1, tree, headings, tree);
 	}
-	jQuery("#snippets").append(headings + text);
+	jq("#snippets").append(headings + text);
 }
 
 function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
@@ -85,14 +85,14 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 			categories = headings[level-2];
 		}
 	
-		jQuery.each(categories, function(heading, id) {
+		jq.each(categories, function(heading, id) {
 			text += "<input type=button value='"+ heading +'\' onclick=\x22moveTo(\x27'+snippet.id+'\x27,\x27'+ id +'\x27)\x22><br>\n';
 		});
 	
 	}
 	text += "<br></td></tr>";
 	text += "</table>";
-	jQuery.each(snippet.subsections, function(i, item) {
+	jq.each(snippet.subsections, function(i, item) {
 		text += printSnippet2(item, level + 1, rootTree,headings, snippet);
 	});
 	text += "</div>";
@@ -117,12 +117,12 @@ function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
 function dump(result)
 {
 	var text = "";
-	jQuery.each(result['tree'], function(i, item) {
+	jq.each(result['tree'], function(i, item) {
 		text += printSnippet(item);
 	});
 	
-	jQuery("#myTextArea").val(text);
-	loadedTextLength = jQuery("#myTextArea").val().length;
+	jq("#myTextArea").val(text);
+	loadedTextLength = jq("#myTextArea").val().length;
 }
 
 // Deprecated
@@ -133,14 +133,14 @@ function printSnippet(jsonObject) {
 	
 	console.debug(jsonObject.heading);
 	console.debug(jsonObject.freetext);
-	jQuery.each(jsonObject.subsections, function(i, item) {
+	jq.each(jsonObject.subsections, function(i, item) {
 		ret += printSnippet(item);
 	});
 	return ret;
 }
 
 function persistChanges() {
-   var latestTextLength = jQuery("#myTextArea").val().length;
+   var latestTextLength = jq("#myTextArea").val().length;
    
    if (latestTextLength == loadedTextLength) {
 		console.debug('text has not changed length');
@@ -148,12 +148,12 @@ function persistChanges() {
    }
 
    
-   jQuery.ajax({          
+   jq.ajax({          
             type:  'POST',
             url:   'http://localhost:9097/helloworld/persist',
 			 data: { 
-			 	filePath: encodeURIComponent(jQuery("#dir option:selected").val()),
-			 	newFileContents : encodeURIComponent(jQuery("#myTextArea").val()),
+			 	filePath: encodeURIComponent(jq("#dir option:selected").val()),
+			 	newFileContents : encodeURIComponent(jq("#myTextArea").val()),
 			 }
          }).done(function() {
 			console.debug("successfully written");
@@ -163,17 +163,17 @@ function persistChanges() {
 
 function moveTo(idToBeMoved, idOfTarget) {
 	//alert(idToBeMoved + '::' + idOfTarget);
-	var filePath = jQuery("#dir").val();
+	var filePath = jq("#dir").val();
 
-   jQuery.ajax({          
+   jq.ajax({          
 		type:  'POST',
 		url:   'http://localhost:9097/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
 		 data: { 
-			//filePath: encodeURIComponent(jQuery("#dir option:selected").val()),
-			//newFileContents : encodeURIComponent(jQuery("#myTextArea").val()),
+			//filePath: encodeURIComponent(jq("#dir option:selected").val()),
+			//newFileContents : encodeURIComponent(jq("#myTextArea").val()),
 		 }
 	 }).done(function() {
-		 jQuery("#"+idToBeMoved).remove();
+		 jq("#"+idToBeMoved).remove();
 		console.debug("successfully written: " + idToBeMoved);
 	 }).fail(function(){alert("fail")});
 }
@@ -186,7 +186,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 	<!-- TODO: remove all references to myTextArea -->
 	<textarea id="myTextArea" rows=2 cols=150 onkeyup="persistChanges()"></textarea>
 
-	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jQuery('#dir option:selected').val())">		
+	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jq('#dir option:selected').val())">		
 		<option>/Users/sarnobat/Desktop/git-repo/mwk/atletico_documentary.mwk</option>
 		<option>/Users/sarnobat/Desktop/git-repo/mwk/humor-cheat-sheet.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/programming-tips.mwk</option>
