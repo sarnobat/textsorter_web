@@ -38,8 +38,8 @@ function loadFile(docUrl){
 	jQuery.getJSON("http://localhost:9098/helloworld/json?filePath=" 
 			+ encodeURIComponent(url))
 		.done(function(result) {
-			jQuery("#myTextArea").val(result['tree']);
 			
+			printTreeAsHtml(result);
 
 			// REMOVE THIS: Print the plaintext	version of the document
 			{
@@ -55,6 +55,15 @@ function loadFile(docUrl){
 		.fail(function() {
 			alert('Failed. Is the server running?');
 		});
+}
+
+function printTreeAsHtml(response) {
+	var tree = response.tree;
+	
+	for (var i = 0; i < tree.length; i++) {
+		jQuery("#snippets").append(tree[i] + "<br>");
+	}
+
 }
 
 function printSnippet(jsonObject) {
@@ -149,7 +158,7 @@ function persistChanges() {
 	<button onclick="alert('unimplemented')">Save Changes, Regenerate Contents</button>
 -->
 	
-	<div id="myTableOfContents">
+	<div id="snippets">
 
 	
 		<div id="output">
