@@ -100,9 +100,16 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 			  return 0;
 		});
 		
+		var i = 0;
+		text += "<table><tr><td>";
 		jq.each(sortedCategories, function(pos, obj) {
+			i++;
+			if (i %20 == 0) {
+				text += "</td><td>";
+			}
 			text += "<input type=button value='"+ obj.heading +'\' onclick=\x22moveTo(\x27'+snippet.id+'\x27,\x27'+ obj.id +'\x27)\x22><br>\n';
 		});
+		text += "</td></tr></table>";
 	
 	}
 	text += "<br></td></tr>";
