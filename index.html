@@ -12,8 +12,15 @@ jQuery.noConflict();
 //jQuery stuff
 jQuery(document).ready(function(){
 
-	
-	loadFile();
+	var url = "";
+	if (window.location.search.length == 0) {
+		url = jQuery("#dir").val();
+	} 
+	// Textbox
+	else {
+		url = decodeURIComponent(window.location.search.replace('?filePath=',''));
+	}
+	loadFile(url);
 	convert();
 	regenerateToc()
 	
@@ -23,9 +30,14 @@ function clearTextArea() {
 	jQuery("#myTextArea").val("");
 }
 
-function loadFile(){
+function loadFile(docUrl){
+	var url = docUrl;
+	alert(url);
+	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url));
+	// TODO (minor): update the combo box value
+	
 	jQuery.getJSON("http://localhost:9098/helloworld/json?filePath=" 
-			+ encodeURIComponent(jQuery("#dir option:selected").val()))
+			+ encodeURIComponent(url))
 		.done(function(result) {
 			jQuery("#myTextArea").val("");
 			jQuery("#myTextArea").val(result['entireFile']);
@@ -64,7 +76,7 @@ function persistChanges() {
 
 </script>
 
-<script src="http://remysharp.com/downloads/wiki2html.js" type="text/javascript" ></script>
+<script src="backup/wiki2html.js" type="text/javascript" ></script>
 
 <script type="text/javascript" charset="utf-8">
       
@@ -93,6 +105,7 @@ function persistChanges() {
 
 </script>
 
+<!-- TODO URGENT: DOWNLOAD THESE -->
 <script type="text/javascript" src="http://www.dhtmlgoodies.com/scripts/dynamic-table-of-contents/js/external/mootools-core-1.3-full-compat.js"></script>
 <script type="text/javascript" src="http://www.dhtmlgoodies.com/scripts/dynamic-table-of-contents/js/dynamic-table-of-contents.js"></script>
 	
@@ -102,9 +115,11 @@ function persistChanges() {
 
 	<textarea id="myTextArea" rows=20 cols=150 onkeyup="persistChanges()"></textarea>
 
-	<select id="dir" name="sometext" onchange="clearTextArea();loadFile()">		
-		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/productivity-cheat-sheet.mwk</option>
+	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jQuery('#dir option:selected').val())">		
+		<option>/Users/sarnobat/Desktop/git-repo/mwk/humor-cheat-sheet.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/programming-tips.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/productivity-cheat-sheet.mwk</option>
+
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/technology.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/technology-linux.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/new.mwk</option>
