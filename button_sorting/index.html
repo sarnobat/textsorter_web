@@ -71,9 +71,10 @@ function printTreeAsHtml(response) {
 	jq("#snippets").append(headings + text);
 }
 
+var colors = ['red','green','blue','yellow','red'];
 function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	var text = "";
-	var text = "<div id="+snippet.id+"><table><tr><td>"; 
+	var text = "<div id="+snippet.id+" style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
 	text += snippet.heading + "(" + level+", "+snippet.id+", "+parentSnippet.heading+")<br>";
 	if (level > 2 && level < 4) // Level 4 is also best left alone
 	{
