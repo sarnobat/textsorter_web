@@ -75,10 +75,21 @@ var colors = ['red','green','blue','yellow','red'];
 function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	var text = "";
 	var text = "<div id="+snippet.id+" style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
-	text += snippet.heading + "(" + level+", "+snippet.id+", "+parentSnippet.heading+")<br>";
+	text += snippet.heading + "(" + level+", "+snippet.id+", <span style='background-color : pink'>"+parentSnippet.heading+"</span>)<br>";
 	if (level > 2 && level < 4) // Level 4 is also best left alone
 	{
-		text += "<textarea cols=80 rows=5>" + snippet.freetext + "</textarea><br></td><td>";
+		var textareaColor = 'white';
+		if (snippet.freetext == null) {
+			textareaColor = 'orange';
+		}
+		else if (snippet.freetext.trim().length == 0) {
+			if (snippet.subsections.length == 0) {
+				textareaColor = 'purple';
+			} else {
+				textareaColor = 'red';
+			}
+		}
+		text += "<textarea cols=80 rows=5 style='background-color : "+textareaColor+"'>" + snippet.freetext + "</textarea><br></td><td>";
 	
 		var categories = [];
 		if (level > 2) {
@@ -105,10 +116,14 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 		text += "<table><tr><td>";
 		jq.each(sortedCategories, function(pos, obj) {
 			i++;
+			var buttonColor = 'none';
 			if (i %20 == 0) {
 				text += "</td><td>";
 			}
-			text += "<input type=button value='"+ obj.heading +'\' onclick=\x22moveTo(\x27'+snippet.id+'\x27,\x27'+ obj.id +'\x27)\x22><br>\n';
+			if (new RegExp(".*Trash.*").test(obj.heading)) {
+				buttonColor = 'purple';
+			}
+			text += "<input type=button value='"+ obj.heading +'\' onclick=\x22moveTo(\x27'+snippet.id+'\x27,\x27'+ obj.id +'\x27)\x22 style="background-color : '+buttonColor+'"><br>\n';
 		});
 		text += "</td></tr></table>";
 	
@@ -210,6 +225,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 	<textarea id="myTextArea" rows=2 cols=150 onkeyup="persistChanges()"></textarea>
 
 	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jq('#dir option:selected').val())">		
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/new.mwk</option>
 		<option>/Users/sarnobat/Desktop/git-repo/mwk/atletico_documentary.mwk</option>
 		<option>/Users/sarnobat/Desktop/git-repo/mwk/humor-cheat-sheet.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/programming-tips.mwk</option>
