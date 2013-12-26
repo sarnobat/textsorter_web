@@ -26,7 +26,7 @@ jQuery(document).ready(function(){
 });
 
 function clearTextArea() {
-	jQuery("#myTextArea").val("");
+	jQuery("#snippets").text("");
 }
 
 function loadFile(docUrl){
@@ -49,6 +49,7 @@ function printTreeAsHtml(response) {
 	var level = 0;
 	jQuery("#snippets").val();
 	var tree = response.tree;	
+	tree.heading = "-root-"
 	var text = "";
 
 	var headings = {
@@ -68,30 +69,33 @@ function printTreeAsHtml(response) {
 	console.debug(headings);
 	for (var i = 0; i < tree.length; i++) {
 		var snippet = tree[i];
-		text += printSnippet2(snippet, level + 1, tree, headings);
+		text += printSnippet2(snippet, level + 1, tree, headings, tree);
 	}
 	jQuery("#snippets").append(headings + text);
 }
 
-function printSnippet2(snippet, level, rootTree, headings) {
+function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
+	var text = "";
+	var text = "<div id="+snippet.id+"><table><tr><td>"; 
+	text += snippet.heading + "(" + level+", "+snippet.id+", "+parentSnippet.heading+")<br>";
+	if (level > 2)
+	{
+		text += "<textarea cols=80 rows=5>" + snippet.freetext + "</textarea><br></td><td>";
 	
-	var text = "<table><tr><td>"; 
-	text += snippet.heading + "(" + level+", "+snippet.id+")<br>";
-	text += "<textarea cols=80 rows=5>" + snippet.freetext + "</textarea><br></td><td>";
-
-	var categories = [];
-	if (level > 2) {
-		categories = headings[level-2];
+		var categories = [];
+		if (level > 2) {
+			categories = headings[level-2];
+		}
+	
+		jQuery.each(categories, function(heading, id) {
+			text += "<input type=button value='"+ heading +'\' onclick=\x22moveTo(\x27'+snippet.id+'\x27,\x27'+ id +'\x27)\x22><br>\n';
+		});
+	
 	}
-
-	jQuery.each(categories, function(heading, id) {
-		text += "<input type=button value='"+ heading +'\' onclick=\x22moveTo(\x27'+snippet.id+'\x27,\x27'+ id +'\x27)\x22><br>\n';
-	});
-
 	text += "<br></td></tr>";
-	text += "</table>";
+	text += "</table></div>";
 	jQuery.each(snippet.subsections, function(i, item) {
-		text += printSnippet2(item, level + 1, rootTree,headings);
+		text += printSnippet2(item, level + 1, rootTree,headings, snippet);
 	});
 	return text;
 }
@@ -100,9 +104,7 @@ function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
 	
 	if (subtree.subsections != null) {	
 		if (level > 0) {
-			//if (jQuery.inArray(subtree.heading, headingsAtLevels[level]) < 0) {
-				headingsAtLevels[level][subtree.heading] = subtree.id;
-			//}
+			headingsAtLevels[level][subtree.heading] = subtree.id;
 		}
 		for (var i = 0; i < subtree.subsections.length; i++) {
 			getHeadingLevelToHeadings(subtree.subsections[i],level+1,headingsAtLevels);
@@ -172,8 +174,8 @@ function moveTo(idToBeMoved, idOfTarget) {
 			//newFileContents : encodeURIComponent(jQuery("#myTextArea").val()),
 		 }
 	 }).done(function() {
-		console.debug("successfully written");
-		loadedTextLength = latestTextLength;
+		 jQuery("#"+idToBeMoved).remove();
+		console.debug("successfully written: " + idToBeMoved);
 	 }).fail(function(){alert("fail")});
 }
 </script>
@@ -182,6 +184,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 <body>
 <input type="button" value="== Rohidekar brand ==" onclick="moveTo('2762d89e11131511c238be15f2a63c88','d41d8cd98f00b204e9800998ecf8427e'" />
 
+	<!-- TODO: remove all references to myTextArea -->
 	<textarea id="myTextArea" rows=2 cols=150 onkeyup="persistChanges()"></textarea>
 
 	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jQuery('#dir option:selected').val())">		
