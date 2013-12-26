@@ -85,7 +85,7 @@ function printSnippet2(snippet, level, rootTree, headings) {
 	}
 
 	jQuery.each(categories, function(heading, id) {
-		text += "<input type=button value='"+ heading +"' onclick='moveTo("+snippet.id+","+ id +")'><br>";
+		text += "<input type=button value='"+ heading +'\' onclick=\x22moveTo(\x27'+snippet.id+'\x27,\x27'+ id +'\x27)\x22><br>\n';
 	});
 
 	text += "<br></td></tr>";
@@ -180,7 +180,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 
 </head>
 <body>
-
+<input type="button" value="== Rohidekar brand ==" onclick="moveTo('2762d89e11131511c238be15f2a63c88','d41d8cd98f00b204e9800998ecf8427e'" />
 
 	<textarea id="myTextArea" rows=2 cols=150 onkeyup="persistChanges()"></textarea>
 
