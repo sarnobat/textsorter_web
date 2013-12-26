@@ -55,27 +55,67 @@ function printTreeAsHtml(response) {
 	jQuery("#snippets").val();
 	var tree = response.tree;	
 	var text = "";
+
+	var headings = {
+		0 : [],
+		1 : [],
+		2 : [],
+		3 : [],
+		4 : [],
+		5 : [],
+		6 : [],
+		7 : [],
+	};
 	for (var i = 0; i < tree.length; i++) {
 		var snippet = tree[i];
-		text += printSnippet2(snippet, level + 1, tree);
+		getHeadingLevelToHeadings(tree[i], 0, headings);
 	}
-	jQuery("#snippets").append(text);
+	console.debug(headings);
+	for (var i = 0; i < tree.length; i++) {
+		var snippet = tree[i];
+		text += printSnippet2(snippet, level + 1, tree, headings);
+	}
+	jQuery("#snippets").append(headings + text);
 }
 
-function printSnippet2(snippet, level, rootTree) {
+function printSnippet2(snippet, level, rootTree, headings) {
+	
 	var text = "<table><tr><td>"; 
 	text += snippet.heading + "(" + level+")<br>";
 	text += "<textarea cols=80 rows=5>" + snippet.freetext + "</textarea><br></td><td>";
 
-	//console.debug('hello');
-	var categories = getCategoriesAtLevel(rootTree, level -1);
-	console.debug(categories);
+	var categories = [];
+	if (level > 2) {
+		categories = headings[level-2];
+	}
+
+	jQuery.each(categories, function(pos, heading) {
+		text += heading + "<br>";
+	});
+
 	text += "</td></tr>";
 	text += "</table>";
 	jQuery.each(snippet.subsections, function(i, item) {
-		text += printSnippet2(item, level + 1, rootTree);
+		text += printSnippet2(item, level + 1, rootTree,headings);
 	});
 	return text;
+}
+
+function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
+	
+	if (subtree.subsections != null) {	
+		if (level > 0) {
+			if (jQuery.inArray(subtree.heading, headingsAtLevels[level]) < 0) {
+				headingsAtLevels[level].push(subtree.heading);
+			}
+		}
+		for (var i = 0; i < subtree.subsections.length; i++) {
+			getHeadingLevelToHeadings(subtree.subsections[i],level+1,headingsAtLevels);
+		}
+	}
+	
+	return headingsAtLevels;
+	
 }
 
 function getCategoriesAtLevel(rootTree, maxLevel) {
@@ -84,9 +124,8 @@ function getCategoriesAtLevel(rootTree, maxLevel) {
 		var categoriesBelow = getCategoriesAtLevel2(rootTree[i], 1, maxLevel);
 		if (categoriesBelow !=null) {
 			jQuery.merge(categories, categoriesBelow);
-		}
+		} 
 	}
-	//console.debug(categories);
 	return categories;
 }
 
@@ -96,16 +135,13 @@ function getCategoriesAtLevel2(subTree, currentLevel, maxLevel) {
 		return;
 	}
 	var categories = [ subTree.heading ];
-	//console.debug(categories);
 	
 	for (var i = 0; i < subTree.subsections.length; i++) {
-		//console.debug(subTree.subsections[i].heading);
 		var categoriesBelow = getCategoriesAtLevel2(subTree.subsections[i], currentLevel+1, maxLevel);
 		if (categoriesBelow !=null) {
 			categories = jQuery.merge(categories, categoriesBelow);
 		}
 	}
-	//console.debug(categories);
 	return categories;
 }
 
@@ -162,7 +198,7 @@ function persistChanges() {
 <body>
 
 
-	<textarea id="myTextArea" rows=20 cols=150 onkeyup="persistChanges()"></textarea>
+	<textarea id="myTextArea" rows=2 cols=150 onkeyup="persistChanges()"></textarea>
 
 	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jQuery('#dir option:selected').val())">		
 		<option>/Users/sarnobat/Desktop/git-repo/mwk/atletico_documentary.mwk</option>
