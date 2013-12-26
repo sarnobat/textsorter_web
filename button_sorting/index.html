@@ -38,12 +38,7 @@ function loadFile(docUrl){
 	jQuery.getJSON("http://localhost:9098/helloworld/json?filePath=" 
 			+ encodeURIComponent(url))
 		.done(function(result) {
-			
-			printTreeAsHtml(result);
-
-			// REMOVE THIS: Print the plaintext	version of the document
-			//dump(result);
-			
+			printTreeAsHtml(result);			
 		})
 		.fail(function() {
 			alert('Failed. Is the server running?');
