@@ -63,9 +63,11 @@ function printTreeAsHtml(response) {
 }
 
 function printSnippet2(snippet, level, rootTree) {
-	var text = ""; 
+	var text = "<table><tr>"; 
 	text += snippet.heading + "(" + level+")<br>";
-	text += "<textarea cols=80 rows=3>" + snippet.freetext + "</textarea><br>";
+	text += "<textarea cols=80 rows=5>" + snippet.freetext + "</textarea><br>";
+	text += "</tr>";
+	text += "</table>";
 	jQuery.each(snippet.subsections, function(i, item) {
 		text += printSnippet2(item, level + 1, rootTree);
 		//text += "<br>";
