@@ -40,13 +40,17 @@ function loadFile(docUrl){
 		.done(function(result) {
 			jQuery("#myTextArea").val(result['tree']);
 			
-			var text = "";
-			jQuery.each(result['tree'], function(i, item) {
-			    text += printSnippet(item);
-			});
-			
-			jQuery("#myTextArea").val(text);
-			loadedTextLength = jQuery("#myTextArea").val().length;
+
+			// REMOVE THIS: Print the plaintext	version of the document
+			{
+				var text = "";
+				jQuery.each(result['tree'], function(i, item) {
+					text += printSnippet(item);
+				});
+				
+				jQuery("#myTextArea").val(text);
+				loadedTextLength = jQuery("#myTextArea").val().length;
+			}
 		})
 		.fail(function() {
 			alert('Failed. Is the server running?');
