@@ -64,7 +64,6 @@ function printTreeAsHtml(response) {
 		var snippet = tree[i];
 		getHeadingLevelToHeadings(tree[i], 0, headings);
 	}
-	console.debug(headings);
 	for (var i = 0; i < tree.length; i++) {
 		var snippet = tree[i];
 		text += printSnippet2(snippet, level + 1, tree, headings, tree);
