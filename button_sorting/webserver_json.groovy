@@ -1,3 +1,17 @@
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -23,9 +37,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.common.base.Joiner;
-import com.sun.net.httpserver.HttpServer;
-
 public class Server {
 	@Path("helloworld")
 	public static class HelloWorldResource { // Must be public
@@ -35,40 +46,25 @@ public class Server {
 		@Produces("application/json")
 		public Response read(@QueryParam("filePath") String iFilePath)
 				throws JSONException, IOException {
-			// System.out.println("readFile() - begin");
-			sort: {
-				try {
-					// Defragmenter.defragmentFile(iFilePath);
-					// System.out.println("readFile() - sort successful");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
 
-			JSONObject json = new JSONObject();
-			_1:{
-				File f = new File(iFilePath);
-				if (!f.exists()) {
-					throw new RuntimeException();
-				}
-				// String contents = FileUtils.readFileToString(f);
-				// json.put("entireFile", contents);
-				MwkReader m = new MwkReader(iFilePath);
-				try {
-					JSONArray o = m.toJson();
-					json.put("tree", o);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
+			JSONObject mwkFileAsJson = new JSONObject();
+			File mwkFile = new File(iFilePath);
+			if (!mwkFile.exists()) {
+				throw new RuntimeException();
 			}
-			// System.out.println(s);
+			JSONArray o = MwkReader.toJson(iFilePath);
+			mwkFileAsJson.put("tree", o);
+
 			return Response.ok().header("Access-Control-Allow-Origin", "*")
-					.entity(json.toString()).type("application/json").build();
+					.entity(mwkFileAsJson.toString()).type("application/json")
+					.build();
 		}
 
+		@SuppressWarnings("unused")
 		@POST
 		@Path("persist")
+		@Deprecated
+		// I don't think we're using this
 		public Response persist(final String body) throws JSONException,
 				IOException, URISyntaxException {
 			System.out.println("persist() - begin");
@@ -77,10 +73,8 @@ public class Server {
 			save: {
 				List<NameValuePair> params = URLEncodedUtils.parse(new URI(
 						"http://www.fake.com/?" + body), "UTF-8");
-				Map<String, String> m = new HashMap();
+				Map<String, String> m = new HashMap<String, String>();
 				for (NameValuePair param : params) {
-					// System.out.println(param.getName() + " : "
-					// + URLDecoder.decode(param.getValue(), "UTF-8"));
 					m.put(param.getName(),
 							URLDecoder.decode(param.getValue(), "UTF-8"));
 				}
@@ -92,166 +86,158 @@ public class Server {
 					.entity(new JSONObject().toString())
 					.type("application/json").build();
 		}
+
+		@POST
+		@Path("move")
+		public Response move(@QueryParam("filePath") String iFilePath,
+				@QueryParam("id") final String iIdOfObjectToMove,
+				@QueryParam("destId") final String iIdOfLocationToMoveTo)
+				throws JSONException, IOException, URISyntaxException {
+
+			try {
+				JSONArray topLevelArray = MwkReader.toJson(iFilePath);
+
+				JSONObject destination = findSnippetById(iIdOfLocationToMoveTo,
+						topLevelArray);
+				if (destination == null) {
+					throw new RuntimeException("couldn't find "
+							+ iIdOfLocationToMoveTo);
+				}
+				JSONObject snippetOriginalParent = findParentOfSnippetById(
+						iIdOfObjectToMove, topLevelArray);
+				if (snippetOriginalParent == null) {
+					throw new RuntimeException("couldn't find "
+							+ iIdOfObjectToMove);
+				}
+				JSONObject snippetToMove = removeObject(iIdOfObjectToMove,
+						topLevelArray, snippetOriginalParent);
+				if (snippetToMove == null) {
+					throw new RuntimeException("Couldn't find snippet");
+				}
+				if (!destination.getString("id").equals(iIdOfLocationToMoveTo)) {
+					System.out.println("Wrong location");
+					throw new RuntimeException("Wrong destination");
+				}
+				destination.getJSONArray("subsections").put(snippetToMove);
+
+				try {
+					String string = MwkReader.asString(topLevelArray)
+							.toString();
+					FileUtils.writeStringToFile(new File(iFilePath), string);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return Response.ok().header("Access-Control-Allow-Origin", "*")
+						.entity(topLevelArray.toString())
+						.type("application/json").build();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+
+		}
+
+		private JSONObject removeObject(final String iIdOfObjectToRemove,
+				JSONArray topLevelArray, JSONObject snippetOriginalParent) {
+			JSONObject snippet = null;
+			JSONArray subsectionsArray = (JSONArray) snippetOriginalParent
+					.get("subsections");
+			for (int i = 0; i < topLevelArray.length(); i++) {
+				if (topLevelArray.get(i) != null) {
+					for (int j = 0; j < subsectionsArray.length(); j++) {
+						String id = subsectionsArray.getJSONObject(j)
+								.getString("id");
+						if (id.equals(iIdOfObjectToRemove)) {
+							snippet = (JSONObject) subsectionsArray.remove(j);
+							break;
+						}
+					}
+					break;
+				}
+			}
+
+			return snippet;
+		}
+
+		private JSONObject findParentOfSnippetById(String iIdOfObjectToMove,
+				JSONArray a) {
+			for (int i = 0; i < a.length(); i++) {
+				JSONObject jsonObject = a.getJSONObject(i);
+				JSONObject p = findParentOfSnippetById(iIdOfObjectToMove,
+						jsonObject);
+				if (p != null) {
+					return p;
+				}
+			}
+			throw new RuntimeException("Couldn't find parent of "
+					+ iIdOfObjectToMove);
+		}
+
+		private JSONObject findParentOfSnippetById(String iIdOfObjectToMove,
+				JSONObject jsonObject) {
+			JSONArray a = jsonObject.getJSONArray("subsections");
+			for (int i = 0; i < a.length(); i++) {
+				JSONObject jsonObject2 = a.getJSONObject(i);
+				JSONObject o = findSnippetById(iIdOfObjectToMove, jsonObject2);
+				if (o != null) {
+					return jsonObject2;
+				}
+			}
+			return null;
+		}
+
+		private JSONObject findSnippetById(String iIdOfObjectToMove, JSONArray a) {
+			for (int i = 0; i < a.length(); i++) {
+				JSONObject o = findSnippetById(iIdOfObjectToMove,
+						a.getJSONObject(i));
+				if (o != null) {
+					return o;
+				}
+			}
+			return null;
+		}
+
+		private JSONObject findSnippetById(String iIdOfObjectToMove,
+				JSONObject jsonObject) {
+			String string2 = jsonObject.getString("id");
+			if (iIdOfObjectToMove.equals(string2)) {
+				return jsonObject;
+			}
+			JSONArray arr = (JSONArray) jsonObject.getJSONArray("subsections");
+
+			for (int j = 0; j < arr.length(); j++) {
+				JSONObject jsonObject2 = arr.getJSONObject(j);
+				JSONObject o = findSnippetById(iIdOfObjectToMove, jsonObject2);
+				if (o != null) {
+					return o;
+				}
+			}
+			return null;
+		}
 	}
 
 	public static void main(String[] args) throws URISyntaxException {
-		HttpServer server = JdkHttpServerFactory.createHttpServer(new URI(
-				"http://localhost:9098/"), new ResourceConfig(
-				HelloWorldResource.class));
+		JdkHttpServerFactory.createHttpServer(
+				new URI("http://localhost:9097/"), new ResourceConfig(
+						HelloWorldResource.class));
 	}
 
 }
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.google.common.base.Joiner;
 
 public class MwkReader {
-	private final String inputFilePath;
-	private String _text;
 
-	List<String> _lines;
-	// ListIterator<String> _lineIter;
-	int _startIndex = 0;
-	int _endIndex = 0;
+	private MwkReader() {
 
-	public MwkReader(String iFilePath) throws IOException, JSONException {
-		inputFilePath = iFilePath;
-		JSONObject json = new JSONObject();
+	}
+
+	public static JSONArray toJson(String iFilePath) throws JSONException,
+			IOException {
+		List<String> _lines;
 		File f = new File(iFilePath);
 		if (!f.exists()) {
 			throw new RuntimeException();
 		}
-		_2:{
-			_lines = FileUtils.readLines(f);
-			// String contents = FileUtils.readFileToString(f);
-			// json.put("entireFile", _lines);
-		}
-	}
-
-	@Deprecated
-	// make this private
-	public List<String> getNextSection() {
-		if (_startIndex != _endIndex) {
-			_startIndex = _endIndex;
-		}
-		List<String> aNextSection = new LinkedList<String>();
-
-		// The first line is the heading and should not be disqualified for
-		// being
-		// equal to the heading level at which we will terminate
-		String aCurrentLine = _lines.get(_endIndex++);
-		aNextSection.add(aCurrentLine);
-
-		aCurrentLine = _lines.get(_endIndex++);
-		// 1) forward the end index to the end of this section
-		// 2) accumulate the text to be displayed
-		while (isWithinSection(aCurrentLine, 2)) {
-			aNextSection.add(aCurrentLine);
-			aCurrentLine = _lines.get(_endIndex++);
-		}
-		--_endIndex;
-		if (_endIndex == _startIndex) {
-			throw new IllegalAccessError("Developer Error");
-		}
-		return aNextSection;
-	}
-
-	private boolean isWithinSection(String iLine, final int iHeadingLevel) {
-		int thisLinesLevel = 0;
-		if (iLine == null || iLine.equals("")) {
-
-		} else {
-			for (int i = 1; i <= 6; i++) {
-				String pattern = "^={" + i + "}[^=].*";
-				if (iLine.matches(pattern)) {
-					thisLinesLevel = i;
-				}
-			}
-		}
-		if (thisLinesLevel < 1) {
-			return true;
-		} else if (thisLinesLevel > iHeadingLevel) {
-			return true;
-		} else if (thisLinesLevel <= iHeadingLevel && thisLinesLevel > 0) {
-			return false;// needs a new section
-		} else {
-			throw new IllegalAccessError("Developer error");
-		}
-	}
-
-	private void rewindSection() {
-		_lines = readFile(inputFilePath);
-		_text = (Joiner.on("\n").join(locatePreviousSection()));
-	}
-
-	private static List<String> readFile(String inputFilePath) {
-		List<String> theLines = null;
-		try {
-			theLines = FileUtils.readLines(new File(inputFilePath));
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return new CopyOnWriteArrayList<String>(theLines);
-	}
-
-	private List<String> locatePreviousSection() {
-
-		if (_endIndex == _startIndex) {
-			throw new IllegalAccessError("Developer Error");
-		}
-
-		if (_startIndex == 0) {
-			// There is no previous section
-			return _lines.subList(_startIndex, _endIndex);
-		}
-
-		_endIndex = _startIndex;
-		if (_startIndex > 0) {
-			--_startIndex;
-		}
-		String aCurrentLine = null;
-		try {
-			aCurrentLine = _lines.get(_startIndex);
-		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println();
-		}
-		List<String> sectionBefore = new LinkedList<String>();
-
-		while (isWithinSection(aCurrentLine, 2)) {
-			sectionBefore.add(0, aCurrentLine);
-			if (_startIndex > 0) {
-				--_startIndex;
-			} else {
-				break;
-			}
-			try {
-				aCurrentLine = _lines.get(_startIndex);
-			} catch (ArrayIndexOutOfBoundsException e) {
-				System.out.println();
-			}
-		}
-		sectionBefore.add(0, aCurrentLine);
-
-		if (_endIndex == _startIndex) {
-			throw new IllegalAccessError("Developer Error");
-		}
-		return sectionBefore;
-	}
-
-	public JSONArray toJson() throws JSONException {
+		_lines = FileUtils.readLines(f);
 		int level = 1;
 		JSONArray o = new JSONArray();
 		addSectionsAtLevel(level, o, 0, _lines.size(), _lines);
@@ -262,14 +248,11 @@ public class MwkReader {
 			JSONArray oSubObjectToFill, int startLineIdx, int endLineIdx,
 			List<String> allLines) throws JSONException {
 		ArrayList<String> al = new ArrayList<String>(allLines);
-		// List<Pair<Integer, Integer>> startAndEndsAtLevelInRange =
-		// getStartAndEndsAtLevelInRange();
 		List<JSONObject> objectsAtLevel = getObjectsAtLevel(level,
 				al.subList(startLineIdx, endLineIdx));
 		for (JSONObject o : objectsAtLevel) {
 			oSubObjectToFill.put(o);
 		}
-		System.out.println(oSubObjectToFill.toString(2));
 
 	}
 
@@ -277,16 +260,12 @@ public class MwkReader {
 			List<String> subList) throws JSONException {
 		String startingPattern = "^" + StringUtils.repeat('=', level) + "\\s.*";
 		List<JSONObject> ret = new LinkedList<JSONObject>();
-		// int start;
-		// int end = 0;
 		for (int start = 0; start < subList.size(); start++) {
-			// ++end;
 			String line = subList.get(start);
 			if (!"= =".matches(startingPattern)) {
 				throw new RuntimeException("wrong logic");
 			}
 			if (line.matches(startingPattern)) {
-				System.out.println("match:" + line);
 				int j = start + 1;
 				while (j < subList.size()
 						&& !subList.get(j).matches(startingPattern)) {
@@ -305,7 +284,6 @@ public class MwkReader {
 
 	private static JSONObject convertStringRangeToJSONObject(
 			List<String> subList, int levelBelow) throws JSONException {
-		// System.out.println("sublist: " + subList);
 		JSONObject ret = new JSONObject();
 		int start = 0;
 		String heading = subList.get(start++) + "\n";
@@ -314,17 +292,14 @@ public class MwkReader {
 		}
 		ret.put("heading", heading);
 		// first get free text
-		String startingPattern = "^" + StringUtils.repeat('=', levelBelow) + "\\s.*";
+		String startingPattern = "^" + StringUtils.repeat('=', levelBelow)
+				+ "\\s.*";
 		StringBuffer freeTextSb = new StringBuffer();
 		JSONArray subsections = new JSONArray();
 		for (; start < subList.size(); start++) {
 			String str = subList.get(start);
-			// System.out.println(str);
 			if (str.matches(startingPattern)) {
 				break;
-			}
-			if (str.startsWith("==== Value creation ====")) {
-				throw new RuntimeException("This should never happen");
 			}
 			freeTextSb.append(str);
 			freeTextSb.append("\n");
@@ -338,11 +313,6 @@ public class MwkReader {
 			int end = start + 1;
 			while (end < subList.size()
 					&& !subList.get(end).matches(startingPattern)) {
-				if (subList.get(end).startsWith(
-						"=== Rohidekar brand - w/ value creation ===")) {
-					System.out
-							.println("check why this isn't including level 4");
-				}
 				++end;
 			}
 			int nextStartOrEnd = end;
@@ -362,8 +332,24 @@ public class MwkReader {
 			}
 
 		}
-		ret.put("freetext", freeTextSb.toString());
+		String string = freeTextSb.toString();
+		ret.put("freetext", string);
 		ret.put("subsections", subsections);
+		ret.put("id", DigestUtils.md5Hex(heading + string));
+
 		return ret;
+	}
+
+	public static StringBuffer asString(JSONArray topLevelArray) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < topLevelArray.length(); i++) {
+			JSONObject subtree = topLevelArray.getJSONObject(i);
+			sb.append(subtree.getString("heading"));
+			sb.append(subtree.getString("freetext"));
+			JSONArray subsections = subtree.getJSONArray("subsections");
+			StringBuffer sb1 = asString(subsections);
+			sb.append(sb1);
+		}
+		return sb;
 	}
 }

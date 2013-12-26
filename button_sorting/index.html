@@ -35,7 +35,7 @@ function loadFile(docUrl){
 	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url));
 	// TODO (minor): update the combo box value
 	
-	jQuery.getJSON("http://localhost:9098/helloworld/json?filePath=" 
+	jQuery.getJSON("http://localhost:9097/helloworld/json?filePath=" 
 			+ encodeURIComponent(url))
 		.done(function(result) {
 			printTreeAsHtml(result);			
@@ -151,7 +151,7 @@ function persistChanges() {
    
    jQuery.ajax({          
             type:  'POST',
-            url:   'http://localhost:9098/helloworld/persist',
+            url:   'http://localhost:9097/helloworld/persist',
 			 data: { 
 			 	filePath: encodeURIComponent(jQuery("#dir option:selected").val()),
 			 	newFileContents : encodeURIComponent(jQuery("#myTextArea").val()),
@@ -168,7 +168,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 
    jQuery.ajax({          
 		type:  'POST',
-		url:   'http://localhost:9098/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
+		url:   'http://localhost:9097/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
 		 data: { 
 			//filePath: encodeURIComponent(jQuery("#dir option:selected").val()),
 			//newFileContents : encodeURIComponent(jQuery("#myTextArea").val()),
