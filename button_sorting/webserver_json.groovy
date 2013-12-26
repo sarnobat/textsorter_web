@@ -19,6 +19,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,26 +35,32 @@ public class Server {
 		@Produces("application/json")
 		public Response read(@QueryParam("filePath") String iFilePath)
 				throws JSONException, IOException {
-			System.out.println("readFile() - begin");
+			// System.out.println("readFile() - begin");
 			sort: {
 				try {
-					Defragmenter.defragmentFile(iFilePath);
-					System.out.println("readFile() - sort successful");
+					// Defragmenter.defragmentFile(iFilePath);
+					// System.out.println("readFile() - sort successful");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
+
 			JSONObject json = new JSONObject();
-			File f = new File(iFilePath);
-			if (!f.exists()) {
-				throw new RuntimeException();
-			}
-			// String contents = FileUtils.readFileToString(f);
-			// json.put("entireFile", contents);
-			MwkReader m = new MwkReader(iFilePath);
-			for (int i = 0; i < 10; i++) {
-				String s = Joiner.on("\n").join(m.getNextSection());
-				json.put("section" + i, s);
+			_1:{
+				File f = new File(iFilePath);
+				if (!f.exists()) {
+					throw new RuntimeException();
+				}
+				// String contents = FileUtils.readFileToString(f);
+				// json.put("entireFile", contents);
+				MwkReader m = new MwkReader(iFilePath);
+				try {
+					JSONArray o = m.toJson();
+					json.put("tree", o);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 			}
 			// System.out.println(s);
 			return Response.ok().header("Access-Control-Allow-Origin", "*")
@@ -94,14 +101,17 @@ public class Server {
 	}
 
 }
-
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -123,11 +133,15 @@ public class MwkReader {
 		if (!f.exists()) {
 			throw new RuntimeException();
 		}
-		_lines = FileUtils.readLines(f);
-		String contents = FileUtils.readFileToString(f);
-		json.put("entireFile", _lines);
+		_2:{
+			_lines = FileUtils.readLines(f);
+			// String contents = FileUtils.readFileToString(f);
+			// json.put("entireFile", _lines);
+		}
 	}
 
+	@Deprecated
+	// make this private
 	public List<String> getNextSection() {
 		if (_startIndex != _endIndex) {
 			_startIndex = _endIndex;
@@ -153,6 +167,7 @@ public class MwkReader {
 		}
 		return aNextSection;
 	}
+
 	private boolean isWithinSection(String iLine, final int iHeadingLevel) {
 		int thisLinesLevel = 0;
 		if (iLine == null || iLine.equals("")) {
@@ -175,7 +190,8 @@ public class MwkReader {
 			throw new IllegalAccessError("Developer error");
 		}
 	}
-	public void rewindSection() {
+
+	private void rewindSection() {
 		_lines = readFile(inputFilePath);
 		_text = (Joiner.on("\n").join(locatePreviousSection()));
 	}
@@ -233,5 +249,121 @@ public class MwkReader {
 			throw new IllegalAccessError("Developer Error");
 		}
 		return sectionBefore;
+	}
+
+	public JSONArray toJson() throws JSONException {
+		int level = 1;
+		JSONArray o = new JSONArray();
+		addSectionsAtLevel(level, o, 0, _lines.size(), _lines);
+		return o;
+	}
+
+	private static void addSectionsAtLevel(int level,
+			JSONArray oSubObjectToFill, int startLineIdx, int endLineIdx,
+			List<String> allLines) throws JSONException {
+		ArrayList<String> al = new ArrayList<String>(allLines);
+		// List<Pair<Integer, Integer>> startAndEndsAtLevelInRange =
+		// getStartAndEndsAtLevelInRange();
+		List<JSONObject> objectsAtLevel = getObjectsAtLevel(level,
+				al.subList(startLineIdx, endLineIdx));
+		for (JSONObject o : objectsAtLevel) {
+			oSubObjectToFill.put(o);
+		}
+		System.out.println(oSubObjectToFill.toString(2));
+
+	}
+
+	private static List<JSONObject> getObjectsAtLevel(int level,
+			List<String> subList) throws JSONException {
+		String startingPattern = "^" + StringUtils.repeat('=', level) + "\\s.*";
+		List<JSONObject> ret = new LinkedList<JSONObject>();
+		// int start;
+		// int end = 0;
+		for (int start = 0; start < subList.size(); start++) {
+			// ++end;
+			String line = subList.get(start);
+			if (!"= =".matches(startingPattern)) {
+				throw new RuntimeException("wrong logic");
+			}
+			if (line.matches(startingPattern)) {
+				System.out.println("match:" + line);
+				int j = start + 1;
+				while (j < subList.size()
+						&& !subList.get(j).matches(startingPattern)) {
+					++j;
+				}
+				// find ending line
+				JSONObject js = convertStringRangeToJSONObject(
+						subList.subList(start, j), level + 1);
+				ret.add(js);
+				start = j - 1;
+			}
+
+		}
+		return ret;
+	}
+
+	private static JSONObject convertStringRangeToJSONObject(
+			List<String> subList, int levelBelow) throws JSONException {
+		// System.out.println("sublist: " + subList);
+		JSONObject ret = new JSONObject();
+		int start = 0;
+		String heading = subList.get(start++) + "\n";
+		if (heading.equals("")) {
+			throw new RuntimeException("Incorrect assumption.");
+		}
+		ret.put("heading", heading);
+		// first get free text
+		String startingPattern = "^" + StringUtils.repeat('=', levelBelow) + "\\s.*";
+		StringBuffer freeTextSb = new StringBuffer();
+		JSONArray subsections = new JSONArray();
+		for (; start < subList.size(); start++) {
+			String str = subList.get(start);
+			// System.out.println(str);
+			if (str.matches(startingPattern)) {
+				break;
+			}
+			if (str.startsWith("==== Value creation ====")) {
+				throw new RuntimeException("This should never happen");
+			}
+			freeTextSb.append(str);
+			freeTextSb.append("\n");
+
+		}
+		for (; start < subList.size(); start++) {
+
+			if (!subList.get(start).startsWith("=")) {
+				throw new RuntimeException("The first line should be a heading");
+			}
+			int end = start + 1;
+			while (end < subList.size()
+					&& !subList.get(end).matches(startingPattern)) {
+				if (subList.get(end).startsWith(
+						"=== Rohidekar brand - w/ value creation ===")) {
+					System.out
+							.println("check why this isn't including level 4");
+				}
+				++end;
+			}
+			int nextStartOrEnd = end;
+			JSONObject innerObj = convertStringRangeToJSONObject(
+					subList.subList(start, nextStartOrEnd), levelBelow + 1);
+			subsections.put(innerObj);
+			start = end - 1;
+			if (end == subList.size()) {
+				break;
+			}
+			String endingLine = subList.get(end);
+			if (endingLine != null) {
+				if (!endingLine.matches(startingPattern)) {
+					throw new RuntimeException(
+							"You can't have free text after the subsections have begun");
+				}
+			}
+
+		}
+		ret.put("freetext", freeTextSb.toString());
+		ret.put("subsections", subsections);
+		return ret;
 	}
 }
