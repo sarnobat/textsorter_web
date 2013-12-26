@@ -40,7 +40,10 @@ function persistChanges() {
    jQuery.ajax({          
             type:  'POST',
             url:   'http://localhost:9099/helloworld/persist',
-			 data: { name: "John", location: "Boston" }
+			 data: { 
+			 	filePath: encodeURIComponent(jQuery("#dir option:selected").val()),
+			 	location: "Boston" 
+			 }
          }).done(function() {alert("hi");}).fail(function(){alert("fail")});
 
 
