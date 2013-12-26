@@ -10,19 +10,10 @@ jQuery.noConflict();
 //jQuery stuff
 jQuery(document).ready(function(){
 
-//	jQuery.getJSON("http://localhost:9099/helloworld/json?filePath=foobar")
-
-   jQuery.ajax({          
-            type:  'POST',
-            url:   'http://localhost:9099/helloworld/persist',
-//            dataType: 'json',      
-			 data: { name: "John", location: "Boston" }
-         }).done(function() {alert("hi");}).fail(function(){alert("fail")});
-
-//	convert();
-//	regenerateToc()
+	convert();
+	regenerateToc()
 	
-//	loadFile()
+	loadFile()
 });
 
 function clearTextArea() {
@@ -49,9 +40,10 @@ function persistChanges() {
    jQuery.ajax({          
             type:  'POST',
             url:   'http://localhost:9099/helloworld/persist',
-//            dataType: 'json',      
 			 data: { name: "John", location: "Boston" }
-         });
+         }).done(function() {alert("hi");}).fail(function(){alert("fail")});
+
+
   
 	/*jQuery.post("http://localhost:9099/helloworld/persist?filePath=" 
 			+ encodeURIComponent(jQuery("#dir option:selected").val()), { "foo" : "bar" })
