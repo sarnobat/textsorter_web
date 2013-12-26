@@ -139,6 +139,9 @@ public class ButtonSorterServer {
 
 		private JSONObject removeObject(final String iIdOfObjectToRemove,
 				JSONArray topLevelArray, JSONObject snippetOriginalParent) {
+			System.out.println("snippetOriginalParent - " + snippetOriginalParent.getString("id"));
+			System.out.println("IdOfObjectToRemove - " + iIdOfObjectToRemove);
+			System.out.println();
 			JSONObject snippet = null;
 			JSONArray subsectionsArray = (JSONArray) snippetOriginalParent
 					.get("subsections");
@@ -151,6 +154,18 @@ public class ButtonSorterServer {
 								iIdOfObjectToRemove, subtreeRootJsonObject);
 						if (desiredSnippet != null) {
 							snippet = desiredSnippet;
+							JSONArray a = snippetOriginalParent.getJSONArray("subsections");
+							boolean found = false;
+							for (int k = 0; i < a.length();i++) {
+								System.out.println(a.getJSONObject(k).getString("id"));
+								if (iIdOfObjectToRemove.equals(a.getJSONObject(k).getString("id"))){
+									a.remove(k);
+									found = true;
+								}
+							}
+							if (!found){
+								throw new RuntimeException("Not removed:" + iIdOfObjectToRemove);
+							}
 							break;
 						}
 					}
@@ -179,11 +194,19 @@ public class ButtonSorterServer {
 				JSONObject jsonObject) {
 			JSONArray a = jsonObject.getJSONArray("subsections");
 			for (int i = 0; i < a.length(); i++) {
-				JSONObject jsonObject2 = a.getJSONObject(i);
-				JSONObject o = findSnippetById(iIdOfObjectToMove, jsonObject2);
-				if (o != null) {
-					return jsonObject2;
+				if (iIdOfObjectToMove.equals(a.getJSONObject(i).getString("id"))){
+					return jsonObject;
+				} else {
+					JSONObject parentCandidate = findParentOfSnippetById(iIdOfObjectToMove, a.getJSONObject(i));
+					if (parentCandidate != null) {
+						return parentCandidate;
+					}
 				}
+//				JSONObject jsonObject2 = a.getJSONObject(i);
+//				JSONObject o = findSnippetById(iIdOfObjectToMove, jsonObject2);
+//				if (o != null) {
+//					return jsonObject2;
+//				}
 			}
 			return null;
 		}
@@ -280,8 +303,7 @@ public class ButtonSorterServer {
 		}
 		ret.put("heading", heading);
 		// first get free text
-		String startingPattern = "^" + StringUtils.repeat('=', levelBelow)
-				+ "\\s.*";
+		String startingPattern = "^" + StringUtils.repeat('=', levelBelow) + "\\s.*";
 		StringBuffer freeTextSb = new StringBuffer();
 		JSONArray subsections = new JSONArray();
 		for (; start < subList.size(); start++) {

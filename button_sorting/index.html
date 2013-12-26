@@ -130,7 +130,9 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 				buttonColor = 'purple';
 			}
 			text += "<input type=button value='"
-				+ obj.heading.replace('\n','') +" " +obj.id +'\' onclick=\x22moveTo(\x27'
+				+ obj.heading.replace('\n','') 
+				//+" " +obj.id 
+				+'\' onclick=\x22moveTo(\x27'
 				+snippet.id+'\x27,\x27'
 				+ obj.id 
 				+'\x27)\x22 style="background-color : '
