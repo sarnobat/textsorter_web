@@ -39,12 +39,34 @@ function loadFile(docUrl){
 			+ encodeURIComponent(url))
 		.done(function(result) {
 			jQuery("#myTextArea").val("");
-			jQuery("#myTextArea").val(result['section4']);
+			
+			jQuery("#myTextArea").val(result['tree']);
+			
+			var text = "";
+			jQuery.each(result['tree'], function(i, item) {
+			    //console.debug(item);
+			    text += printSnippet(item);
+			});
+			
+			jQuery("#myTextArea").val(text);
 			loadedTextLength = jQuery("#myTextArea").val().length;
 		})
 		.fail(function() {
 			alert('Failed. Is the server running?');
 		});
+}
+
+function printSnippet(jsonObject) {
+	var ret = "";
+	ret += jsonObject.heading;
+	ret += jsonObject.freetext;
+	
+	console.debug(jsonObject.heading);
+	console.debug(jsonObject.freetext);
+	jQuery.each(jsonObject.subsections, function(i, item) {
+		ret += printSnippet(item);
+	});
+	return ret;
 }
 
 function persistChanges() {
