@@ -38,8 +38,6 @@ function loadFile(docUrl){
 	jQuery.getJSON("http://localhost:9098/helloworld/json?filePath=" 
 			+ encodeURIComponent(url))
 		.done(function(result) {
-			jQuery("#myTextArea").val("");
-			
 			jQuery("#myTextArea").val(result['tree']);
 			
 			var text = "";
