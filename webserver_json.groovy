@@ -39,8 +39,12 @@ public class Server {
 				IOException {
 			System.out.println("readFile() - begin");
 			sort: {
+				try {
 				Defragmenter.defragmentFile(iFilePath);
 				System.out.println("readFile() - sort successful");
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
 			JSONObject json = new JSONObject();
 			File f = new File(iFilePath);
@@ -505,10 +509,17 @@ public class Server {
 					l.addAll(nodesWithSameHeading);
 				}
 				if (!preserveOriginalOrder(this)) {
-					printSortedHeadings(l);
+//					System.out.println();
+//					System.out.println("============= before ==================");
+//					printSortedHeadings(l);
 					Collections.sort(l);
+					printSortedHeadings(l);
+//					System.out.println("============= after ==================");
+//					System.out.println();
+
 				}
-				return ImmutableList.copyOf(l);
+				ImmutableList<MyTreeNode> ret = ImmutableList.copyOf(l);
+				return ret;
 			}
 
 			public void printSortedHeadings(List<MyTreeNode> l) {
@@ -544,7 +555,7 @@ public class Server {
 			// return parentNode;
 			// }
 
-			 //@Override
+			// @Override
 			public int compareTo(Object other) {
 				MyTreeNode that = (MyTreeNode) other;
 				int ret = this.snippet.compareTo(that.snippet);
