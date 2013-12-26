@@ -39,7 +39,7 @@ function loadFile(docUrl){
 			+ encodeURIComponent(url))
 		.done(function(result) {
 			jQuery("#myTextArea").val("");
-			jQuery("#myTextArea").val(result['entireFile']);
+			jQuery("#myTextArea").val(result['section4']);
 			loadedTextLength = jQuery("#myTextArea").val().length;
 		})
 		.fail(function() {
