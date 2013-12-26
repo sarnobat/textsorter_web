@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jQuery/1.9.1/jQuery.min.js"> -->
 <script src="jQuery/jQuery-1.9.1.js">
 </script>
 <script>
@@ -76,36 +75,6 @@ function persistChanges() {
 
 </script>
 
-<script src="backup/wiki2html.js" type="text/javascript" ></script>
-
-<script type="text/javascript" charset="utf-8">
-      
-    function convert() {
-        document.getElementById('output').innerHTML = ('= =\n== ==\n' + document.getElementById('myTextArea').value).wiki2html();
-    }
-    
-    // This is expensive so cannot be done every time the text changes
-    function regenerateToc() {
-        var tocParents = document.getElementsByClassName('DG-toc-parent');
-        for (var i = 0; i < tocParents.length; i++) {
-        	var tocParent = tocParents[i];
-        	tocParent.parentNode.removeChild(tocParent);
-        }
-		var toc = new DG.TableOfContents({
-			el : 'myTableOfContents',
-			tocDepth : 4,
-			heading: 'Table of Contents',
-			numbering : {
-				enabled : true,
-				format : '1ai',
-				enabled: false,
-			}
-		});
-    }
-
-</script>
-
-<!-- TODO URGENT: DOWNLOAD THESE -->
 <script type="text/javascript" src="http://www.dhtmlgoodies.com/scripts/dynamic-table-of-contents/js/external/mootools-core-1.3-full-compat.js"></script>
 <script type="text/javascript" src="http://www.dhtmlgoodies.com/scripts/dynamic-table-of-contents/js/dynamic-table-of-contents.js"></script>
 	
