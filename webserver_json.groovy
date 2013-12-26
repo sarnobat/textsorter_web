@@ -3,8 +3,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.ws.rs.GET;
+import javax.ws.rs.*;
 import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
@@ -37,7 +38,20 @@ public class Server {
 			return Response.ok().header("Access-Control-Allow-Origin", "*").entity(json.toString())
 					.type("application/json").build();
 		}
+		
+		@POST
+		@Path("persist")
+		@Produces("application/json")
+		public Response persist(@QueryParam("foo") String bar) throws JSONException,
+				IOException {
+			System.out.println(bar);
+		
+			return Response.ok().header("Access-Control-Allow-Origin", "*").entity("")
+					.type("application/json").build();
+		}
 	}
+	
+
 
 	public static void main(String[] args) throws URISyntaxException {
 		HttpServer server = JdkHttpServerFactory.createHttpServer(
