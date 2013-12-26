@@ -43,7 +43,11 @@ function persistChanges() {
 			 	filePath: encodeURIComponent(jQuery("#dir option:selected").val()),
 			 	newFileContents : encodeURIComponent(jQuery("#myTextArea").val()),
 			 }
-         }).done(function() {console.debug("successfully written");}).fail(function(){alert("fail")});
+         }).done(function() {
+			console.debug("successfully written");
+         	convert();
+			regenerateToc()
+         }).fail(function(){alert("fail")});
 }
 
 </script>
@@ -84,7 +88,7 @@ function persistChanges() {
 <body>
 
 
-	<textarea id="myTextArea" rows=20 cols=150 onkeyup="persistChanges();clearTextArea();loadFile()"></textarea>
+	<textarea id="myTextArea" rows=20 cols=150 onkeyup="persistChanges()"></textarea>
 
 	<select id="dir" name="sometext" onchange="clearTextArea();loadFile()">		
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/productivity-cheat-sheet.mwk</option>
