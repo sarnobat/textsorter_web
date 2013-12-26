@@ -93,10 +93,11 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	
 	}
 	text += "<br></td></tr>";
-	text += "</table></div>";
+	text += "</table>";
 	jQuery.each(snippet.subsections, function(i, item) {
 		text += printSnippet2(item, level + 1, rootTree,headings, snippet);
 	});
+	text += "</div>";
 	return text;
 }
 
