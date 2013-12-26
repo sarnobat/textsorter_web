@@ -42,7 +42,7 @@ function loadFile(docUrl){
 			printTreeAsHtml(result);
 
 			// REMOVE THIS: Print the plaintext	version of the document
-			dump(result);
+			//dump(result);
 			
 		})
 		.fail(function() {
@@ -53,21 +53,23 @@ function loadFile(docUrl){
 function printTreeAsHtml(response) {
 	jQuery("#snippets").val();
 	var tree = response.tree;	
-	
+	var text = "";
 	for (var i = 0; i < tree.length; i++) {
 		var snippet = tree[i];
-		printSnippet2(snippet);		
+		text += printSnippet2(snippet);		
 	}
-
+	jQuery("#snippets").append(text);
 }
 
 function printSnippet2(snippet) {
-	jQuery("#snippets").append(snippet.heading + "<br>");
-	jQuery("#snippets").append(snippet.freetext + "<br>");
-	for (var i = 0; i < snippet.subsections.length; i++) {
-		var snippet = snippet.subsections[i];
-		printSnippet2(snippet);		
-	}
+	var text = ""; 
+	text += snippet.heading + "<br>";
+	text += snippet.freetext + "<br>";
+	jQuery.each(snippet.subsections, function(i, item) {
+		text += printSnippet2(item);
+		//text += "<br>";
+	});
+	return text;
 }
 
 
