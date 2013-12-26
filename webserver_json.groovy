@@ -3,12 +3,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.util.List;
 
 import javax.ws.rs.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONException;
@@ -46,10 +49,15 @@ public class Server {
 		final String body
 		//, @QueryParam("filePath") String iFilePath
 		) throws JSONException,
-				IOException {
+				IOException, URISyntaxException {
 			//System.out.println(iFilePath);
 			System.out.println("persist() - begin");
 			System.out.println(body);
+			List<NameValuePair> params = URLEncodedUtils.parse(new URI("http://www.fake.com/?" + body), "UTF-8");
+
+			for (NameValuePair param : params) {
+			  System.out.println(param.getName() + " : " + URLDecoder.decode(param.getValue(),"UTF-8"));
+			}
 			JSONObject j = new JSONObject(URLDecoder.decode(body,"UTF-8"));
 			System.out.println(j.get("filePath"));
 		//FileUtils.write
