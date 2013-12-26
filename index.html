@@ -32,6 +32,7 @@ function clearTextArea() {
 
 function loadFile(docUrl){
 	var url = docUrl;
+	jQuery("#dir").val(url);
 	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url));
 	// TODO (minor): update the combo box value
 	
