@@ -76,7 +76,7 @@ function printTreeAsHtml(response) {
 function printSnippet2(snippet, level, rootTree, headings) {
 	
 	var text = "<table><tr><td>"; 
-	text += snippet.heading + "(" + level+")<br>";
+	text += snippet.heading + "(" + level+", "+snippet.id+")<br>";
 	text += "<textarea cols=80 rows=5>" + snippet.freetext + "</textarea><br></td><td>";
 
 	var categories = [];
