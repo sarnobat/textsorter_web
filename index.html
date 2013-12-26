@@ -24,7 +24,7 @@ function clearTextArea() {
 }
 
 function loadFile(){
-	jQuery.getJSON("http://localhost:9099/helloworld/json?filePath=" 
+	jQuery.getJSON("http://localhost:9098/helloworld/json?filePath=" 
 			+ encodeURIComponent(jQuery("#dir option:selected").val()))
 		.done(function(result) {
 			jQuery("#myTextArea").val("");

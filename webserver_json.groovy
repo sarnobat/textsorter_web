@@ -84,7 +84,7 @@ public class Server {
 
 	public static void main(String[] args) throws URISyntaxException {
 		HttpServer server = JdkHttpServerFactory.createHttpServer(
-				new URI("http://localhost:9099/"), new ResourceConfig(HelloWorldResource.class));
+				new URI("http://localhost:9098/"), new ResourceConfig(HelloWorldResource.class));
 	}
 
 
