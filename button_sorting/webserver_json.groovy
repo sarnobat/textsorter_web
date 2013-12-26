@@ -1,23 +1,11 @@
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +16,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
@@ -37,7 +27,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Server {
+public class ButtonSorterServer {
+	public static void main(String[] args) throws URISyntaxException {
+		JdkHttpServerFactory.createHttpServer(
+				new URI("http://localhost:9097/"), new ResourceConfig(
+						HelloWorldResource.class));
+	}
+
 	@Path("helloworld")
 	public static class HelloWorldResource { // Must be public
 
@@ -46,22 +42,22 @@ public class Server {
 		@Produces("application/json")
 		public Response read(@QueryParam("filePath") String iFilePath)
 				throws JSONException, IOException {
-try{
-			JSONObject mwkFileAsJson = new JSONObject();
-			File mwkFile = new File(iFilePath);
-			if (!mwkFile.exists()) {
-				throw new RuntimeException();
-			}
-			JSONArray o = toJson(iFilePath);
-			mwkFileAsJson.put("tree", o);
+			try {
+				JSONObject mwkFileAsJson = new JSONObject();
+				File mwkFile = new File(iFilePath);
+				if (!mwkFile.exists()) {
+					throw new RuntimeException();
+				}
+				JSONArray o = toJson(iFilePath);
+				mwkFileAsJson.put("tree", o);
 
-			return Response.ok().header("Access-Control-Allow-Origin", "*")
-					.entity(mwkFileAsJson.toString()).type("application/json")
-					.build();
-					} catch (Exception e) {
-					e.printStackTrace();
-					return null;
-					}
+				return Response.ok().header("Access-Control-Allow-Origin", "*")
+						.entity(mwkFileAsJson.toString())
+						.type("application/json").build();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 
 		@SuppressWarnings("unused")
@@ -116,7 +112,8 @@ try{
 				JSONObject snippetToMove = removeObject(iIdOfObjectToMove,
 						topLevelArray, snippetOriginalParent);
 				if (snippetToMove == null) {
-					throw new RuntimeException("Couldn't find snippet");
+					throw new RuntimeException("Couldn't find snippet "
+							+ iIdOfObjectToMove);
 				}
 				if (!destination.getString("id").equals(iIdOfLocationToMoveTo)) {
 					System.out.println("Wrong location");
@@ -125,8 +122,7 @@ try{
 				destination.getJSONArray("subsections").put(snippetToMove);
 
 				try {
-					String string = asString(topLevelArray)
-							.toString();
+					String string = asString(topLevelArray).toString();
 					FileUtils.writeStringToFile(new File(iFilePath), string);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -149,10 +145,12 @@ try{
 			for (int i = 0; i < topLevelArray.length(); i++) {
 				if (topLevelArray.get(i) != null) {
 					for (int j = 0; j < subsectionsArray.length(); j++) {
-						String id = subsectionsArray.getJSONObject(j)
-								.getString("id");
-						if (id.equals(iIdOfObjectToRemove)) {
-							snippet = (JSONObject) subsectionsArray.remove(j);
+						JSONObject subtreeRootJsonObject = subsectionsArray
+								.getJSONObject(j);
+						JSONObject desiredSnippet = findSnippetById(
+								iIdOfObjectToRemove, subtreeRootJsonObject);
+						if (desiredSnippet != null) {
+							snippet = desiredSnippet;
 							break;
 						}
 					}
@@ -220,12 +218,6 @@ try{
 		}
 	}
 
-	public static void main(String[] args) throws URISyntaxException {
-		JdkHttpServerFactory.createHttpServer(
-				new URI("http://localhost:9097/"), new ResourceConfig(
-						HelloWorldResource.class));
-	}
-	
 	public static JSONArray toJson(String iFilePath) throws JSONException,
 			IOException {
 		List<String> _lines;
@@ -288,7 +280,8 @@ try{
 		}
 		ret.put("heading", heading);
 		// first get free text
-		String startingPattern = "^" + StringUtils.repeat('=', levelBelow) + "\\s.*";
+		String startingPattern = "^" + StringUtils.repeat('=', levelBelow)
+				+ "\\s.*";
 		StringBuffer freeTextSb = new StringBuffer();
 		JSONArray subsections = new JSONArray();
 		for (; start < subList.size(); start++) {

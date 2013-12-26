@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style type="text/css">
+body {
+font-size:small;
+background-color:Khaki ;}
+</style>
+
 <!-- <script src="//ajax.googleapis.com/ajax/libs/jQuery/1.9.1/jQuery.min.js"> -->
 <script src="jQuery/jQuery-1.9.1.js">
 </script>
@@ -112,9 +118,9 @@ function persistChanges() {
 <body>
 
 
-	<textarea id="myTextArea" rows=20 cols=150 onkeyup="persistChanges()"></textarea>
 
 	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jQuery('#dir option:selected').val())">		
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/new.mwk</option>
 		<option>/Users/sarnobat/Desktop/git-repo/mwk/atletico_documentary.mwk</option>
 		<option>/Users/sarnobat/Desktop/git-repo/mwk/humor-cheat-sheet.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/programming-tips.mwk</option>
@@ -139,7 +145,6 @@ function persistChanges() {
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/learning.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/life-story.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/misc.mwk</option>
-		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/new.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/new_google.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/people.mwk</option>
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/poster.mwk</option>
@@ -163,9 +168,17 @@ function persistChanges() {
 	<button onclick="alert('unimplemented')">Save Changes, Regenerate Contents</button>
 -->
 	
+	
+
+<table>
+<tr>
+<td><textarea id="myTextArea" rows=200 cols=50 onkeyup="persistChanges()"></textarea></td>
+<td>
+
 	<div id="myTableOfContents">
 
-	
+
+		<!-- output is the table of contents . Can we name this better? -->	
 		<div id="output">
 		</div>
 	
@@ -173,6 +186,8 @@ function persistChanges() {
 		<div></div>
 	
 	</DIV>
-
+</td>
+</tr>
+</table>
 </body>
 </html>

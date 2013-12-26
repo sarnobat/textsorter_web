@@ -71,12 +71,18 @@ function printTreeAsHtml(response) {
 	jq("#snippets").append(headings + text);
 }
 
-var colors = ['red','white','blue','yellow','red'];
+var colors = ['red','white','SteelBlue','MistyRose','red'];
 function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	var text = "";
 	var text = "<blockquote><div id="+snippet.id+" style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
-	text += snippet.heading + "(" + level+", "+snippet.id+", <span style='background-color : pink'>"+parentSnippet.heading+"</span>)<br>";
-	if (level > 2 && level < 4) // Level 4 is also best left alone
+	text += snippet.heading + "(" 
+		//+ level+", "
+		+snippet.id
+		//+", " 
+		+"<span style='background-color : pink'>"
+		+parentSnippet.heading+"</span>)"
+		+"<br>";
+	if (level > 2 && level < 5) // Level 4 is also best left alone
 	{
 		var textareaColor = 'white';
 		if (snippet.freetext == null) {
@@ -123,7 +129,12 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 			if (new RegExp(".*Trash.*").test(obj.heading)) {
 				buttonColor = 'purple';
 			}
-			text += "<input type=button value='"+ obj.heading +'\' onclick=\x22moveTo(\x27'+snippet.id+'\x27,\x27'+ obj.id +'\x27)\x22 style="background-color : '+buttonColor+'"><br>\n';
+			text += "<input type=button value='"
+				+ obj.heading.replace('\n','') +" " +obj.id +'\' onclick=\x22moveTo(\x27'
+				+snippet.id+'\x27,\x27'
+				+ obj.id 
+				+'\x27)\x22 style="background-color : '
+				+buttonColor+'"><br>\n';
 		});
 		text += "</td></tr></table>";
 	
@@ -226,7 +237,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 
 </head>
 <body>
-<input type="button" value="== Rohidekar brand ==" onclick="moveTo('2762d89e11131511c238be15f2a63c88','d41d8cd98f00b204e9800998ecf8427e'" />
+
 
 	<!-- TODO: remove all references to myTextArea -->
 	<textarea id="myTextArea" rows=2 cols=150 onkeyup="persistChanges()"></textarea>
