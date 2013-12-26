@@ -28,7 +28,7 @@ public class Server {
 		@Produces("application/json")
 		public Response json(@QueryParam("filePath") String iFilePath) throws JSONException,
 				IOException {
-				System.out.println("readFile() - begin");
+			System.out.println("readFile() - begin");
 			JSONObject json = new JSONObject();
 			File f = new File(iFilePath);
 			if (!f.exists()) {
@@ -40,33 +40,25 @@ public class Server {
 			return Response.ok().header("Access-Control-Allow-Origin", "*").entity(json.toString())
 					.type("application/json").build();
 		}
-		
+
 		@POST
 		@Path("persist")
-//		@Consumes("application/json")
-//		@Produces("application/json")
-		public Response persist(
-		final String body
-		//, @QueryParam("filePath") String iFilePath
-		) throws JSONException,
-				IOException, URISyntaxException {
-			//System.out.println(iFilePath);
+		public Response persist(final String body) throws JSONException, IOException,
+				URISyntaxException {
 			System.out.println("persist() - begin");
 			System.out.println(body);
-			List<NameValuePair> params = URLEncodedUtils.parse(new URI("http://www.fake.com/?" + body), "UTF-8");
-
-			for (NameValuePair param : params) {
-			  System.out.println(param.getName() + " : " + URLDecoder.decode(param.getValue(),"UTF-8"));
+			{
+				List<NameValuePair> params = URLEncodedUtils.parse(new URI("http://www.fake.com/?"
+						+ body), "UTF-8");
+				for (NameValuePair param : params) {
+					System.out.println(param.getName() + " : "
+							+ URLDecoder.decode(param.getValue(), "UTF-8"));
+				}
 			}
-			JSONObject j = new JSONObject(URLDecoder.decode(body,"UTF-8"));
-			System.out.println(j.get("filePath"));
-		//FileUtils.write
-			return Response.ok().header("Access-Control-Allow-Origin", "*").entity(new JSONObject().toString())
-					.type("application/json").build();
+			return Response.ok().header("Access-Control-Allow-Origin", "*")
+					.entity(new JSONObject().toString()).type("application/json").build();
 		}
 	}
-	
-
 
 	public static void main(String[] args) throws URISyntaxException {
 		HttpServer server = JdkHttpServerFactory.createHttpServer(

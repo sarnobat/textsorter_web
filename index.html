@@ -42,7 +42,7 @@ function persistChanges() {
             url:   'http://localhost:9099/helloworld/persist',
 			 data: { 
 			 	filePath: encodeURIComponent(jQuery("#dir option:selected").val()),
-
+			 	newFileContents : encodeURIComponent(jQuery("#myTextArea").val()),
 			 }
          }).done(function() {alert("hi");}).fail(function(){alert("fail")});
 
