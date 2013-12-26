@@ -161,7 +161,20 @@ function persistChanges() {
 }
 
 function moveTo(idToBeMoved, idOfTarget) {
-	alert(idToBeMoved + '::' + idOfTarget);
+	//alert(idToBeMoved + '::' + idOfTarget);
+	var filePath = jQuery("#dir").val();
+
+   jQuery.ajax({          
+		type:  'POST',
+		url:   'http://localhost:9098/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
+		 data: { 
+			//filePath: encodeURIComponent(jQuery("#dir option:selected").val()),
+			//newFileContents : encodeURIComponent(jQuery("#myTextArea").val()),
+		 }
+	 }).done(function() {
+		console.debug("successfully written");
+		loadedTextLength = latestTextLength;
+	 }).fail(function(){alert("fail")});
 }
 </script>
 
