@@ -3,7 +3,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.*;
 import javax.ws.rs.*;
@@ -47,13 +49,17 @@ public class Server {
 				URISyntaxException {
 			System.out.println("persist() - begin");
 			System.out.println(body);
+			// Save the changes to the file
 			{
 				List<NameValuePair> params = URLEncodedUtils.parse(new URI("http://www.fake.com/?"
 						+ body), "UTF-8");
+				Map<String, String> m = new HashMap();
 				for (NameValuePair param : params) {
 					System.out.println(param.getName() + " : "
 							+ URLDecoder.decode(param.getValue(), "UTF-8"));
+					m.put(param.getName(), URLDecoder.decode(param.getValue(), "UTF-8"));
 				}
+				FileUtils.write(new File(m.get("filePath")), m.get("newFileContents"));
 			}
 			return Response.ok().header("Access-Control-Allow-Origin", "*")
 					.entity(new JSONObject().toString()).type("application/json").build();
