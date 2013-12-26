@@ -36,7 +36,6 @@ function loadFile(){
 }
 
 function persistChanges() {
-
    jQuery.ajax({          
             type:  'POST',
             url:   'http://localhost:9099/helloworld/persist',
@@ -45,18 +44,6 @@ function persistChanges() {
 			 	newFileContents : encodeURIComponent(jQuery("#myTextArea").val()),
 			 }
          }).done(function() {console.debug("successfully written");}).fail(function(){alert("fail")});
-
-
-  
-	/*jQuery.post("http://localhost:9099/helloworld/persist?filePath=" 
-			+ encodeURIComponent(jQuery("#dir option:selected").val()), { "foo" : "bar" })
-		.done(function(result) {
-			convert();
-			regenerateToc();
-		})
-		.fail(function() {
-			alert('Not persisted. Your changes will be lost on refresh');
-		});*/
 }
 
 </script>
