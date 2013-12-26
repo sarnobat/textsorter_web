@@ -42,17 +42,18 @@ public class Server {
 		
 		@POST
 		@Path("persist")
-		@Consumes("application/json")
-		@Produces("application/json")
+//		@Consumes("application/json")
+//		@Produces("application/json")
 		public Response persist(
 		final String bar
 		//, @QueryParam("filePath") String iFilePath
 		) throws JSONException,
 				IOException {
 			//System.out.println(iFilePath);
-			System.out.println(bar);
+			System.out.println("persist() - begin");
+//			System.out.println(bar);
 		//FileUtils.write
-			return Response.ok().header("Access-Control-Allow-Origin", "*").entity("")
+			return Response.ok().header("Access-Control-Allow-Origin", "*").entity(new JSONObject().toString())
 					.type("application/json").build();
 		}
 	}
