@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<script src="jQuery/jQuery-1.9.1.js">
+<script src="../jquery/jQuery-1.9.1.js">
 </script>
 
 <script>
@@ -33,7 +33,7 @@ function loadFile(docUrl){
 	var url = docUrl;
 	jq("#dir").val(url);
 	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url));
-	jq.getJSON("http://localhost:9097/helloworld/json?filePath=" 
+	jq.getJSON("http://netgear.rohidekar.com:4455/helloworld/json?filePath=" 
 			+ encodeURIComponent(url))
 		.done(function(result) {
 			printTreeAsHtml(result);			
@@ -208,7 +208,7 @@ function persistChanges() {
    
    jq.ajax({          
             type:  'POST',
-            url:   'http://localhost:9097/helloworld/persist',
+            url:   'http://netgear.rohidekar.com:4455/helloworld/persist',
 			 data: { 
 			 	filePath: encodeURIComponent(jq("#dir option:selected").val()),
 			 	newFileContents : encodeURIComponent(jq("#myTextArea").val()),
@@ -225,7 +225,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 
    jq.ajax({          
 		type:  'POST',
-		url:   'http://localhost:9097/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
+		url:   'http://netgear.rohidekar.com:4455/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
 		 data: { 
 			//filePath: encodeURIComponent(jq("#dir option:selected").val()),
 			//newFileContents : encodeURIComponent(jq("#myTextArea").val()),
@@ -244,7 +244,8 @@ function moveTo(idToBeMoved, idOfTarget) {
 	<!-- TODO: remove all references to myTextArea -->
 	<textarea id="myTextArea" rows=2 cols=150 onkeyup="persistChanges()"></textarea>
 
-	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jq('#dir option:selected').val())">		
+	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jq('#dir option:selected').val())">	
+		<option>/home/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>		
 		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/new.mwk</option>
 		<option>/Users/sarnobat/Desktop/git-repo/mwk/atletico_documentary.mwk</option>
 		<option>/Users/sarnobat/Desktop/git-repo/mwk/humor-cheat-sheet.mwk</option>
