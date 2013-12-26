@@ -402,9 +402,9 @@ class Snippet implements Comparable<Object> {
 
 	public Snippet(List<String> singleSnippetLines, String headingLine,
 			int headingLevel) {
-		this.snippetLines = singleSnippetLines;
+		this.snippetLines = Preconditions.checkNotNull(singleSnippetLines);
 		this.levelNumber = headingLevel;
-		this.headingLine = headingLine;
+		this.headingLine = Preconditions.checkNotNull(headingLine);
 	}
 
 	public Snippet(int start, int nextSnippetStart, List<String> allFileLines) {
@@ -487,6 +487,9 @@ class Snippet implements Comparable<Object> {
 
 	// @Override
 	public int compareTo(Object o) {
+		if (o == null) {
+			return 1;
+		}
 		Snippet that = (Snippet) o;
 		String thisHeading = this.headingLine.toLowerCase();
 		String thatHeading = that.headingLine.toLowerCase();
@@ -945,7 +948,6 @@ class MyTreeNode implements Comparable<Object> {
 		if (nodes.size() == 0) {
 			return null;
 		}
-		System.out.println("createSuperNodeHeader() - begin");
 		checkAllNodesHaveSameHeading(nodes);
 		MyTreeNode first = nodes.get(0);
 		MyTreeNode parent = first.getParentNode();
@@ -966,14 +968,11 @@ class MyTreeNode implements Comparable<Object> {
 			// textToAdd = n.getSnippetTextNoHeading();
 			// }
 			superSnippetLines.add(textToAdd2.toString());
-			System.out.println("createSuperNodeHeader() - "
-					+ n.getSnippetHeadingLine());
 			i++;
 		}
 		Snippet superSnippet = new Snippet(superSnippetLines,
 				first.getHeadingText(), first.getSnippet().getLevelNumber());
 		MyTreeNode ret = new MyTreeNode(superSnippet, parent);
-		System.out.println("createSuperNodeHeader() - end\n");
 		return ret;
 	}
 
