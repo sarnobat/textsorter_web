@@ -518,7 +518,7 @@ class MyTreeNode implements Comparable {
 //			System.out.println("============= before ==================");
 //			printSortedHeadings(l);
 			Collections.sort(l);
-			printSortedHeadings(l);
+//			printSortedHeadings(l);
 //			System.out.println("============= after ==================");
 //			System.out.println();
 
@@ -537,16 +537,16 @@ class MyTreeNode implements Comparable {
 		}
 	}
 
-	private Boolean preserveOriginalOrder(MyTreeNode myTreeNode) {
-		boolean preserveOriginalOrder = myTreeNode.getSnippetHeadingLine().contains(
-				"do not sort") || myTreeNode.getSnippetHeadingLine().contains(Defragmenter.PUBLISHING);
+	private Boolean preserveOriginalOrder(MyTreeNode myTreeNode1) {
+		boolean preserveOriginalOrder = myTreeNode1.getSnippetHeadingLine().contains(
+				"do not sort") || myTreeNode1.getSnippetHeadingLine().contains(Defragmenter.PUBLISHING);
 		if (preserveOriginalOrder) {
 			return true;
 		}
-		if (myTreeNode.parentNode == null) {
+		if (myTreeNode1.parentNode == null) {
 			return false;
 		}
-		return preserveOriginalOrder(myTreeNode.parentNode);
+		return this.preserveOriginalOrder(myTreeNode1.getParentNode());
 
 	}
 
@@ -555,9 +555,9 @@ class MyTreeNode implements Comparable {
 		return getSnippetText().toString();
 	}
 
-	// public MyTreeNode getParentNode() {
-	// return parentNode;
-	// }
+	public MyTreeNode getParentNode() {
+	 	return parentNode;
+ 	}
 
 	// @Override
 	public int compareTo(Object other) {
