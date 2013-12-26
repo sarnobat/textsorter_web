@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jQuery/1.9.1/jQuery.min.js"> -->
+<script src="jQuery/jQuery-1.9.1.js">
+</script>
+<script>
+
+var loadedTextLength;
+//no conflict jQuery
+jQuery.noConflict();
+//jQuery stuff
+jQuery(document).ready(function(){
+
+	var url = "";
+	if (window.location.search.length == 0) {
+		url = jQuery("#dir").val();
+	} 
+	// Textbox
+	else {
+		url = decodeURIComponent(window.location.search.replace('?filePath=',''));
+	}
+	loadFile(url);
+	convert();
+	regenerateToc()
+	
+});
+
+function clearTextArea() {
+	jQuery("#myTextArea").val("");
+}
+
+function loadFile(docUrl){
+	var url = docUrl;
+	jQuery("#dir").val(url);
+	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url));
+	// TODO (minor): update the combo box value
+	
+	jQuery.getJSON("http://localhost:9098/helloworld/json?filePath=" 
+			+ encodeURIComponent(url))
+		.done(function(result) {
+			jQuery("#myTextArea").val("");
+			jQuery("#myTextArea").val(result['entireFile']);
+			loadedTextLength = jQuery("#myTextArea").val().length;
+			convert();
+			regenerateToc();
+		})
+		.fail(function() {
+			alert('Failed. Is the server running?');
+		});
+}
+
+function persistChanges() {
+   var latestTextLength = jQuery("#myTextArea").val().length;
+   
+   if (latestTextLength == loadedTextLength) {
+		console.debug('text has not changed length');
+		return;
+   }
+
+   
+   jQuery.ajax({          
+            type:  'POST',
+            url:   'http://localhost:9098/helloworld/persist',
+			 data: { 
+			 	filePath: encodeURIComponent(jQuery("#dir option:selected").val()),
+			 	newFileContents : encodeURIComponent(jQuery("#myTextArea").val()),
+			 }
+         }).done(function() {
+			console.debug("successfully written");
+			loadedTextLength = latestTextLength;
+         	convert();
+			regenerateToc()
+         }).fail(function(){alert("fail")});
+}
+
+</script>
+
+<script src="backup/wiki2html.js" type="text/javascript" ></script>
+
+<script type="text/javascript" charset="utf-8">
+      
+    function convert() {
+        document.getElementById('output').innerHTML = ('= =\n== ==\n' + document.getElementById('myTextArea').value).wiki2html();
+    }
+    
+    // This is expensive so cannot be done every time the text changes
+    function regenerateToc() {
+        var tocParents = document.getElementsByClassName('DG-toc-parent');
+        for (var i = 0; i < tocParents.length; i++) {
+        	var tocParent = tocParents[i];
+        	tocParent.parentNode.removeChild(tocParent);
+        }
+		var toc = new DG.TableOfContents({
+			el : 'myTableOfContents',
+			tocDepth : 4,
+			heading: 'Table of Contents',
+			numbering : {
+				enabled : true,
+				format : '1ai',
+				enabled: false,
+			}
+		});
+    }
+
+</script>
+
+<!-- TODO URGENT: DOWNLOAD THESE -->
+<script type="text/javascript" src="http://www.dhtmlgoodies.com/scripts/dynamic-table-of-contents/js/external/mootools-core-1.3-full-compat.js"></script>
+<script type="text/javascript" src="http://www.dhtmlgoodies.com/scripts/dynamic-table-of-contents/js/dynamic-table-of-contents.js"></script>
+	
+</head>
+<body>
+
+
+	<textarea id="myTextArea" rows=20 cols=150 onkeyup="persistChanges()"></textarea>
+
+	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jQuery('#dir option:selected').val())">		
+		<option>/Users/sarnobat/Desktop/git-repo/mwk/atletico_documentary.mwk</option>
+		<option>/Users/sarnobat/Desktop/git-repo/mwk/humor-cheat-sheet.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/programming-tips.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/productivity-cheat-sheet.mwk</option>
+
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/technology.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/technology-linux.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/new.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/academic-class-notes.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/academic.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/business.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/career.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/communication.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/docs.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/entertainment.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/finance.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/geography.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/girls.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/git.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/health.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/humor-cheat-sheet.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/learning.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/life-story.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/misc.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/new.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/new_google.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/people.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/poster.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/productivity-cheat-sheet.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/programming-tips.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/self.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/session.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/soccer.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/stepz.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/technology/eclipse.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/technology-apps.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/technology-linux.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/technology.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/winning-cheat-sheet.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/youtube_finished.mwk</option>
+		<option>/Users/sarnobat/Desktop/mac-sync/cheat-sheets-plain-text/yurled.mwk</option>
+	</select>
+<!--
+	<button onclick="alert('unimplemented')">Sort this file</button>
+	<button onclick="regenerateToc()">Regenerate Contents</button>
+	<button onclick="alert('unimplemented')">Save Changes, Regenerate Contents</button>
+-->
+	
+	<div id="myTableOfContents">
+
+	
+		<div id="output">
+		</div>
+	
+	
+		<div></div>
+	
+	</DIV>
+
+</body>
+</html>
