@@ -2,12 +2,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 
 import javax.ws.rs.*;
-import javax.ws.rs.Path;
 import javax.ws.rs.*;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
@@ -52,6 +50,8 @@ public class Server {
 			//System.out.println(iFilePath);
 			System.out.println("persist() - begin");
 			System.out.println(body);
+			JSONObject j = new JSONObject(URLDecoder.decode(body,"UTF-8"));
+			System.out.println(j.get("filePath"));
 		//FileUtils.write
 			return Response.ok().header("Access-Control-Allow-Origin", "*").entity(new JSONObject().toString())
 					.type("application/json").build();
