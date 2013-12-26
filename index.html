@@ -36,7 +36,7 @@ function loadFile(){
 
 function persistChanges() {
 	jQuery.post("http://localhost:9099/helloworld/persist?filePath=" 
-			+ encodeURIComponent(jQuery("#dir option:selected").val()), '{ foo : bar }')
+			+ encodeURIComponent(jQuery("#dir option:selected").val()), { "foo" : "bar" })
 		.done(function(result) {
 			convert();
 			regenerateToc();

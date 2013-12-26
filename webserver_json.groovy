@@ -41,8 +41,9 @@ public class Server {
 		
 		@POST
 		@Path("persist")
+		@Consumes("application/json")
 		@Produces("application/json")
-		public Response persist(@QueryParam("foo") String bar) throws JSONException,
+		public Response persist(final String bar) throws JSONException,
 				IOException {
 			System.out.println(bar);
 		
