@@ -42,15 +42,8 @@ function loadFile(docUrl){
 			printTreeAsHtml(result);
 
 			// REMOVE THIS: Print the plaintext	version of the document
-			{
-				var text = "";
-				jQuery.each(result['tree'], function(i, item) {
-					text += printSnippet(item);
-				});
-				
-				jQuery("#myTextArea").val(text);
-				loadedTextLength = jQuery("#myTextArea").val().length;
-			}
+			dump(result);
+			
 		})
 		.fail(function() {
 			alert('Failed. Is the server running?');
@@ -70,6 +63,23 @@ function printTreeAsHtml(response) {
 
 function printSnippet2(snippet) {
 	jQuery("#snippets").append(snippet.heading + "<br>");
+	jQuery("#snippets").append(snippet.freetext + "<br>");
+	for (var i = 0; i < snippet.subsections.length; i++) {
+		var snippet = snippet.subsections[i];
+		printSnippet2(snippet);		
+	}
+}
+
+
+function dump(result)
+{
+	var text = "";
+	jQuery.each(result['tree'], function(i, item) {
+		text += printSnippet(item);
+	});
+	
+	jQuery("#myTextArea").val(text);
+	loadedTextLength = jQuery("#myTextArea").val().length;
 }
 
 // Deprecated
