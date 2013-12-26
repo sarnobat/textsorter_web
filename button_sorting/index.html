@@ -58,8 +58,8 @@ function loadFile(docUrl){
 }
 
 function printTreeAsHtml(response) {
-	var tree = response.tree;
-	
+	jQuery("#snippets").val();
+	var tree = response.tree;	
 	for (var i = 0; i < tree.length; i++) {
 		jQuery("#snippets").append(tree[i] + "<br>");
 	}
