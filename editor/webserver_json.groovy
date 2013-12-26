@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.annotation.Nullable;
+//import javax.annotation.Nullable;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -619,8 +619,7 @@ class MyTreeNode implements Comparable<Object> {
 
 	private Boolean preserveOriginalOrder(MyTreeNode myTreeNode1) {
 		boolean preserveOriginalOrder = myTreeNode1.getSnippetHeadingLine()
-				.contains("do not sort")
-				|| myTreeNode1.getSnippetHeadingLine().contains(
+				.contains("do not sort") || myTreeNode1.getSnippetHeadingLine().contains(
 						Defragmenter.PUBLISHING);
 		if (preserveOriginalOrder) {
 			return true;
@@ -941,7 +940,7 @@ class MyTreeNode implements Comparable<Object> {
 		return ret;
 	}
 
-	@Nullable
+	//@Nullable
 	private static MyTreeNode createSuperNodeHeader(List<MyTreeNode> nodes) {
 		if (nodes.size() == 0) {
 			return null;
