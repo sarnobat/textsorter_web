@@ -87,6 +87,9 @@ public class Server {
 
 		public static final String PUBLISHING = "publishing";
 
+		/**
+		 * This only writes it to stdout, it doesn't modify the file.
+		 */
 		public static void defragmentFile(String fileToOrganizePath) {
 			System.out.println("defragmentFile() - begin");
 			List<String> lines = TextSorterControllerUtils.readFile(fileToOrganizePath);
