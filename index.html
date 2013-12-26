@@ -5,6 +5,8 @@
 <script src="jQuery/jQuery-1.9.1.js">
 </script>
 <script>
+
+var loadedTextLength;
 //no conflict jQuery
 jQuery.noConflict();
 //jQuery stuff
@@ -27,6 +29,7 @@ function loadFile(){
 		.done(function(result) {
 			jQuery("#myTextArea").val("");
 			jQuery("#myTextArea").val(result['entireFile']);
+			loadedTextLength = jQuery("#myTextArea").val().length;
 			convert();
 			regenerateToc();
 		})
@@ -36,6 +39,14 @@ function loadFile(){
 }
 
 function persistChanges() {
+   var latestTextLength = jQuery("#myTextArea").val().length;
+   
+   if (latestTextLength == loadedTextLength) {
+		console.debug('text has not changed length');
+		return;
+   }
+
+   
    jQuery.ajax({          
             type:  'POST',
             url:   'http://localhost:9099/helloworld/persist',
@@ -45,6 +56,7 @@ function persistChanges() {
 			 }
          }).done(function() {
 			console.debug("successfully written");
+			loadedTextLength = latestTextLength;
          	convert();
 			regenerateToc()
          }).fail(function(){alert("fail")});
