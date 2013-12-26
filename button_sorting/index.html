@@ -71,10 +71,10 @@ function printTreeAsHtml(response) {
 	jq("#snippets").append(headings + text);
 }
 
-var colors = ['red','green','blue','yellow','red'];
+var colors = ['red','white','blue','yellow','red'];
 function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	var text = "";
-	var text = "<div id="+snippet.id+" style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
+	var text = "<blockquote><div id="+snippet.id+" style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
 	text += snippet.heading + "(" + level+", "+snippet.id+", <span style='background-color : pink'>"+parentSnippet.heading+"</span>)<br>";
 	if (level > 2 && level < 4) // Level 4 is also best left alone
 	{
@@ -133,7 +133,14 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	jq.each(snippet.subsections, function(i, item) {
 		text += printSnippet2(item, level + 1, rootTree,headings, snippet);
 	});
-	text += "</div>";
+	text += "</div></blockquote>";
+	
+	for (var j = 4; j > 0; j--) {
+		var numberOfNewlines = j-level;
+		for (var k = numberOfNewlines; k >0; k--) {
+			text += "<br>";
+		}
+	}
 	return text;
 }
 
