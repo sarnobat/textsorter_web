@@ -82,7 +82,8 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 		+"<span style='background-color : pink'>"
 		+parentSnippet.heading+"</span>)"
 		+"<br>";
-	if (level > 2 && level < 5) // Level 4 is also best left alone
+	var forbiddenLevel = 2;
+	if (level > forbiddenLevel && level < 5) // Level 4 is also best left alone
 	{
 		var textareaColor = 'white';
 		if (snippet.freetext == null) {
@@ -98,7 +99,7 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 		text += "<textarea cols=80 rows=5 style='background-color : "+textareaColor+"'>" + snippet.freetext + "</textarea><br></td><td>";
 	
 		var categories = [];
-		if (level > 2) {
+		if (level > forbiddenLevel) {
 			categories = headings[level-2];
 		}
 		var sortedCategories = [];
