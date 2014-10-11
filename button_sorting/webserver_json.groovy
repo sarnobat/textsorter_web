@@ -29,9 +29,11 @@ import org.json.JSONObject;
 
 public class ButtonSorterServer {
 	public static void main(String[] args) throws URISyntaxException {
-		JdkHttpServerFactory.createHttpServer(
-				new URI("http://localhost:4455/"), new ResourceConfig(
-						HelloWorldResource.class));
+		try {
+			JdkHttpServerFactory.createHttpServer(
+					new URI("http://localhost:4455/"), new ResourceConfig(
+							HelloWorldResource.class));
+		} catch (java.net.BindException e) {}
 	}
 
 	@Path("helloworld")
