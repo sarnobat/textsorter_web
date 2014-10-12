@@ -153,13 +153,13 @@ public class ButtonSorterServer {
 				JSONObject aSubsection = subsectionsOfParent.getJSONObject(i);
 				if (aSubsection.getString("id")
 						.equals(iIdOfObjectToRemove)) {
-					System.out.println("removeObject(): aSubsection: " + aSubsection);
+					//System.out.println("removeObject(): aSubsection: " + aSubsection);
 					rDesiredSnippet = (JSONObject) subsectionsOfParent.remove(i);
-					System.out.println("removeObject(): rDesiredSnippet: " + rDesiredSnippet);
+					//System.out.println("removeObject(): rDesiredSnippet: " + rDesiredSnippet);
 					rDesiredSnippet = aSubsection;
-					String r = rDesiredSnippet.toString();
+					//String r = rDesiredSnippet.toString();
 					//System.out.println("removeObject(): subsectionsOfParent: " + subsectionsOfParent);Too long
-					System.out.println("removeObject(): r: " + r);					
+					//System.out.println("removeObject(): r: " + r);					
 					break;
 				}
 			}
