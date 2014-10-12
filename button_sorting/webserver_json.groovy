@@ -121,6 +121,7 @@ public class ButtonSorterServer {
 					System.out.println("Wrong location");
 					throw new RuntimeException("Wrong destination");
 				}
+				System.out.println("move() - Snippet to move: " + snippetToMove);
 				destination.getJSONArray("subsections").put(snippetToMove);
 
 				try {
@@ -152,7 +153,14 @@ public class ButtonSorterServer {
 				JSONObject aSubsection = subsectionsOfParent.getJSONObject(i);
 				if (aSubsection.getString("id")
 						.equals(iIdOfObjectToRemove)) {
+					System.out.println("removeObject(): aSubsection: " + aSubsection);
 					rDesiredSnippet = (JSONObject) subsectionsOfParent.remove(i);
+					System.out.println("removeObject(): rDesiredSnippet: " + rDesiredSnippet);
+					rDesiredSnippet = aSubsection;
+					String r = rDesiredSnippet.toString();
+					//System.out.println("removeObject(): subsectionsOfParent: " + subsectionsOfParent);Too long
+					System.out.println("removeObject(): r: " + r);					
+					break;
 				}
 			}
 			if (rDesiredSnippet == null) {
@@ -394,11 +402,15 @@ public class ButtonSorterServer {
 		String string = freeTextSb.toString();
 		ret.put("freetext", string);
 		ret.put("subsections", subsections);
+		// It's difficult if you make this recursive because the destination's ID will change
+		// if you've added content to it since loading the file for display on the client
+		// You'd have to refresh each time
+		//ret.put("id", DigestUtils.md5Hex(heading + string + subsections.toString()));
 		ret.put("id", DigestUtils.md5Hex(heading + string));
 
 		return ret;
 	}
-
+	
 	public static StringBuffer asString(JSONArray topLevelArray) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < topLevelArray.length(); i++) {

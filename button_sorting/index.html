@@ -82,7 +82,7 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 		+"<span style='background-color : pink'>"
 		+parentSnippet.heading+"</span>)"
 		+"<br>";
-	var forbiddenLevel = 2;
+	var forbiddenLevel = 1;
 	if (level > forbiddenLevel && level < 5) // Level 4 is also best left alone
 	{
 		var textareaColor = 'white';
@@ -161,7 +161,7 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
 	
 	if (subtree.subsections != null) {	
-		if (level > 0) {
+		if (level > -1) {
 			headingsAtLevels[level][subtree.heading] = subtree.id;
 		}
 		for (var i = 0; i < subtree.subsections.length; i++) {
