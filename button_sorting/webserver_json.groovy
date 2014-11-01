@@ -40,7 +40,9 @@ public class ButtonSorterServer {
 			JdkHttpServerFactory.createHttpServer(
 					new URI("http://localhost:4455/"), new ResourceConfig(
 							HelloWorldResource.class));
-		} catch (java.net.BindException e) {}
+		} catch (Exception e) {
+			System.out.println("Already running");
+		}
 	}
 
 	@Path("helloworld")
