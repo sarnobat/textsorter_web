@@ -2,12 +2,18 @@
 <html>
 <head>
 <title>Text Sorter</title>
+
+<link rel="shortcut icon" href="http://netgear.rohidekar.com/static/icons/Orb_Icons_009.png" type="image/x-icon" />
+
 <script src="../jquery/jQuery-1.9.1.js">
 </script>
 
 <script>
 var jq = jQuery;
 var loadedTextLength;
+
+// TODO: bad: global state
+var headingNames = [];
 //no conflict jQuery
 jq.noConflict();
 //jQuery stuff
@@ -119,9 +125,11 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 			  return 0;
 		});
 		
+		sortedCategoriesDeDuped = getWithoutDuplicates(sortedCategories, headingNames);
+
 		var i = 0;
 		text += "<table><tr><td>";
-		jq.each(sortedCategories, function(pos, obj) {
+		jq.each(sortedCategoriesDeDuped, function(pos, obj) {
 			i++;
 			var buttonColor = 'none';
 			if (i %20 == 0) {
@@ -158,6 +166,23 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	return text;
 }
 
+// TODO: bad: mutable state
+function getWithoutDuplicates(sortedCategories, headingNames) {
+	var deDuped = [];
+	jq.each(sortedCategories, function(pos, obj) {
+		var substitutionFunction = function(match, p1, p2, offset, totalString) { return p1
+			+ p2.charAt(0).toUpperCase() + p2.slice(1);
+		 };
+		var capitalizedHeading = obj.heading.replace(/(=+\s+)(\w+)/, substitutionFunction);
+		if (headingNames.indexOf(capitalizedHeading) > -1) {
+			// do nothing
+		} else {
+			headingNames.push(capitalizedHeading);
+			deDuped.push(obj);
+		}
+	});
+	return deDuped;
+}
 function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
 	
 	if (subtree.subsections != null) {	
@@ -248,7 +273,9 @@ function moveTo(idToBeMoved, idOfTarget) {
 	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jq('#dir option:selected').val())">	
 		<option>/home/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>		
 		<!--<option>/home/sarnobat/sarnobat.git/mwk/new.mwk</option>-->
-                <option>/home/sarnobat/sarnobat.git/mwk/programming_tips/functional_programming.mwk<ioption>
+                <option>/home/sarnobat/sarnobat.git/mwk/programming_tips/functional_programming.mwk</option>
+                <option>/home/sarnobat/sarnobat.git/mwk/programming_tips/unglorification.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/work/google/gtt/work.txt</option>
 		<option>/Users/sarnobat/Desktop/git-repo/mwk/atletico_documentary.mwk</option>
 		<option>/Users/sarnobat/Desktop/git-repo/mwk/humor-cheat-sheet.mwk</option>
 		<option>/home/sarnobat/sarnobat.git/mwk/programming-tips.mwk</option>
