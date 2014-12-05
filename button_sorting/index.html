@@ -124,8 +124,9 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 			if(a.heading.toLowerCase() < b.heading.toLowerCase()){ return -1}
 			  return 0;
 		});
-		
-		sortedCategoriesDeDuped = getWithoutDuplicates(sortedCategories, headingNames);
+		sortedCategoriesDeDuped = sortedCategories;
+// This doesn't work for empty headings. Besides the code is written badly. Try it again and do it properly
+//		sortedCategoriesDeDuped = getWithoutDuplicates(sortedCategories, headingNames);
 
 		var i = 0;
 		text += "<table><tr><td>";
@@ -173,7 +174,7 @@ function getWithoutDuplicates(sortedCategories, headingNames) {
 		var substitutionFunction = function(match, p1, p2, offset, totalString) { return p1
 			+ p2.charAt(0).toUpperCase() + p2.slice(1);
 		 };
-		var capitalizedHeading = obj.heading.replace(/(=+\s+)(\w+)/, substitutionFunction);
+		var capitalizedHeading = obj.heading.replace(/(=+\s+)(\w*)/, substitutionFunction);
 		if (headingNames.indexOf(capitalizedHeading) > -1) {
 			// do nothing
 		} else {
