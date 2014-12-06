@@ -118,13 +118,26 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 			};
 		    sortedCategories.push(p);
 		});
-		
-		sortedCategories.sort(function(a,b){
+
+		var deDupedCategories = [];
+		var deDupedCategoryHeadings = [];
+		jq.each(sortedCategories, function(heading, id) {
+//		    var substitutionFunction = function(match, p1, p2, offset, totalString) { return p1
+  //                      + p2.charAt(0).toUpperCase() + p2.slice(1);
+    //                };
+		    var capitalizedHeading = sortedCategories[heading].heading.replace(/(=+\s+)(\w*)/, capitalizeHeadingFunction); 
+		    if (deDupedCategoryHeadings.indexOf(capitalizedHeading) < 0) {
+                        deDupedCategoryHeadings.push(capitalizedHeading);
+			deDupedCategories.push(sortedCategories[heading]);
+		    }
+                });
+//		console.debug(deDupedCategoryHeadings);	
+		deDupedCategories.sort(function(a,b){
  		    if(a.heading.toLowerCase() > b.heading.toLowerCase()){ return 1}
 			if(a.heading.toLowerCase() < b.heading.toLowerCase()){ return -1}
 			  return 0;
 		});
-		sortedCategoriesDeDuped = sortedCategories;
+		sortedCategoriesDeDuped = deDupedCategories;
 // This doesn't work for empty headings. Besides the code is written badly. Try it again and do it properly
 //		sortedCategoriesDeDuped = getWithoutDuplicates(sortedCategories, headingNames);
 
@@ -166,6 +179,10 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	}
 	return text;
 }
+
+function capitalizeHeadingFunction (match, p1, p2, offset, totalString) { return p1
+                        + p2.charAt(0).toUpperCase() + p2.slice(1);
+                    };
 
 // TODO: bad: mutable state
 function getWithoutDuplicates(sortedCategories, headingNames) {
