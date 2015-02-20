@@ -128,7 +128,7 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 				textareaColor = 'red';
 			}
 		}
-		text += "<textarea cols=80 rows=5 style='background-color : "+textareaColor+"'>" + snippet.freetext + "</textarea><br></td><td>";
+		text += "<textarea cols=60 rows=10 style='background-color : "+textareaColor+"'>" + snippet.freetext + "</textarea><br></td><td>";
 	
 		var categories = [];
 		if (level > forbiddenLevel) {
@@ -176,7 +176,7 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 				buttonColor = 'purple';
 			}
 			text += "<input type=button value='"
-				+ obj.heading.replace('\n','') 
+				+ obj.heading.replace('\n','').substring(0,14) 
 				+'\' onclick=\x22moveTo(\x27'
 				+snippet.id+'\x27,\x27'
 				+ obj.id 
