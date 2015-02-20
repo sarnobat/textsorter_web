@@ -7,7 +7,15 @@
 
 <script src="../jquery/jQuery-1.9.1.js">
 </script>
-
+<style>
+.item {
+	border-radius: 15px;
+	box-shadow:
+		inset 0 0 9px #222222,
+		10px 10px 14px #474747;// internal and external shadow
+	background-color:#E6FAD2
+}
+</style>
 <script>
 var jq = jQuery;
 var loadedTextLength;
@@ -80,7 +88,7 @@ function printTreeAsHtml(response) {
 var colors = ['red','white','SteelBlue','MistyRose','red'];
 function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	var text = "";
-	var text = "<blockquote><div id="+snippet.id+" style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
+	var text = "<blockquote><div id="+snippet.id+" class='item' style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
 	text += snippet.heading + "(" 
 		//+ level+", "
 		+snippet.id
@@ -267,6 +275,9 @@ function moveTo(idToBeMoved, idOfTarget) {
 	//alert(idToBeMoved + '::' + idOfTarget);
 	var filePath = jq("#dir").val();
 
+ jq("#"+idToBeMoved).css('background-color','orange');
+// slide up doesn't animate on a heavy page
+ jq("#"+idToBeMoved).fadeOut(5000, function(){});
    jq.ajax({          
 		type:  'POST',
 		url:   'http://netgear.rohidekar.com:4455/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
@@ -282,7 +293,15 @@ function moveTo(idToBeMoved, idOfTarget) {
 </script>
 
 </head>
-<body>
+<body style="background-color : #CCCCFF">
+
+
+<script> 
+    jq(function(){
+      jq("#menubar").load("http://netgear.rohidekar.com/index.html"); 
+    });
+</script>
+<div id="menubar"></div>
 
 	<a href='/textsorter/editor/'>Heading Outline</a><br>
 	<!-- TODO: remove all references to myTextArea -->
