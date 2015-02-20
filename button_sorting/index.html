@@ -5,7 +5,8 @@
 
 <link rel="shortcut icon" href="http://netgear.rohidekar.com/static/icons/Orb_Icons_009.png" type="image/x-icon" />
 
-<script src="../jquery/jQuery-1.9.1.js">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://netgear.rohidekar.com/yurl/jquery/purl.js"></script>
 </script>
 <style>
 .item {
@@ -18,6 +19,10 @@
 </style>
 <script>
 var jq = jQuery;
+
+var limit;
+
+
 var loadedTextLength;
 
 // TODO: bad: global state
@@ -27,17 +32,28 @@ jq.noConflict();
 //jQuery stuff
 jq(document).ready(function(){
 
+	updateURLIfEmpty();
+
 	var url = "";
 	if (window.location.search.length == 0) {
 		url = jq("#dir").val();
 	} 
 	// Textbox
 	else {
-		url = decodeURIComponent(window.location.search.replace('?filePath=',''));
+		url = decodeURIComponent(jq.url().param('filePath'));
 	}
 	loadFile(url);
 	
 });
+
+function updateURLIfEmpty() {
+  	limit = jq.url().param('limit');
+	if (limit == null) {
+		limit = 20;
+		window.history.pushState("object or string", "Title", document.URL + "&limit=" + limit);
+	}
+}
+
 
 function clearTextArea() {
 	jq("#snippets").text("");
@@ -46,7 +62,7 @@ function clearTextArea() {
 function loadFile(docUrl){
 	var url = docUrl;
 	jq("#dir").val(url);
-	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url));
+	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url)  + "&limit=" + limit);
 	jq.getJSON("http://netgear.rohidekar.com:4455/helloworld/json?filePath=" 
 			+ encodeURIComponent(url))
 		.done(function(result) {
@@ -130,24 +146,21 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 		var deDupedCategories = [];
 		var deDupedCategoryHeadings = [];
 		jq.each(sortedCategories, function(heading, id) {
-//		    var substitutionFunction = function(match, p1, p2, offset, totalString) { return p1
-  //                      + p2.charAt(0).toUpperCase() + p2.slice(1);
-    //                };
 		    var capitalizedHeading = sortedCategories[heading].heading.replace(/(=+\s+)(\w*)/, capitalizeHeadingFunction); 
 		    if (deDupedCategoryHeadings.indexOf(capitalizedHeading) < 0) {
                         deDupedCategoryHeadings.push(capitalizedHeading);
 			deDupedCategories.push(sortedCategories[heading]);
 		    }
-                });
-//		console.debug(deDupedCategoryHeadings);	
+		});
 		deDupedCategories.sort(function(a,b){
  		    if(a.heading.toLowerCase() > b.heading.toLowerCase()){ return 1}
 			if(a.heading.toLowerCase() < b.heading.toLowerCase()){ return -1}
 			  return 0;
 		});
 		sortedCategoriesDeDuped = deDupedCategories;
-// This doesn't work for empty headings. Besides the code is written badly. Try it again and do it properly
-//		sortedCategoriesDeDuped = getWithoutDuplicates(sortedCategories, headingNames);
+
+		// This doesn't work for empty headings. Besides the code is written badly. Try it again and do it properly
+		//		sortedCategoriesDeDuped = getWithoutDuplicates(sortedCategories, headingNames);
 
 		var i = 0;
 		text += "<table><tr><td>";
@@ -162,7 +175,6 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 			}
 			text += "<input type=button value='"
 				+ obj.heading.replace('\n','') 
-				//+" " +obj.id 
 				+'\' onclick=\x22moveTo(\x27'
 				+snippet.id+'\x27,\x27'
 				+ obj.id 
