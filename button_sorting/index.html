@@ -9,6 +9,12 @@
 <script type="text/javascript" src="http://netgear.rohidekar.com/yurl/jquery/purl.js"></script>
 </script>
 <style>
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 2s, opacity 2s linear;
+}
 .item {
 	border-radius: 15px;
 	box-shadow:
@@ -289,9 +295,12 @@ function moveTo(idToBeMoved, idOfTarget) {
 	//alert(idToBeMoved + '::' + idOfTarget);
 	var filePath = jq("#dir").val();
 
+
  jq("#"+idToBeMoved).css('background-color','orange');
-// slide up doesn't animate on a heavy page
- jq("#"+idToBeMoved).fadeOut(5000, function(){});
+ jq("#"+idToBeMoved).addClass('hidden');
+// javascript animation is expensive. CSS animation is a lot smoother.
+// jq("#"+idToBeMoved).slideUp(20000, function(){});
+ //jq("#"+idToBeMoved).fadeOut(5000, function(){});
    jq.ajax({          
 		type:  'POST',
 		url:   'http://netgear.rohidekar.com:4455/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
@@ -300,6 +309,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 			//newFileContents : encodeURIComponent(jq("#myTextArea").val()),
 		 }
 	 }).done(function() {
+ //jq("#"+idToBeMoved).slideUp(5000, function(){});
 		 jq("#"+idToBeMoved).remove();
 		console.debug("successfully written: " + idToBeMoved);
 	 }).fail(function(){alert("fail")});
