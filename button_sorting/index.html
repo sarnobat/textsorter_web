@@ -256,7 +256,7 @@ function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
 	return headingsAtLevels;
 	
 }
-
+// Rarely used
 function dump(result)
 {
 	var text = "";
@@ -268,7 +268,7 @@ function dump(result)
 	loadedTextLength = jq("#myTextArea").val().length;
 }
 
-// Deprecated
+// Deprecated - only used by dump()
 function printSnippet(jsonObject) {
 	var ret = "";
 	ret += jsonObject.heading;
@@ -305,29 +305,24 @@ function persistChanges() {
 }
 
 function moveTo(idToBeMoved, idOfTarget) {
-	//alert(idToBeMoved + '::' + idOfTarget);
 	var filePath = jq("#dir").val();
 
 
-  jq("#"+idToBeMoved).css('background-color','orange');
-  jq("#"+idToBeMoved).addClass('fadeOut');
-//  jq("#"+idToBeMoved).addClass('slider');
-//  jq("#"+idToBeMoved).toggleClass('up');
-// javascript animation is expensive. CSS animation is a lot smoother.
-// jq("#"+idToBeMoved).slideUp(20000, function(){});
- //jq("#"+idToBeMoved).fadeOut(5000, function(){});
-   jq.ajax({          
+	jq("#"+idToBeMoved).css('background-color','orange');
+	jq("#"+idToBeMoved).addClass('fadeOut');
+
+	// javascript animation is expensive. CSS animation is a lot smoother.
+	jq.ajax({          
 		type:  'POST',
 		url:   'http://netgear.rohidekar.com:4455/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
 		 data: { 
 			//filePath: encodeURIComponent(jq("#dir option:selected").val()),
 			//newFileContents : encodeURIComponent(jq("#myTextArea").val()),
 		 }
-	 }).done(function() {
- //jq("#"+idToBeMoved).slideUp(5000, function(){});
-		 jq("#"+idToBeMoved).remove();
+	}).done(function() {
+		jq("#"+idToBeMoved).remove();
 		console.debug("successfully written: " + idToBeMoved);
-	 }).fail(function(){alert("fail")});
+	}).fail(function(){alert("fail")});
 }
 </script>
 
@@ -349,8 +344,8 @@ function moveTo(idToBeMoved, idOfTarget) {
 	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jq('#dir option:selected').val())">	
 		<option>/home/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>		
 		<!--<option>/home/sarnobat/sarnobat.git/mwk/new.mwk</option>-->
-                <option>/home/sarnobat/sarnobat.git/mwk/programming_tips/functional_programming.mwk</option>
-                <option>/home/sarnobat/sarnobat.git/mwk/programming_tips/unglorification.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/programming_tips/functional_programming.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/programming_tips/unglorification.mwk</option>
 		<option>/home/sarnobat/sarnobat.git/work/google/gtt/work.txt</option>
 		<option>/home/sarnobat/sarnobat.git/mwk/atletico_documentary.mwk</option>
 		<option>/home/sarnobat/sarnobat.git/mwk/humor-cheat-sheet.mwk</option>
@@ -394,20 +389,11 @@ function moveTo(idToBeMoved, idOfTarget) {
 		<option>/home/sarnobat/sarnobat.git/mwk/youtube_finished.mwk</option>
 		<option>/home/sarnobat/sarnobat.git/mwk/yurled.mwk</option>
 	</select>
-<!--
-	<button onclick="alert('unimplemented')">Sort this file</button>
-	<button onclick="regenerateToc()">Regenerate Contents</button>
-	<button onclick="alert('unimplemented')">Save Changes, Regenerate Contents</button>
--->
 	
 	<div id="snippets">
 
 	
-		<div id="output">
-		</div>
-	
-	
-		<div></div>
+		<div id="output"></div>
 	
 	</DIV>
 
