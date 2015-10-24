@@ -3,10 +3,10 @@
 <head>
 <title>Text Sorter</title>
 
-<link rel="shortcut icon" href="http://netgear.rohidekar.com/static/icons/Orb_Icons_009.png" type="image/x-icon" />
+<link rel="shortcut icon" href="/static/icons/Orb_Icons_009.png" type="image/x-icon" />
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://netgear.rohidekar.com/yurl/jquery/purl.js"></script>
+<script type="text/javascript" src="/yurl/jquery/purl.js"></script>
 </script>
 <style>
 .item {
@@ -38,6 +38,9 @@
 }
 </style>
 <script>
+
+var BASE_URL_NO_PORT = "http://netgear.rohidekar.com";
+var BASE_URL = "http://netgear.rohidekar.com:4455";
 var jq = jQuery;
 
 var limit;
@@ -83,7 +86,7 @@ function loadFile(docUrl){
 	var url = docUrl;
 	jq("#dir").val(url);
 	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url)  + "&limit=" + limit);
-	jq.getJSON("http://netgear.rohidekar.com:4455/helloworld/json?filePath=" 
+	jq.getJSON(BASE_URL + "/helloworld/json?filePath=" 
 			+ encodeURIComponent(url))
 		.done(function(result) {
 			printTreeAsHtml(result);			
@@ -293,7 +296,7 @@ function persistChanges() {
    
    jq.ajax({          
             type:  'POST',
-            url:   'http://netgear.rohidekar.com:4455/helloworld/persist',
+            url:   BASE_URL + '/helloworld/persist',
 			 data: { 
 			 	filePath: encodeURIComponent(jq("#dir option:selected").val()),
 			 	newFileContents : encodeURIComponent(jq("#myTextArea").val()),
@@ -314,7 +317,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 	// javascript animation is expensive. CSS animation is a lot smoother.
 	jq.ajax({          
 		type:  'POST',
-		url:   'http://netgear.rohidekar.com:4455/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
+		url:   BASE_URL + '/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
 		 data: { 
 			//filePath: encodeURIComponent(jq("#dir option:selected").val()),
 			//newFileContents : encodeURIComponent(jq("#myTextArea").val()),
@@ -332,7 +335,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 
 <script> 
     jq(function(){
-      jq("#menubar").load("http://netgear.rohidekar.com/index.html"); 
+      jq("#menubar").load(BASE_URL_NO_PORT + "/menu.html"); 
     });
 </script>
 <div id="menubar"></div>
