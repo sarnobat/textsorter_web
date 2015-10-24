@@ -4,10 +4,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -34,7 +37,7 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 
 // Insertion-sort into "sorted" is not implemented
-public class ButtonSorterServer {
+public class TextSorter {
 	public static void main(String[] args) throws URISyntaxException {
 		try {
 			JdkHttpServerFactory.createHttpServer(
@@ -54,6 +57,7 @@ public class ButtonSorterServer {
 		public Response read(@QueryParam("filePath") String iFilePath)
 				throws JSONException, IOException {
 				
+			System.out.println("TextSorter.HelloWorldResource.read() - begin");
 			createSortedCopyOfFile(iFilePath);
 				
 			try {
@@ -64,7 +68,7 @@ public class ButtonSorterServer {
 				}
 				JSONArray o = toJson(iFilePath);
 				mwkFileAsJson.put("tree", o);
-
+System.out.println("TextSorter.HelloWorldResource.read() - end");
 				return Response.ok().header("Access-Control-Allow-Origin", "*")
 						.entity(mwkFileAsJson.toString())
 						.type("application/json").build();
@@ -75,6 +79,7 @@ public class ButtonSorterServer {
 		}
 
 		private void createSortedCopyOfFile(String iFilePath) {
+			System.out.println("TextSorter.HelloWorldResource.createSortedCopyOfFile() - begin");
 			try {
 				Defragmenter.defragmentFile(iFilePath);
 				System.out.println("readFile() - sort successful");
@@ -322,6 +327,7 @@ public class ButtonSorterServer {
 
 	public static JSONArray toJson(String iFilePath) throws JSONException,
 			IOException {
+		System.out.println("TextSorter.toJson() - begin");
 		List<String> _lines;
 		File f = new File(iFilePath);
 		if (!f.exists()) {
@@ -447,9 +453,9 @@ public class ButtonSorterServer {
 		return sb;
 	}
 
-}
 
-public class Defragmenter {
+
+private static class Defragmenter {
 
 	public static final String PUBLISHING = "publishing";
 
@@ -457,7 +463,7 @@ public class Defragmenter {
 	 * This only writes it to stdout, it doesn't modify the file.
 	 */
 	public static void defragmentFile(String fileToOrganizePath) {
-		System.out.println("defragmentFile() - begin");
+		System.out.println("defragmentFile() - begin: " + fileToOrganizePath);
 		List<String> lines = TextSorterControllerUtils
 				.readFile(fileToOrganizePath);
 		MyTreeNode treeRootNode = TreeCreator.createTreeFromLines(lines);
@@ -465,11 +471,12 @@ public class Defragmenter {
 		MyTreeNode.dumpTreeToFileAndVerify(treeRootNode, fileToOrganizePath,
 				Utils.countNonHeadingLines(lines));
 		MyTreeNode.resetValidationStats();
+		System.out.println("TextSorter.Defragmenter.defragmentFile() - end");
 	}
 	
 }
 
-public class Utils {
+private static class Utils {
 		public static int determineHeadingLevel(String headingLine) {
 			int headingLevel = 0;
 			for (int i = 0; i < headingLine.length(); i++) {
@@ -498,15 +505,17 @@ public class Utils {
 		}
 	}
 	
-	class TextSorterControllerUtils {
+private static class TextSorterControllerUtils {
 		public static List<String> readFile(String inputFilePath) {
+			System.out.println("TextSorter.TextSorterControllerUtils.readFile() - " + inputFilePath);
 			List<String> theLines = null;
 			try {
 				theLines = FileUtils.readLines(new File(inputFilePath));
 	
 			} catch (IOException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
+			System.out.println("TextSorter.TextSorterControllerUtils.readFile() - " + theLines);
 			// To ensure we don't lose text before the first heading
 			if (!theLines.get(0).startsWith("=")) {
 				theLines.add(0, "= =");
@@ -515,9 +524,10 @@ public class Utils {
 		}
 	}
 	
-	class TreeCreator {
+private static	class TreeCreator {
 		@SuppressWarnings("unchecked")
 		public static MyTreeNode createTreeFromLines(List<String> lines) {
+			System.out.println("TextSorter.TreeCreator.createTreeFromLines() - begin");
 			List<Snippet> theSnippetList = getSnippetList(lines);
 			Stack<MyTreeNode> snippetTreePath = new Stack<MyTreeNode>();
 			MyTreeNode.totalNodeCount = 0;
@@ -667,7 +677,7 @@ public class Utils {
 	
 	}
 	
-	class VirtualNodeCreator {
+private static class VirtualNodeCreator {
 	
 		public static MyTreeNode createVirtualNode(int iHeadingLevel,
 				Stack<MyTreeNode> snippetTreePath,
@@ -723,7 +733,7 @@ public class Utils {
 		}
 	}
 	
-	class Snippet implements Comparable<Object> {
+	private static class Snippet implements Comparable<Object> {
 		final int levelNumber;
 		final List<String> snippetLines;
 		private final String headingLine;
@@ -837,7 +847,7 @@ public class Utils {
 		}
 	}
 	
-	class MyTreeNode implements Comparable<Object> {
+	private static class MyTreeNode implements Comparable<Object> {
 		final ListMultimap<String, MyTreeNode> childNodes = LinkedListMultimap
 				.create();
 		final MyTreeNode parentNode;
@@ -1062,6 +1072,7 @@ public class Utils {
 	
 		static void dumpTreeToFileAndVerify(MyTreeNode iRootTreeNode,
 				String iFileToWritePath, int nonHeadinglinesInOriginalFile) {
+			System.out.println("TextSorter.MyTreeNode.dumpTreeToFileAndVerify() - begin");
 			String outputMwkFilePath = Utils
 					.getDeragmentedFilePath(iFileToWritePath);
 	
@@ -1074,7 +1085,7 @@ public class Utils {
 	
 		private static void verifyFileWasWritten(String outputPath,
 				int nonHeadinglinesInOriginalFile) {
-	
+	System.out.println("TextSorter.MyTreeNode.verifyFileWasWritten() - begin");
 			int after = Utils.countNonHeadingLines(TextSorterControllerUtils
 					.readFile(outputPath));
 			if (nonHeadinglinesInOriginalFile > after) {
@@ -1217,7 +1228,7 @@ public class Utils {
 	
 		private static void addChildNodesToOutputRootNode(
 				MyTreeNode rOutputTreeNode, Collection<MyTreeNode> values) {
-			rOutputTreeNode.addChildren(new LinkedList<>(values));
+			rOutputTreeNode.addChildren(new LinkedList<MyTreeNode>(values));
 	
 		}
 	
@@ -1279,7 +1290,7 @@ public class Utils {
 			checkAllNodesHaveSameHeading(nodes);
 			MyTreeNode first = nodes.get(0);
 			MyTreeNode parent = first.getParentNode();
-			List<String> superSnippetLines = new LinkedList<>();
+			List<String> superSnippetLines = new LinkedList<String>();
 			int i = 0;
 			for (MyTreeNode n : nodes) {
 				// Hmmm we're assuming that a string containing newlines will have
@@ -1334,7 +1345,7 @@ public class Utils {
 				List<MyTreeNode> childNodesForHeading = rHeadingToAllChildrenOfHeading
 						.get(childNode.getHeadingText());
 				if (childNodesForHeading == null) {
-					childNodesForHeading = new LinkedList<>();
+					childNodesForHeading = new LinkedList<MyTreeNode>();
 					rHeadingToAllChildrenOfHeading.put(childNode.getHeadingText(),
 							childNodesForHeading);
 				}
@@ -1366,6 +1377,7 @@ public class Utils {
 		}
 	
 		public static void validateTotalNodeCount(MyTreeNode root) {
+			System.out.println("TextSorter.MyTreeNode.validateTotalNodeCount() - begin");
 			int subtreeNodeCount = root.countNodesInSubtree();
 			if (subtreeNodeCount < MyTreeNode.totalNodeCount) {
 				throw new RuntimeException("Nodes lost: ["
@@ -1378,3 +1390,5 @@ public class Utils {
 		}
 	
 	}
+
+}
