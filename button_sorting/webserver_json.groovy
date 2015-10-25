@@ -80,7 +80,7 @@ public class TextSorter {
 			System.out.println("TextSorter.HelloWorldResource.createSortedCopyOfFile() - begin");
 			try {
 				Defragmenter.defragmentFile(iFilePath);
-				System.out.println("readFile() - sort successful");
+				System.out.println("TextSorter.HelloWorldResource.createSortedCopyOfFile() - sort successful");
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new RuntimeException();
@@ -148,6 +148,7 @@ public class TextSorter {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				System.out.println("TextSorter.HelloWorldResource.move() - success");
 				return Response.ok().header("Access-Control-Allow-Origin", "*")
 						.entity(topLevelArray.toString()).type("application/json").build();
 			} catch (Exception e) {
@@ -504,7 +505,9 @@ public class TextSorter {
 			List<Snippet> theSnippetList = getSnippetList(lines);
 			Stack<MyTreeNode> snippetTreePath = new Stack<MyTreeNode>();
 			MyTreeNode.totalNodeCount = 0;
+			System.out.println("TextSorter.TreeCreator.createTreeFromLines() - before loop");
 			for (Snippet aSnippet : theSnippetList) {
+				System.out.print(".");
 				// Find the parent node
 				MyTreeNode aParentNode = null;
 				findParentForCurrentSnippet: {
@@ -531,6 +534,8 @@ public class TextSorter {
 				// MyTreeNode.dumpTree(aParentNode);
 				MyTreeNode.validateCount(aParentNode);
 			}
+			System.out.println("");
+			System.out.println("TextSorter.TreeCreator.createTreeFromLines() - after loop");
 			// Pop the stack and return the root
 			MyTreeNode root = null;
 			while (!snippetTreePath.isEmpty()) {
@@ -588,7 +593,6 @@ public class TextSorter {
 		}
 
 		private static int findNextHeadingLineAfter(final int start, List<String> lines) {
-			System.out.println("TextSorter.TreeCreator.findNextHeadingLineAfter() - begin");
 			int nextSnippetStart = start + 1;
 			String endLine = lines.get(nextSnippetStart);
 			while (!isHeadingLine(endLine)) {
@@ -1036,7 +1040,7 @@ public class TextSorter {
 			if (nonHeadinglinesInOriginalFile > after) {
 				throw new RuntimeException("Lines lost");
 			} else {
-				System.out.println("writeTreeToFile() - Before, after: ["
+				System.out.println("TextSorter.MyTreeNode.verifyFileWasWritten() - Before, after: ["
 						+ nonHeadinglinesInOriginalFile + ", " + after + "]");
 			}
 
@@ -1108,7 +1112,7 @@ public class TextSorter {
 
 			int after = Utils.countNonHeadingLines(TextSorterControllerUtils
 					.readFile(coagulatedFilePath));
-			System.out.println("removeRedundantHeadings() - Before, after: ["
+			System.out.println("TextSorter.MyTreeNode.validateSizeBeforeAndAfterCoagulation() - Before, after: ["
 					+ nonHeadinglinesInOriginalFile + ", " + after + "]");
 			if (nonHeadinglinesInOriginalFile != after) {
 				throw new RuntimeException("Lines lost or spurious added");
