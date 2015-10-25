@@ -6,7 +6,7 @@
 <link rel="shortcut icon" href="/static/icons/Orb_Icons_009.png" type="image/x-icon" />
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="/yurl/jquery/purl.js"></script>
+<script type="text/javascript" src="/js/purl.js"></script>
 </script>
 <style>
 .item {
@@ -40,6 +40,7 @@
 <script>
 
 var BASE_URL_NO_PORT = "http://netgear.rohidekar.com";
+//var BASE_URL_NO_PORT = "http://localhost";
 var BASE_URL = BASE_URL_NO_PORT + ":4455";
 var jq = jQuery;
 
@@ -346,6 +347,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 
 	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jq('#dir option:selected').val())">	
 		<option>/home/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>		
+		<option>/Users/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>
 		<!--<option>/home/sarnobat/sarnobat.git/mwk/new.mwk</option>-->
 		<option>/home/sarnobat/sarnobat.git/mwk/programming_tips/functional_programming.mwk</option>
 		<option>/home/sarnobat/sarnobat.git/mwk/programming_tips/unglorification.mwk</option>
