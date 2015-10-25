@@ -437,7 +437,7 @@ public class TextSorter {
 		 * This only writes it to stdout, it doesn't modify the file.
 		 */
 		public static void defragmentFile(String fileToOrganizePath) {
-			System.out.println("defragmentFile() - begin: " + fileToOrganizePath);
+			System.out.println("TextSorter.Defragmenter.defragmentFile() - begin: " + fileToOrganizePath);
 			List<String> lines = TextSorterControllerUtils.readFile(fileToOrganizePath);
 			MyTreeNode treeRootNode = TreeCreator.createTreeFromLines(lines);
 			MyTreeNode.validateTotalNodeCount(treeRootNode);
