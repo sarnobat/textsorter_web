@@ -8,58 +8,33 @@
 <script src="/js/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/purl.js"></script>
 </script>
-<style>
-.item {
-        border-radius: 15px;
-        box-shadow:
-                inset 0 0 9px #222222,
-                10px 10px 14px #474747;// internal and external shadow
-        background-color:#E6FAD2;
-}
-
-/* I can't get this to work.
-.up {
-	max-height: 0;
-}
-
-.slider {
-	overflow-y: hidden;
-	max-height: 500px;
-
-	transition-property: all;
-	transition-duration: .5s;
-	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-}
-*/
-.fadeOut {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s 5s, opacity 5s linear;
-}
-</style>
-
-
 
 <script>
+
 //var BASE_URL_NO_PORT = "http://netgear.rohidekar.com";
 var BASE_URL_NO_PORT = "http://localhost";
 var BASE_URL = BASE_URL_NO_PORT + ":4455";
-var jq = jQuery;
+
 
 var limit;
 
-
+// Not currently being used even though it's useful
 var loadedTextLength;
 
 // TODO: bad: global state
 var headingNames = [];
-//no conflict jQuery
+
+// I forgot why we need this. One of the libraries needs dollar for something
+// else, but I don't remember which one
+var jq = jQuery;
+
 jq.noConflict();
-//jQuery stuff
+
 jq(document).ready(function() {
 
-	updateURLIfEmpty();
-
+	updateURLIfEmpty(jq.url().param('limit'));
+	self.limit = jq.url().param('limit');
+	
 	var dir = jq("#dir").val();
 	var urlFilePath = jq.url().param('filePath');
 
@@ -68,23 +43,21 @@ jq(document).ready(function() {
 
 });
 
-function getUrl(dir, urlFilePath) {
+
+function getUrl(dir, filePathInListbox) {
 	var url = "";
 	if (window.location.search.length == 0) {
 		url = dir;
-	} 
-	// Textbox
-	else {
-		url = decodeURIComponent(urlFilePath);
+	} else {
+		url = decodeURIComponent(filePathInListbox);
 	}
 	return url;
 }
 
-function updateURLIfEmpty() {
-  	limit = jq.url().param('limit');
-	if (limit == null) {
-		limit = 200;
-		window.history.pushState("object or string", "Title", document.URL + "&limit=" + limit);
+function updateURLIfEmpty(limit2) {
+	if (limit2 == null) {
+		limit2 = 200;
+		window.history.pushState("object or string", "Title", document.URL + "&limit=" + limit2);
 	}
 }
 
@@ -94,11 +67,16 @@ function clearTextArea() {
 }
 
 function loadFile(docUrl){
-	var url = docUrl;
-	jq("#dir").val(url);
-	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url)  + "&limit=" + limit);
-	jq.getJSON(BASE_URL + "/helloworld/json?filePath=" 
-			+ encodeURIComponent(url))
+
+	{
+		jq("#dir").val(docUrl);
+
+		window.history.pushState(null, "vi", "index.html?filePath="
+				+ encodeURIComponent(docUrl) + "&limit=" + limit);
+	}
+
+	jq.getJSON(
+			BASE_URL + "/helloworld/json?filePath=" + encodeURIComponent(docUrl))
 		.done(function(result) {
 			printTreeAsHtml(result);			
 		})
@@ -111,7 +89,7 @@ function printTreeAsHtml(response) {
 	var level = 0;
 	jq("#snippets").val();
 	var tree = response.tree;	
-	tree.heading = "-root-"
+	tree.heading = "-root-";
 	var text = "";
 	printedSnippetCount = 0;
 	var headings = {
@@ -125,7 +103,7 @@ function printTreeAsHtml(response) {
 		7 : {},
 	};
 	for (var i = 0; i < tree.length; i++) {
-		var snippet = tree[i];
+		//var snippet = tree[i];
 		getHeadingLevelToHeadings(tree[i], 0, headings);
 	}
 	for (var i = 0; i < tree.length; i++) {
@@ -143,11 +121,11 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 
 	++printedSnippetCount;
 
+	// TODO: bad - global variable
 	if (printedSnippetCount > limit) {
 		return "";
 	}
 
-	var text = "";
 	var text = "<blockquote><div id="+snippet.id+" class='item' style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
 	text += snippet.heading + "(" 
 		+snippet.id
@@ -196,8 +174,8 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 		    }
 		});
 		deDupedCategories.sort(function(a,b){
- 		    if(a.heading.toLowerCase() > b.heading.toLowerCase()){ return 1}
-			if(a.heading.toLowerCase() < b.heading.toLowerCase()){ return -1}
+ 		    if(a.heading.toLowerCase() > b.heading.toLowerCase()){ return 1;}
+			if(a.heading.toLowerCase() < b.heading.toLowerCase()){ return -1;}
 			  return 0;
 		});
 		sortedCategoriesDeDuped = deDupedCategories;
@@ -281,6 +259,8 @@ function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
 	return headingsAtLevels;
 	
 }
+
+// Unused
 // Rarely used
 function dump(result)
 {
@@ -326,7 +306,7 @@ function persistChanges() {
          }).done(function() {
 			console.debug("successfully written");
 			loadedTextLength = latestTextLength;
-         }).fail(function(){alert("fail")});
+         }).fail(function(){alert("fail");});
 }
 
 function moveTo(idToBeMoved, idOfTarget) {
@@ -347,11 +327,41 @@ function moveTo(idToBeMoved, idOfTarget) {
 	}).done(function() {
 		jq("#"+idToBeMoved).remove();
 		console.debug("successfully written: " + idToBeMoved);
-	}).fail(function(){alert("fail")});
+	}).fail(function(){alert("fail");});
 }
+
 
 </script>
 
+<style>
+.item {
+        border-radius: 15px;
+        box-shadow:
+                inset 0 0 9px #222222,
+                10px 10px 14px #474747;// internal and external shadow
+        background-color:#E6FAD2;
+}
+
+/* I can't get this to work.
+.up {
+	max-height: 0;
+}
+
+.slider {
+	overflow-y: hidden;
+	max-height: 500px;
+
+	transition-property: all;
+	transition-duration: .5s;
+	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+*/
+.fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 5s, opacity 5s linear;
+}
+</style>
 </head>
 <body style="background-color : #CCCCFF">
 
