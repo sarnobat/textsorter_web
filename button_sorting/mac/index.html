@@ -37,8 +37,10 @@
   transition: visibility 0s 5s, opacity 5s linear;
 }
 </style>
-<script>
 
+
+
+<script>
 //var BASE_URL_NO_PORT = "http://netgear.rohidekar.com";
 var BASE_URL_NO_PORT = "http://localhost";
 var BASE_URL = BASE_URL_NO_PORT + ":4455";
@@ -54,21 +56,29 @@ var headingNames = [];
 //no conflict jQuery
 jq.noConflict();
 //jQuery stuff
-jq(document).ready(function(){
+jq(document).ready(function() {
 
 	updateURLIfEmpty();
 
+	var dir = jq("#dir").val();
+	var urlFilePath = jq.url().param('filePath');
+
+	var url = getUrl(dir, urlFilePath);
+	loadFile(url);
+
+});
+
+function getUrl(dir, urlFilePath) {
 	var url = "";
 	if (window.location.search.length == 0) {
-		url = jq("#dir").val();
+		url = dir;
 	} 
 	// Textbox
 	else {
-		url = decodeURIComponent(jq.url().param('filePath'));
+		url = decodeURIComponent(urlFilePath);
 	}
-	loadFile(url);
-	
-});
+	return url;
+}
 
 function updateURLIfEmpty() {
   	limit = jq.url().param('limit');
@@ -124,13 +134,19 @@ function printTreeAsHtml(response) {
 	}
 	jq("#snippets").append(headings + text);
 }
+
 var printedSnippetCount = 0;
+
 var colors = ['red','white','SteelBlue','MistyRose','red'];
+
 function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
+
 	++printedSnippetCount;
+
 	if (printedSnippetCount > limit) {
 		return "";
 	}
+
 	var text = "";
 	var text = "<blockquote><div id="+snippet.id+" class='item' style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
 	text += snippet.heading + "(" 
@@ -139,9 +155,11 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 		+parentSnippet.heading+"</span>)"
 		+"<br>";
 	var forbiddenLevel = 1;
+
 	if (level > forbiddenLevel && level < 5) // Level 4 is also best left alone
 	{
 		var textareaColor = 'white';
+
 		if (snippet.freetext == null) {
 			textareaColor = 'orange';
 		}
@@ -173,8 +191,8 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 		jq.each(sortedCategories, function(heading, id) {
 		    var capitalizedHeading = sortedCategories[heading].heading.replace(/(=+\s+)(\w*)/, capitalizeHeadingFunction); 
 		    if (deDupedCategoryHeadings.indexOf(capitalizedHeading) < 0) {
-                        deDupedCategoryHeadings.push(capitalizedHeading);
-			deDupedCategories.push(sortedCategories[heading]);
+				deDupedCategoryHeadings.push(capitalizedHeading);
+				deDupedCategories.push(sortedCategories[heading]);
 		    }
 		});
 		deDupedCategories.sort(function(a,b){
@@ -189,14 +207,16 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 
 		var i = 0;
 		text += "<table><tr><td>";
+
 		jq.each(sortedCategoriesDeDuped, function(pos, obj) {
 			i++;
-			var buttonColor = 'none';
-			if (i %20 == 0) {
-				text += "</td><td>";
-			}
+			var buttonColor ;
+			buttonColor = 'none';
 			if (new RegExp(".*Trash.*").test(obj.heading)) {
 				buttonColor = 'purple';
+			}
+			if (i %20 == 0) {
+				text += "</td><td>";
 			}
 			text += "<input type=button value='"
 				+ obj.heading.replace('\n','').substring(0,14) 
@@ -206,6 +226,7 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 				+'\x27)\x22 style="background-color : '
 				+buttonColor+'"><br>\n';
 		});
+
 		text += "</td></tr></table>";
 	
 	}
@@ -328,6 +349,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 		console.debug("successfully written: " + idToBeMoved);
 	}).fail(function(){alert("fail")});
 }
+
 </script>
 
 </head>
@@ -348,7 +370,11 @@ function moveTo(idToBeMoved, idOfTarget) {
 	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jq('#dir option:selected').val())">	
 		<option>/home/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk</option>		
 		<option>/Users/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk</option>
+		<option>/Users/sarnobat/sarnobat.git/mwk/geography.mwk<option>
 		<option>/Users/sarnobat/sarnobat.git/mwk/programming-tips.mwk</option>
+		<option>/Users/sarnobat/sarnobat.git/mwk/self.mwk</option>
+		<option>/Users/sarnobat/sarnobat.git/mwk/girls.mwk</option>
+		<option>/Users/sarnobat/sarnobat.git/mwk/career.mwk</option>
 		<option>/Users/sarnobat/sarnobat.git/mwk/atletico_documentary.mwk</option>
 		<option>/sarnobat.garagebandbroken/Desktop/git-repo/mwk/atletico_madrid.mwk</option>
 		<option>/sarnobat.garagebandbroken/Desktop/git-repo/mwk/humor.mwk</option>
