@@ -173,12 +173,18 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 			buttonColor = 'none';
 			if (new RegExp(".*Trash.*").test(obj.heading)) {
 				buttonColor = 'purple';
-			}
-			else if (new RegExp(".*rogramming.*ips.*").test(obj.heading)) {
+			} else if (new RegExp(".*prod.*").test(obj.heading)) {
+				buttonColor = 'yellow';
+			} else if (new RegExp(".*usiness.*").test(obj.heading)) {
+				buttonColor = 'green';
+			} else if (new RegExp(".*areer.*").test(obj.heading)) {
+				buttonColor = 'orange';
+			} else if (new RegExp(".*rogramming.*ips.*").test(obj.heading)) {
 				buttonColor = 'blue';
-			}
-			else if (new RegExp(".*tech.*").test(obj.heading)) {
+			} else if (new RegExp(".*tech.*").test(obj.heading)) {
 				buttonColor = 'lightblue';
+			} else if (new RegExp(".*travel.*").test(obj.heading)) {
+				buttonColor = 'lightgreen';
 			}
 			if (i %20 == 0) {
 				text += "</td><td>";
