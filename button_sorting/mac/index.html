@@ -61,11 +61,6 @@ function updateURLIfEmpty(limit2) {
 	}
 }
 
-
-function clearTextArea() {
-	jq("#snippets").text("");
-}
-
 function loadFile(docUrl){
 
 	{
@@ -127,9 +122,9 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	}
 
 	var text = "<blockquote><div id="+snippet.id+" class='item' style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
-	text += snippet.heading + "(" 
-		+snippet.id
-		+"<span style='background-color : pink'>"
+	text += snippet.heading + "<br>(" 
+		+ snippet.id
+		+"<br><span style='background-color : pink'>"
 		+parentSnippet.heading+"</span>)"
 		+"<br>";
 	var forbiddenLevel = 1;
@@ -164,21 +159,7 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 		    sortedCategories.push(p);
 		});
 
-		var deDupedCategories = [];
-		var deDupedCategoryHeadings = [];
-		jq.each(sortedCategories, function(heading, id) {
-		    var capitalizedHeading = sortedCategories[heading].heading.replace(/(=+\s+)(\w*)/, capitalizeHeadingFunction); 
-		    if (deDupedCategoryHeadings.indexOf(capitalizedHeading) < 0) {
-				deDupedCategoryHeadings.push(capitalizedHeading);
-				deDupedCategories.push(sortedCategories[heading]);
-		    }
-		});
-		deDupedCategories.sort(function(a,b){
- 		    if(a.heading.toLowerCase() > b.heading.toLowerCase()){ return 1;}
-			if(a.heading.toLowerCase() < b.heading.toLowerCase()){ return -1;}
-			  return 0;
-		});
-		sortedCategoriesDeDuped = deDupedCategories;
+		var sortedCategoriesDeDuped = deDupe(sortedCategories);
 
 		// This doesn't work for empty headings. Besides the code is written badly. Try it again and do it properly
 		//		sortedCategoriesDeDuped = getWithoutDuplicates(sortedCategories, headingNames);
@@ -193,6 +174,12 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 			if (new RegExp(".*Trash.*").test(obj.heading)) {
 				buttonColor = 'purple';
 			}
+			else if (new RegExp(".*rogramming.*ips.*").test(obj.heading)) {
+				buttonColor = 'blue';
+			}
+			else if (new RegExp(".*tech.*").test(obj.heading)) {
+				buttonColor = 'lightblue';
+			}
 			if (i %20 == 0) {
 				text += "</td><td>";
 			}
@@ -201,7 +188,9 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 				+'\' onclick=\x22moveTo(\x27'
 				+snippet.id+'\x27,\x27'
 				+ obj.id 
-				+'\x27)\x22 style="background-color : '
+				+'\x27)\x22 '
+				+ ' title="' + obj.heading.replace(new RegExp('=+\s*(.*)\s*===?'),'$1') + '" '
+				+' style="background-color : '
 				+buttonColor+'"><br>\n';
 		});
 
@@ -224,16 +213,39 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	return text;
 }
 
-function capitalizeHeadingFunction (match, p1, p2, offset, totalString) { return p1
-                        + p2.charAt(0).toUpperCase() + p2.slice(1);
-                    };
+function deDupe(sortedCategories) {
+	var deDupedCategories = [];
+	var deDupedCategoryHeadings = [];
+	var capitalizedCategoryHeadings = [];
+	jq.each(sortedCategories, function(heading, id) {
+	    var capitalizedHeading = sortedCategories[heading].heading.replace(/(=+\s+)(\w*)/, capitalizeHeadingFunction); 
+	    if (deDupedCategoryHeadings.indexOf(capitalizedHeading) < 0) {
+	    	if (capitalizedCategoryHeadings.indexOf(capitalizedHeading.toUpperCase()) < 0) {
+				deDupedCategoryHeadings.push(capitalizedHeading);
+				deDupedCategories.push(sortedCategories[heading]);
+				capitalizedCategoryHeadings.push(capitalizedHeading.toUpperCase());
+	    	}
+	    }
+	});
+	deDupedCategories.sort(function(a,b){
+	    if(a.heading.toLowerCase() > b.heading.toLowerCase()){ return 1;}
+		if(a.heading.toLowerCase() < b.heading.toLowerCase()){ return -1;}
+		  return 0;
+	});
+	return deDupedCategories;
+}
 
-// TODO: bad: mutable state
+function capitalizeHeadingFunction(match, p1, p2, offset, totalString) {
+	return p1 + p2.charAt(0).toUpperCase() + p2.slice(1);
+};
+
+// Unused
+// TODO: bad: parameter headingNames gets modified
 function getWithoutDuplicates(sortedCategories, headingNames) {
 	var deDuped = [];
 	jq.each(sortedCategories, function(pos, obj) {
 		var substitutionFunction = function(match, p1, p2, offset, totalString) { return p1
-			+ p2.charAt(0).toUpperCase() + p2.slice(1);
+			+ p2.charAt(0).toUpperCase() + p2.slice(1).toLowerCase();
 		 };
 		var capitalizedHeading = obj.heading.replace(/(=+\s+)(\w*)/, substitutionFunction);
 		if (headingNames.indexOf(capitalizedHeading) > -1) {
@@ -245,6 +257,8 @@ function getWithoutDuplicates(sortedCategories, headingNames) {
 	});
 	return deDuped;
 }
+
+
 function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
 	
 	if (subtree.subsections != null) {	
@@ -328,6 +342,11 @@ function moveTo(idToBeMoved, idOfTarget) {
 		jq("#"+idToBeMoved).remove();
 		console.debug("successfully written: " + idToBeMoved);
 	}).fail(function(){alert("fail");});
+}
+
+
+function clearTextArea() {
+	jq("#snippets").text("");
 }
 
 
