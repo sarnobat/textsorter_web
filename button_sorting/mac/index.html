@@ -218,7 +218,7 @@ function deDupe(sortedCategories) {
 	var deDupedCategoryHeadings = [];
 	var capitalizedCategoryHeadings = [];
 	jq.each(sortedCategories, function(heading, id) {
-	    var capitalizedHeading = sortedCategories[heading].heading.replace(/(=+\s+)(\w*)/, capitalizeHeadingFunction); 
+	    var capitalizedHeading = sortedCategories[heading].heading.replace(/=+\s+(\w+)\s+=+/, capitalizeHeadingFunction); 
 	    if (deDupedCategoryHeadings.indexOf(capitalizedHeading) < 0) {
 	    	if (capitalizedCategoryHeadings.indexOf(capitalizedHeading.toUpperCase()) < 0) {
 				deDupedCategoryHeadings.push(capitalizedHeading);
@@ -235,8 +235,8 @@ function deDupe(sortedCategories) {
 	return deDupedCategories;
 }
 
-function capitalizeHeadingFunction(match, p1, p2, offset, totalString) {
-	return p1 + p2.charAt(0).toUpperCase() + p2.slice(1);
+function capitalizeHeadingFunction(match, p2, offset, totalString) {
+	return p2.charAt(0).toUpperCase() + p2.slice(1);
 };
 
 // Unused
@@ -348,6 +348,7 @@ function moveTo(idToBeMoved, idOfTarget) {
 function clearTextArea() {
 	jq("#snippets").text("");
 }
+
 
 
 </script>
