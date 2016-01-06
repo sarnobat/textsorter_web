@@ -5,73 +5,95 @@
 
 <link rel="shortcut icon" href="/static/icons/Orb_Icons_009.png" type="image/x-icon" />
 
-<script src="/js/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/purl.js"></script>
 </script>
+<style>
+.item {
+        border-radius: 15px;
+        box-shadow:
+                inset 0 0 9px #222222,
+                10px 10px 14px #474747;// internal and external shadow
+        background-color:#E6FAD2;
+}
 
+/* I can't get this to work.
+.up {
+	max-height: 0;
+}
+
+.slider {
+	overflow-y: hidden;
+	max-height: 500px;
+
+	transition-property: all;
+	transition-duration: .5s;
+	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+*/
+.fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 5s, opacity 5s linear;
+}
+</style>
 <script>
 
-
-
+<<<<<<< HEAD
+var BASE_URL_NO_PORT = "http://netgear.rohidekar.com";
+//var BASE_URL_NO_PORT = "http://localhost";
+=======
 //var BASE_URL_NO_PORT = "http://netgear.rohidekar.com";
 var BASE_URL_NO_PORT = "http://localhost";
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
 var BASE_URL = BASE_URL_NO_PORT + ":4455";
-
+var jq = jQuery;
 
 var limit;
 
-// Not currently being used even though it's useful
+
 var loadedTextLength;
 
 // TODO: bad: global state
 var headingNames = [];
-
-// I forgot why we need this. One of the libraries needs dollar for something
-// else, but I don't remember which one
-var jq = jQuery;
-
+//no conflict jQuery
 jq.noConflict();
+//jQuery stuff
+jq(document).ready(function(){
 
-jq(document).ready(function() {
+	updateURLIfEmpty();
 
-	updateURLIfEmpty(jq.url().param('limit'));
-	self.limit = jq.url().param('limit');
-	
-	var dir = jq("#dir").val();
-
-	loadFile(getUrl(dir, jq.url().param('filePath')));
-
-});
-
-
-function getUrl(dir, filePathInListbox) {
 	var url = "";
 	if (window.location.search.length == 0) {
-		url = dir;
-	} else {
-		url = decodeURIComponent(filePathInListbox);
+		url = jq("#dir").val();
+	} 
+	// Textbox
+	else {
+		url = decodeURIComponent(jq.url().param('filePath'));
 	}
-	return url;
+	loadFile(url);
+	
+});
+
+function updateURLIfEmpty() {
+  	limit = jq.url().param('limit');
+	if (limit == null) {
+		limit = 200;
+		window.history.pushState("object or string", "Title", document.URL + "&limit=" + limit);
+	}
 }
 
-function updateURLIfEmpty(limit2) {
-	if (limit2 == null) {
-		limit2 = 200;
-		window.history.pushState("object or string", "Title", document.URL + "&limit=" + limit2);
-	}
+
+function clearTextArea() {
+	jq("#snippets").text("");
 }
 
 function loadFile(docUrl){
-
-	{
-		jq("#dir").val(docUrl);
-
-		window.history.pushState(null, "vi", "index.html?filePath="
-				+ encodeURIComponent(docUrl) + "&limit=" + limit);
-	}
-
-	jq.getJSON(
-			BASE_URL + "/helloworld/json?filePath=" + encodeURIComponent(docUrl))
+	var url = docUrl;
+	jq("#dir").val(url);
+	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url)  + "&limit=" + limit);
+	jq.getJSON(BASE_URL + "/helloworld/json?filePath=" 
+			+ encodeURIComponent(url))
 		.done(function(result) {
 			printTreeAsHtml(result);			
 		})
@@ -84,7 +106,7 @@ function printTreeAsHtml(response) {
 	var level = 0;
 	jq("#snippets").val();
 	var tree = response.tree;	
-	tree.heading = "-root-";
+	tree.heading = "-root-"
 	var text = "";
 	printedSnippetCount = 0;
 	var headings = {
@@ -98,7 +120,7 @@ function printTreeAsHtml(response) {
 		7 : {},
 	};
 	for (var i = 0; i < tree.length; i++) {
-		//var snippet = tree[i];
+		var snippet = tree[i];
 		getHeadingLevelToHeadings(tree[i], 0, headings);
 	}
 	for (var i = 0; i < tree.length; i++) {
@@ -107,32 +129,24 @@ function printTreeAsHtml(response) {
 	}
 	jq("#snippets").append(headings + text);
 }
-
 var printedSnippetCount = 0;
-
 var colors = ['red','white','SteelBlue','MistyRose','red'];
-
 function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
-
 	++printedSnippetCount;
-
-	// TODO: bad - global variable
 	if (printedSnippetCount > limit) {
 		return "";
 	}
-
+	var text = "";
 	var text = "<blockquote><div id="+snippet.id+" class='item' style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
-	text += snippet.heading + "<br>(" 
-		+ snippet.id
-		+"<br><span style='background-color : pink'>"
+	text += snippet.heading + "(" 
+		+snippet.id
+		+"<span style='background-color : pink'>"
 		+parentSnippet.heading+"</span>)"
 		+"<br>";
 	var forbiddenLevel = 1;
-
 	if (level > forbiddenLevel && level < 5) // Level 4 is also best left alone
 	{
 		var textareaColor = 'white';
-
 		if (snippet.freetext == null) {
 			textareaColor = 'orange';
 		}
@@ -159,47 +173,44 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 		    sortedCategories.push(p);
 		});
 
-		var sortedCategoriesDeDuped = deDupe(sortedCategories);
+		var deDupedCategories = [];
+		var deDupedCategoryHeadings = [];
+		jq.each(sortedCategories, function(heading, id) {
+		    var capitalizedHeading = sortedCategories[heading].heading.replace(/(=+\s+)(\w*)/, capitalizeHeadingFunction); 
+		    if (deDupedCategoryHeadings.indexOf(capitalizedHeading) < 0) {
+                        deDupedCategoryHeadings.push(capitalizedHeading);
+			deDupedCategories.push(sortedCategories[heading]);
+		    }
+		});
+		deDupedCategories.sort(function(a,b){
+ 		    if(a.heading.toLowerCase() > b.heading.toLowerCase()){ return 1}
+			if(a.heading.toLowerCase() < b.heading.toLowerCase()){ return -1}
+			  return 0;
+		});
+		sortedCategoriesDeDuped = deDupedCategories;
 
 		// This doesn't work for empty headings. Besides the code is written badly. Try it again and do it properly
 		//		sortedCategoriesDeDuped = getWithoutDuplicates(sortedCategories, headingNames);
 
 		var i = 0;
 		text += "<table><tr><td>";
-
 		jq.each(sortedCategoriesDeDuped, function(pos, obj) {
 			i++;
-			var buttonColor ;
-			buttonColor = 'none';
-			if (new RegExp(".*Trash.*").test(obj.heading)) {
-				buttonColor = 'purple';
-			} else if (new RegExp(".*prod.*").test(obj.heading)) {
-				buttonColor = 'yellow';
-			} else if (new RegExp(".*usiness.*").test(obj.heading)) {
-				buttonColor = 'green';
-			} else if (new RegExp(".*areer.*").test(obj.heading)) {
-				buttonColor = 'orange';
-			} else if (new RegExp(".*rogramming.*ips.*").test(obj.heading)) {
-				buttonColor = 'blue';
-			} else if (new RegExp(".*tech.*").test(obj.heading)) {
-				buttonColor = 'lightblue';
-			} else if (new RegExp(".*travel.*").test(obj.heading)) {
-				buttonColor = 'lightgreen';
-			}
+			var buttonColor = 'none';
 			if (i %20 == 0) {
 				text += "</td><td>";
+			}
+			if (new RegExp(".*Trash.*").test(obj.heading)) {
+				buttonColor = 'purple';
 			}
 			text += "<input type=button value='"
 				+ obj.heading.replace('\n','').substring(0,14) 
 				+'\' onclick=\x22moveTo(\x27'
 				+snippet.id+'\x27,\x27'
 				+ obj.id 
-				+'\x27)\x22 '
-				+ ' title="' + obj.heading.replace(new RegExp('=+\s*(.*)\s*===?'),'$1') + '" '
-				+' style="background-color : '
+				+'\x27)\x22 style="background-color : '
 				+buttonColor+'"><br>\n';
 		});
-
 		text += "</td></tr></table>";
 	
 	}
@@ -219,39 +230,16 @@ function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
 	return text;
 }
 
-function deDupe(sortedCategories) {
-	var deDupedCategories = [];
-	var deDupedCategoryHeadings = [];
-	var capitalizedCategoryHeadings = [];
-	jq.each(sortedCategories, function(heading, id) {
-	    var capitalizedHeading = sortedCategories[heading].heading.replace(/=+\s+(\w+)\s+=+/, capitalizeHeadingFunction); 
-	    if (deDupedCategoryHeadings.indexOf(capitalizedHeading) < 0) {
-	    	if (capitalizedCategoryHeadings.indexOf(capitalizedHeading.toUpperCase()) < 0) {
-				deDupedCategoryHeadings.push(capitalizedHeading);
-				deDupedCategories.push(sortedCategories[heading]);
-				capitalizedCategoryHeadings.push(capitalizedHeading.toUpperCase());
-	    	}
-	    }
-	});
-	deDupedCategories.sort(function(a,b){
-	    if(a.heading.toLowerCase() > b.heading.toLowerCase()){ return 1;}
-		if(a.heading.toLowerCase() < b.heading.toLowerCase()){ return -1;}
-		  return 0;
-	});
-	return deDupedCategories;
-}
+function capitalizeHeadingFunction (match, p1, p2, offset, totalString) { return p1
+                        + p2.charAt(0).toUpperCase() + p2.slice(1);
+                    };
 
-function capitalizeHeadingFunction(match, p2, offset, totalString) {
-	return p2.charAt(0).toUpperCase() + p2.slice(1);
-};
-
-// Unused
-// TODO: bad: parameter headingNames gets modified
+// TODO: bad: mutable state
 function getWithoutDuplicates(sortedCategories, headingNames) {
 	var deDuped = [];
 	jq.each(sortedCategories, function(pos, obj) {
 		var substitutionFunction = function(match, p1, p2, offset, totalString) { return p1
-			+ p2.charAt(0).toUpperCase() + p2.slice(1).toLowerCase();
+			+ p2.charAt(0).toUpperCase() + p2.slice(1);
 		 };
 		var capitalizedHeading = obj.heading.replace(/(=+\s+)(\w*)/, substitutionFunction);
 		if (headingNames.indexOf(capitalizedHeading) > -1) {
@@ -263,8 +251,6 @@ function getWithoutDuplicates(sortedCategories, headingNames) {
 	});
 	return deDuped;
 }
-
-
 function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
 	
 	if (subtree.subsections != null) {	
@@ -279,8 +265,6 @@ function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
 	return headingsAtLevels;
 	
 }
-
-// Unused
 // Rarely used
 function dump(result)
 {
@@ -326,7 +310,7 @@ function persistChanges() {
          }).done(function() {
 			console.debug("successfully written");
 			loadedTextLength = latestTextLength;
-         }).fail(function(){alert("fail");});
+         }).fail(function(){alert("fail")});
 }
 
 function moveTo(idToBeMoved, idOfTarget) {
@@ -347,51 +331,10 @@ function moveTo(idToBeMoved, idOfTarget) {
 	}).done(function() {
 		jq("#"+idToBeMoved).remove();
 		console.debug("successfully written: " + idToBeMoved);
-	}).fail(function(){alert("fail");});
+	}).fail(function(){alert("fail")});
 }
-
-
-function clearTextArea() {
-	jq("#snippets").text("");
-}
-
-
-
-
-
-
-
 </script>
 
-<style>
-.item {
-        border-radius: 15px;
-        box-shadow:
-                inset 0 0 9px #222222,
-                10px 10px 14px #474747;// internal and external shadow
-        background-color:#E6FAD2;
-}
-
-/* I can't get this to work.
-.up {
-	max-height: 0;
-}
-
-.slider {
-	overflow-y: hidden;
-	max-height: 500px;
-
-	transition-property: all;
-	transition-duration: .5s;
-	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-}
-*/
-.fadeOut {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s 5s, opacity 5s linear;
-}
-</style>
 </head>
 <body style="background-color : #CCCCFF">
 
@@ -408,16 +351,12 @@ function clearTextArea() {
 	<textarea id="myTextArea" rows=2 cols=150 onkeyup="persistChanges()"></textarea>
 
 	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jq('#dir option:selected').val())">	
-		<option>/home/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk</option>		
-		<option>/Users/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk</option>
-		<option>/Users/sarnobat/sarnobat.git/mwk/geography.mwk<option>
-		<option>/Users/sarnobat/sarnobat.git/mwk/programming-tips.mwk</option>
-		<option>/Users/sarnobat/sarnobat.git/mwk/self.mwk</option>
-		<option>/Users/sarnobat/sarnobat.git/mwk/girls.mwk</option>
-		<option>/Users/sarnobat/sarnobat.git/mwk/career.mwk</option>
-		<option>/Users/sarnobat/sarnobat.git/mwk/atletico_documentary.mwk</option>
-		<option>/sarnobat.garagebandbroken/Desktop/git-repo/mwk/atletico_madrid.mwk</option>
-		<option>/sarnobat.garagebandbroken/Desktop/git-repo/mwk/humor.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>		
+<<<<<<< HEAD
+		<option>/Users/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<option>
+=======
+		<option>/Users/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
 		<!--<option>/home/sarnobat/sarnobat.git/mwk/new.mwk</option>-->
 		<option>/home/sarnobat/sarnobat.git/mwk/programming_tips/functional_programming.mwk</option>
 		<option>/home/sarnobat/sarnobat.git/mwk/programming_tips/unglorification.mwk</option>
