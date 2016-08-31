@@ -35,7 +35,7 @@ public class JsonMoveMwk {
 				addToFile(json.getString("heading") + "\n" + json.getString("body"), dest);
 
 				// Then remove it from the source
-				// removeFromFile(json, src);
+				removeFromFile(json.getString("heading") + "\n" + json.getString("body"), src);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -48,6 +48,11 @@ public class JsonMoveMwk {
 				}
 			}
 		}
+	}
+
+	private static void removeFromFile(String string, Path dest) throws IOException {
+		String lines = FileUtils.readFileToString(dest.toFile());
+		FileUtils.writeStringToFile(dest.toFile(), lines.replace(string, ""));
 	}
 
 	private static void addToFile(String string, Path dest) throws IOException {
@@ -64,6 +69,5 @@ public class JsonMoveMwk {
 		} else {
 			throw new RuntimeException("Couldn't find a level 2 heading to attach snippet to.");
 		}
-		//lines.replaceFirst("(==\\s(2\\s)?==)", "$1\n" + string);
 	}
 }
