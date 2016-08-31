@@ -1,0 +1,1 @@
+cat new.mwk| groovy mwk2json.groovy | grep -v http | grep -i cygwin | groovy jsonmvmwk.groovy new.mwk technology.mwk
