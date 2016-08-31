@@ -24,36 +24,31 @@ public class Mwk2Json {
 			boolean insideLevel3Snippet = false;
 			while ((line = br.readLine()) != null) {
 
-				// System.err.println(insideLevel3Snippet);
-
 				if (isHeading(line)) {
 					if (getHeadingLevel(line) == 3) {
+						if (insideLevel3Snippet) {
+							// emit
+							JSONObject snippet3Json = createEmitJson(level3snippet);
+							System.out.println(snippet3Json);
+							level3snippet = "";
+							insideLevel3Snippet = false; // Pointless but just for completeness
+						} 
 						// start appending
-						level3snippet += line;
+						level3snippet += line + "\n";
 						insideLevel3Snippet = true;
 					} else if (getHeadingLevel(line) > 3) {
 						// continue appending
-						level3snippet += line;
+						level3snippet += line + "\n";
 						if (!insideLevel3Snippet) {
 							throw new RuntimeException("We must be inside a level 3 snippet");
 						}
 					} else if (getHeadingLevel(line) < 3) {
-						if (insideLevel3Snippet) {
-							throw new RuntimeException("We can't be inside a level 3 snippet");
-						}
+
 						// emit
-
-						String[] snippet3Lines = level3snippet.split("\\n");
-						JSONObject snippet3Json = new JSONObject();
-						snippet3Json.put("heading", snippet3Lines[0]);
-						snippet3Json
-								.put("body",
-										Joiner.on('\n').join(
-												Arrays.copyOfRange(snippet3Lines, 1,
-														snippet3Lines.length)));
-
+						JSONObject snippet3Json = createEmitJson(level3snippet);
 						System.out.println(snippet3Json);
 						level3snippet = "";
+						insideLevel3Snippet = false;
 					} else {
 						throw new RuntimeException("Invalid case");
 					}
@@ -61,14 +56,15 @@ public class Mwk2Json {
 					insideLevel3Snippet = isInsideLevel3Heading(line, insideLevel3Snippet);
 					if (insideLevel3Snippet) {
 						// continue appending
-						level3snippet += line;
+						level3snippet += line + "\n";
 					} else {
 						// emit
 						System.out.println(line);
 						// there shouldn't be anything accumulated
 						if (level3snippet.length() > 0) {
 							throw new RuntimeException(
-									"nothing should be accumulated if we are outside a level 3 snippet: >>>>" + level3snippet + "<<<<");
+									"nothing should be accumulated if we are outside a level 3 snippet: >>>>"
+											+ level3snippet + "<<<<");
 						}
 					}
 				}
@@ -84,6 +80,18 @@ public class Mwk2Json {
 				}
 			}
 		}
+	}
+
+	private static JSONObject createEmitJson(String level3snippet) {
+		String[] snippet3Lines = level3snippet.split("\\n");
+		JSONObject snippet3Json = new JSONObject();
+		snippet3Json.put("heading", snippet3Lines[0]);
+		snippet3Json
+				.put("body",
+						Joiner.on('\n').join(
+								Arrays.copyOfRange(snippet3Lines, 1,
+										snippet3Lines.length)));
+		return snippet3Json;
 	}
 
 	private static boolean isInsideLevel3Heading(String line, boolean insideLevel3Snippet) {
