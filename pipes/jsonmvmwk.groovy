@@ -28,8 +28,14 @@ public class JsonMoveMwk {
 			br = new BufferedReader(new InputStreamReader(System.in));
 			String line = "";
 			while ((line = br.readLine()) != null) {
-
-				JSONObject json = new JSONObject(line);
+				JSONObject json;
+				try {
+					json = new JSONObject(line);
+				} catch (org.json.JSONException e) {
+					System.err.println("line was:\n\t" + line);
+					e.printStackTrace();
+					return;
+				}				
 
 				// First add it to the destination
 				addToFile(json.getString("heading") + "\n" + json.getString("body"), dest);
