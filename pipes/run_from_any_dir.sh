@@ -22,5 +22,5 @@ cat $SOURCE_MWK \
 	| groovy mwk2json.groovy \
 	| groovy filtervalidjson.groovy \
 	| grep -v http \
-	| grep -i $SEARCH_TERM \
+	| grep -i "$SEARCH_TERM" \
 	| groovy jsonmvmwk.groovy $SOURCE_MWK $DESTINATION_MWK
