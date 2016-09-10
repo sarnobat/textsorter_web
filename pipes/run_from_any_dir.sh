@@ -14,13 +14,13 @@ DESTINATION_MWK="$PWD/$3"
 
 ## Checkpoint before messing with files
 cd /sarnobat.garagebandbroken/Desktop/sarnobat.git/mwk
-git commit --all --message="Minor changes (untested)"
+git commit --all --message="Before mwk_pipes" > /dev/null
 
 cd /Users/sarnobat/github/textsorter_web/pipes/ || exit -1;
 
 cat $SOURCE_MWK \
 	| groovy mwk2json.groovy \
-	| groovy isvalidjson.groovy \
+	| groovy filtervalidjson.groovy \
 	| grep -v http \
 	| grep -i $SEARCH_TERM \
 	| groovy jsonmvmwk.groovy $SOURCE_MWK $DESTINATION_MWK
