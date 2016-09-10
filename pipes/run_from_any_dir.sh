@@ -20,6 +20,7 @@ cd /Users/sarnobat/github/textsorter_web/pipes/ || exit -1;
 
 cat $SOURCE_MWK \
 	| groovy mwk2json.groovy \
+	| groovy isvalidjson.groovy \
 	| grep -v http \
 	| grep -i $SEARCH_TERM \
 	| groovy jsonmvmwk.groovy $SOURCE_MWK $DESTINATION_MWK
