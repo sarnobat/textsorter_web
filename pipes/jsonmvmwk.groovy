@@ -46,7 +46,7 @@ public class JsonMoveMwk {
 				// Then remove it from the source
 				int linesRemoved =  removeFromFile(json.getString("heading") + "\n" + json.getString("body"), src);
 				// The extra 1 is for the additional newline
-				if (linesAdded != linesRemoved + 1) {
+				if (Math.abs(linesAdded - linesRemoved) > 1) {
 					System.err.println("JsonMoveMwk.main() " + json);
 					throw new RuntimeException("linesAdded != linesRemoved: " + linesAdded + " vs " + linesRemoved);
 				}
