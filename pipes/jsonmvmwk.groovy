@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 /**
  * moves a json snippet, passed via stdin, from one mwk file to another
- */
+ */ 
 public class JsonMoveMwk {
 
 	public static void main(String[] args) {
@@ -48,7 +48,7 @@ public class JsonMoveMwk {
 				// The extra 1 is for the additional newline
 				if (linesAdded != linesRemoved + 1) {
 					System.err.println("JsonMoveMwk.main() " + json);
-// 					throw new RuntimeException("linesAdded != linesRemoved: " + linesAdded + " vs " + linesRemoved);
+					throw new RuntimeException("linesAdded != linesRemoved: " + linesAdded + " vs " + linesRemoved);
 				}
 			}
 		} catch (IOException e) {
