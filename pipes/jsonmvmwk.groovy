@@ -39,10 +39,17 @@ public class JsonMoveMwk {
 				}				
 
 				// First add it to the destination
-				addToFile(json.getString("heading") + "\n" + json.getString("body"), dest);
+				int linesAdded = addToFile(json.getString("heading") 
+						+ "\n"
+						+ json.getString("body"), dest);
 
 				// Then remove it from the source
-				removeFromFile(json.getString("heading") + "\n" + json.getString("body"), src);
+				int linesRemoved =  removeFromFile(json.getString("heading") + "\n" + json.getString("body"), src);
+				// The extra 1 is for the additional newline
+				if (linesAdded != linesRemoved + 1) {
+					System.err.println("JsonMoveMwk.main() " + json);
+					throw new RuntimeException("linesAdded != linesRemoved: " + linesAdded + " vs " + linesRemoved);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -57,7 +64,7 @@ public class JsonMoveMwk {
 		}
 	}
 
-	private static void removeFromFile(String string, Path dest) throws IOException {
+	private static int removeFromFile(String string, Path dest) throws IOException {
 		String fileContentsBefore = FileUtils.readFileToString(dest.toFile());
 		String fileContentsAfter = StringUtils.replace(fileContentsBefore, string, "", 1)  ;
 
@@ -69,9 +76,10 @@ public class JsonMoveMwk {
 					+ (fileContentsBefore.length() - fileContentsAfter.length()));
 		}
 		FileUtils.writeStringToFile(dest.toFile(), fileContentsAfter);
+		return fileContentsBefore.length() - fileContentsAfter.length();
 	}
 
-	private static void addToFile(String string, Path dest) throws IOException {
+	private static int addToFile(String string, Path dest) throws IOException {
 		String lines = FileUtils.readFileToString(dest.toFile());
 		Pattern p = Pattern.compile("(.*?)(==\\s(2\\s)?==\\n.*?)(=*?)");
 		Matcher m = p.matcher(lines);
@@ -79,9 +87,10 @@ public class JsonMoveMwk {
 			String before = m.group(1);
 			String level2Heading = m.group(2);
 			String remainder = m.group(4);
-			String out = m.replaceFirst(before + "" + level2Heading + "\n" + string + "\n"
+			String out = m.replaceFirst(before + "" + level2Heading + string + "\n"
 					+ remainder);
 			FileUtils.writeStringToFile(dest.toFile(), out);
+			return out.length() - lines.length();
 		} else {
 			throw new RuntimeException("Couldn't find a level 2 heading to attach snippet to.");
 		}
