@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 /**
@@ -57,8 +58,17 @@ public class JsonMoveMwk {
 	}
 
 	private static void removeFromFile(String string, Path dest) throws IOException {
-		String lines = FileUtils.readFileToString(dest.toFile());
-		FileUtils.writeStringToFile(dest.toFile(), lines.replace(string, ""));
+		String fileContentsBefore = FileUtils.readFileToString(dest.toFile());
+		String fileContentsAfter = StringUtils.replace(fileContentsBefore, string, "", 1)  ;
+
+		if (fileContentsBefore.length() != fileContentsAfter.length() + string.length()) {
+			FileUtils.writeStringToFile(Paths.get("/sarnobat.garagebandbroken/Desktop/github-repositories/textsorter_web/pipes/before.txt").toFile(), fileContentsBefore);
+			FileUtils.writeStringToFile(Paths.get("/sarnobat.garagebandbroken/Desktop/github-repositories/textsorter_web/pipes/after.txt").toFile(), fileContentsAfter);
+			throw new RuntimeException("Full string did not get replaced. Wanted to remove "
+					+ string.length() + " chars but only removed "
+					+ (fileContentsBefore.length() - fileContentsAfter.length()));
+		}
+		FileUtils.writeStringToFile(dest.toFile(), fileContentsAfter);
 	}
 
 	private static void addToFile(String string, Path dest) throws IOException {
