@@ -29,6 +29,7 @@ public class MwkCountNodes {
 		InputStreamReader isr = new InputStreamReader(System.in);
 		BufferedReader br = new BufferedReader(isr);
 		String filePath = br.readLine();
+		System.out.println("File\tHeading\tBody\tTotal");
 		while (filePath != null) {
 			List<String> lines = FileUtils.readLines(Paths.get(filePath).toFile());
 			Defragmenter.defragmentFile(filePath, lines);
@@ -169,14 +170,21 @@ public class MwkCountNodes {
 		/**
 		 * This only writes it to stdout, it doesn't modify the file. Hmmmm,
 		 * this comment looks wrong.
-		 * @param filePath 
+		 * 
+		 * @param filePath
 		 */
 		public static void defragmentFile(String filePath, List<String> lines) {
 			MyTreeNode treeRootNode = TreeCreator.createTreeFromLines(lines);
 			int subtreeNodeCount = treeRootNode.countNodesInSubtree();
 			int nonHeadingLines = Utils.countNonHeadingNonBlankLines(lines);
-			System.out.println(filePath + "\tNumber of nodes\t\t:\t"+ subtreeNodeCount);
-			System.out.println(filePath + "\tNon-heading non-blank lines\t:\t" + nonHeadingLines);
+			System.out.println(filePath + "\t" + subtreeNodeCount + "\t" + nonHeadingLines + "\t"
+					+ lines.size());
+			// System.out.println(filePath + "\tNumber of lines\t\t:\t"+
+			// lines.size());
+			// System.out.println(filePath +
+			// "\tNon-heading non-blank lines\t:\t" + nonHeadingLines);
+			// System.out.println(filePath + "\tNumber of nodes\t\t:\t"+
+			// subtreeNodeCount);
 		}
 	}
 
@@ -212,7 +220,7 @@ public class MwkCountNodes {
 			Stack<MyTreeNode> snippetTreePath = new Stack<MyTreeNode>();
 			MyTreeNode.totalNodeCount = 0;
 			for (Snippet aSnippet : theSnippetList) {
-//				System.err.print(".");
+				// System.err.print(".");
 				// Find the parent node
 				MyTreeNode aParentNode = null;
 				findParentForCurrentSnippet: {
