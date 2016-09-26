@@ -84,13 +84,9 @@ public class JsonMoveMwk {
 		Pattern p = Pattern.compile("(.*?)(==\\s(2\\s)?==\\n.*?)(=*?)");
 		Matcher m = p.matcher(lines);
 		if (m.find()) {
-//			System.err.println(string);
 			String before = m.group(1);
-//			System.err.println(before);
 			String level2Heading = m.group(2);
-//			System.err.println(level2Heading);
 			String remainder = m.group(4);
-//			System.err.println(remainder);
 			String out = m.replaceFirst(before + "" + level2Heading + string + "\n" + remainder);
 			FileUtils.writeStringToFile(dest.toFile(), out);
 			return out.length() - lines.length();
