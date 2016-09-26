@@ -38,20 +38,25 @@ public class JsonMoveMwk {
 					return;
 				}				
 
-				// First add it to the destination
-				int linesAdded = addToFile(json.getString("heading") 
-						+ "\n"
-						+ json.getString("body"), dest, json.getString("parent"));
+				if (json.getString("heading").length() > 0) {
+					// First add it to the destination
+					int linesAdded = addToFile(
+							json.getString("heading") + "\n" + json.getString("body"), dest,
+							json.getString("parent"));
 
-				// Then remove it from the source
-				int linesRemoved =  removeFromFile(json.getString("heading") + "\n" + json.getString("body"), src);
-				// The extra 1 is for the additional newline
-				if (Math.abs(linesAdded - linesRemoved) > 1) {
-					System.err.println("JsonMoveMwk.main() ADDED:\t" + json.getString("heading") + "\n" + json.getString("body"));
-					System.err.println("JsonMoveMwk.main() REMOVED\t: " + json.getString("heading") + "\n" + json.getString("body"));
-					throw new RuntimeException("linesAdded != linesRemoved: " + linesAdded + " vs " + linesRemoved);
+					// Then remove it from the source
+					int linesRemoved = removeFromFile(json.getString("heading") + "\n" + json.getString("body"), src);
+					// The extra 1 is for the additional newline
+					if (Math.abs(linesAdded - linesRemoved) > 1) {
+//						System.err.println("JsonMoveMwk.main() ADDED:\t"
+//								+ json.getString("heading") + "\n" + json.getString("body"));
+//						System.err.println("JsonMoveMwk.main() REMOVED\t: "
+//								+ json.getString("heading") + "\n" + json.getString("body"));
+						throw new RuntimeException("linesAdded != linesRemoved: " + linesAdded
+								+ " vs " + linesRemoved);
+					}
+					// TODO: count the number of snippets added and removed
 				}
-				// TODO: count the number of snippets added and removed
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -90,7 +95,8 @@ public class JsonMoveMwk {
 				String before = m.group(1);
 				String level2Heading = m.group(2);
 				String remainder = m.group(4);
-				String out = m.replaceFirst(before + "" + level2Heading + string + "\n" + remainder);
+				String out = m
+						.replaceFirst(before + "" + level2Heading + string + "\n" + remainder);
 				FileUtils.writeStringToFile(dest.toFile(), out);
 				return out.length() - lines.length();
 			} else {
