@@ -5,7 +5,9 @@ import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
+import org.mortbay.util.StringUtil;
 
 import com.google.common.base.Joiner;
 
@@ -98,12 +100,16 @@ public class Mwk2Json {
 		// TODO : this eliminates blank lines from the source snippet. Not a huge problem but it would be nice to fix.
 		String[] snippet3Lines = level3snippet.split("\\n");
 		JSONObject snippet3Json = new JSONObject();
-		snippet3Json.put("heading", snippet3Lines[0]);
-		snippet3Json
-				.put("body",
-						Joiner.on('\n').join(
-								Arrays.copyOfRange(snippet3Lines, 1,
-										snippet3Lines.length)));
+		String heading = snippet3Lines[0];
+		snippet3Json.put("heading", heading);
+		
+		String bodyOut = Joiner.on('\n').join(
+				Arrays.copyOfRange(snippet3Lines, 1, snippet3Lines.length));
+
+		String allLinesExceptHeading = StringUtils.replace(level3snippet, heading + "\n", "", 1);
+//		String trailingBlankLines =  StringUtils.replace(trailingBlankLines1, bodyOut
+
+		snippet3Json.put("body", allLinesExceptHeading);
 		if (currentLevel2Heading != null) {
 			snippet3Json.put("parent", currentLevel2Heading);
 		}

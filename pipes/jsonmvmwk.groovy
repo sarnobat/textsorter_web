@@ -73,14 +73,13 @@ public class JsonMoveMwk {
 
 	private static int removeFromFile(String string, Path dest) throws IOException {
 		String fileContentsBefore = FileUtils.readFileToString(dest.toFile());
+		//System.err.println("JsonMoveMwk.removeFromFile() :"+string);
 		String fileContentsAfter = StringUtils.replace(fileContentsBefore, string, "", 1)  ;
 
 		if (fileContentsBefore.length() != fileContentsAfter.length() + string.length()) {
 			FileUtils.writeStringToFile(Paths.get("/sarnobat.garagebandbroken/Desktop/github-repositories/textsorter_web/pipes/before.txt").toFile(), fileContentsBefore);
 			FileUtils.writeStringToFile(Paths.get("/sarnobat.garagebandbroken/Desktop/github-repositories/textsorter_web/pipes/after.txt").toFile(), fileContentsAfter);
-			throw new RuntimeException("Full string did not get replaced. Wanted to remove "
-					+ string.length() + " chars but only removed "
-					+ (fileContentsBefore.length() - fileContentsAfter.length()));
+			throw new RuntimeException("Full string did not get replaced. Wanted to remove " + string.length() + " chars but only removed " + (fileContentsBefore.length() - fileContentsAfter.length()));
 		}
 		FileUtils.writeStringToFile(dest.toFile(), fileContentsAfter);
 		return fileContentsBefore.length() - fileContentsAfter.length();
