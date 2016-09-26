@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
@@ -94,8 +95,11 @@ public class JsonMoveMwk {
 				String before = m.group(1);
 				String level2Heading = m.group(2);
 				String remainder = m.group(4);
-				String out = m
-						.replaceFirst(before + "" + level2Heading + string + "\n" + remainder);
+				
+				// TODO: if snippet contains a dollar, it doesn't get preserved after the replacefirst operation. Groovy's syntax doesn't mirror java's so I get an error when trying to replace.
+				String out = unescapeDollarSign(m.replaceFirst(before + "" + level2Heading +escapeDollarSign(string) + "\n" + remainder));
+				
+				System.err.println("JsonMoveMwk.addToFile() :"+ string);
 				FileUtils.writeStringToFile(dest.toFile(), out);
 				return out.length() - lines.length();
 			} else {
@@ -111,5 +115,25 @@ public class JsonMoveMwk {
 			return out.length() - lines.length();
 		}
 		
+	}
+
+	private static String escapeDollarSign(String input) {
+	    StringBuilder b = new StringBuilder();
+
+	    for (char c : input.toCharArray()) {
+	        if (c == '\u0024'){
+	            b.append("__0024__");//"\\u").append(String.format("%04X", (int) c));
+	        }
+	        else {
+	            b.append(c);
+	        }
+	    }
+
+	    return b.toString();
+	}
+	
+	private static String unescapeDollarSign(String input) {
+		String s = new StringBuffer().append('\u0024').toString();
+		return input.replace("__0024__", s);
 	}
 }
