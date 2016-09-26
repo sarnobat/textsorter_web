@@ -47,16 +47,17 @@ public class Mwk2Json {
 						}
 					} else if (getHeadingLevel(line) < 3) {
 
-						currentLevel2Heading = null;
-						if (getHeadingLevel(line) == 2) {
-							currentLevel2Heading = line;
-						}
-						
-						// emit
+						// first emit under the old heading
 						JSONObject snippet3Json = createEmitJson(level3snippet, currentLevel2Heading);
 						System.out.println(snippet3Json);
 						level3snippet = "";
 						insideLevel3Snippet = false;
+						
+						// second, update the level 2 heading
+						currentLevel2Heading = null;
+						if (getHeadingLevel(line) == 2) {
+							currentLevel2Heading = line;
+						}
 					} else {
 						throw new RuntimeException("Invalid case");
 					}
