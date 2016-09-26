@@ -66,6 +66,9 @@ public class Mwk2Json {
 					if (insideLevel3Snippet) {
 						// continue appending
 						level3snippet += line + "\n";
+						if (level3snippet.contains("purchase funnel")) {
+							//System.err.println("Mwk2Json.main() level3snippet += >>>" + line + "\n<<");
+						}
 					} else {
 						// emit
 						System.out.println(line);
@@ -92,6 +95,7 @@ public class Mwk2Json {
 	}
 
 	private static JSONObject createEmitJson(String level3snippet, @Nullable String currentLevel2Heading) {
+		// TODO : this eliminates blank lines from the source snippet. Not a huge problem but it would be nice to fix.
 		String[] snippet3Lines = level3snippet.split("\\n");
 		JSONObject snippet3Json = new JSONObject();
 		snippet3Json.put("heading", snippet3Lines[0]);
