@@ -99,7 +99,7 @@ public class JsonMoveMwk {
 				// TODO: if snippet contains a dollar, it doesn't get preserved after the replacefirst operation. Groovy's syntax doesn't mirror java's so I get an error when trying to replace.
 				String out = unescapeDollarSign(m.replaceFirst(before + "" + level2Heading +escapeDollarSign(string) + "\n" + remainder));
 				
-				System.err.println("JsonMoveMwk.addToFile() :"+ string);
+//				System.err.println("JsonMoveMwk.addToFile() :"+ string);
 				FileUtils.writeStringToFile(dest.toFile(), out);
 				return out.length() - lines.length();
 			} else {
