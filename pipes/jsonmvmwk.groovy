@@ -41,7 +41,7 @@ public class JsonMoveMwk {
 				// First add it to the destination
 				int linesAdded = addToFile(json.getString("heading") 
 						+ "\n"
-						+ json.getString("body"), dest);
+						+ json.getString("body"), dest, json.getString("parent"));
 
 				// Then remove it from the source
 				int linesRemoved =  removeFromFile(json.getString("heading") + "\n" + json.getString("body"), src);
@@ -81,19 +81,29 @@ public class JsonMoveMwk {
 		return fileContentsBefore.length() - fileContentsAfter.length();
 	}
 
-	private static int addToFile(String string, Path dest) throws IOException {
+	private static int addToFile(String string, Path dest, String parentHeadingLevel2) throws IOException {
 		String lines = FileUtils.readFileToString(dest.toFile());
-		Pattern p = Pattern.compile("(.*?)(==\\s(2\\s)?==\\n.*?)(=*?)");
-		Matcher m = p.matcher(lines);
-		if (m.find()) {
-			String before = m.group(1);
-			String level2Heading = m.group(2);
-			String remainder = m.group(4);
-			String out = m.replaceFirst(before + "" + level2Heading + string + "\n" + remainder);
+		if (parentHeadingLevel2 == null) {
+			Pattern p = Pattern.compile("(.*?)(==\\s(2\\s)?==\\n.*?)(=*?)");
+			Matcher m = p.matcher(lines);
+			if (m.find()) {
+				String before = m.group(1);
+				String level2Heading = m.group(2);
+				String remainder = m.group(4);
+				String out = m.replaceFirst(before + "" + level2Heading + string + "\n" + remainder);
+				FileUtils.writeStringToFile(dest.toFile(), out);
+				return out.length() - lines.length();
+			} else {
+				throw new RuntimeException("Couldn't find a level 2 heading to attach snippet to.");
+			}
+		} else {
+			if (lines.indexOf(parentHeadingLevel2) < 0) {
+				throw new RuntimeException("TODO: Insert the heading");
+			}
+			String out = StringUtils.replaceOnce(lines, parentHeadingLevel2, parentHeadingLevel2 + "\n" + string);
 			FileUtils.writeStringToFile(dest.toFile(), out);
 			return out.length() - lines.length();
-		} else {
-			throw new RuntimeException("Couldn't find a level 2 heading to attach snippet to.");
 		}
+		
 	}
 }
