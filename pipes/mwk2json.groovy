@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
+import javax.annotation.Nullable;
+
 import org.json.JSONObject;
 
 import com.google.common.base.Joiner;
@@ -19,6 +21,7 @@ public class Mwk2Json {
 			br = new BufferedReader(new InputStreamReader(System.in));
 
 			String level3snippet = "";
+			String currentLevel2Heading = null;
 
 			String line = "";
 			boolean insideLevel3Snippet = false;
@@ -28,7 +31,7 @@ public class Mwk2Json {
 					if (getHeadingLevel(line) == 3) {
 						if (insideLevel3Snippet) {
 							// emit
-							JSONObject snippet3Json = createEmitJson(level3snippet);
+							JSONObject snippet3Json = createEmitJson(level3snippet, currentLevel2Heading);
 							System.out.println(snippet3Json);
 							level3snippet = "";
 							insideLevel3Snippet = false; // Pointless but just for completeness
@@ -44,8 +47,13 @@ public class Mwk2Json {
 						}
 					} else if (getHeadingLevel(line) < 3) {
 
+						currentLevel2Heading = null;
+						if (getHeadingLevel(line) == 2) {
+							currentLevel2Heading = line;
+						}
+						
 						// emit
-						JSONObject snippet3Json = createEmitJson(level3snippet);
+						JSONObject snippet3Json = createEmitJson(level3snippet, currentLevel2Heading);
 						System.out.println(snippet3Json);
 						level3snippet = "";
 						insideLevel3Snippet = false;
@@ -82,7 +90,7 @@ public class Mwk2Json {
 		}
 	}
 
-	private static JSONObject createEmitJson(String level3snippet) {
+	private static JSONObject createEmitJson(String level3snippet, @Nullable String currentLevel2Heading) {
 		String[] snippet3Lines = level3snippet.split("\\n");
 		JSONObject snippet3Json = new JSONObject();
 		snippet3Json.put("heading", snippet3Lines[0]);
@@ -91,6 +99,9 @@ public class Mwk2Json {
 						Joiner.on('\n').join(
 								Arrays.copyOfRange(snippet3Lines, 1,
 										snippet3Lines.length)));
+		if (currentLevel2Heading != null) {
+			snippet3Json.put("parent", currentLevel2Heading);
+		}
 		return snippet3Json;
 	}
 
