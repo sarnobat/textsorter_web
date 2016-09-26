@@ -87,7 +87,7 @@ public class JsonMoveMwk {
 
 	private static int addToFile(String string, Path dest, String parentHeadingLevel2) throws IOException {
 		String lines = FileUtils.readFileToString(dest.toFile());
-		if (parentHeadingLevel2 == null) {
+		if (parentHeadingLevel2 == null || lines.indexOf("\n" +parentHeadingLevel2 +"\n") < 1) {
 			Pattern p = Pattern.compile("(.*?)(==\\s(2\\s)?==\\n.*?)(=*?)");
 			Matcher m = p.matcher(lines);
 			if (m.find()) {
@@ -105,7 +105,8 @@ public class JsonMoveMwk {
 			if (lines.indexOf(parentHeadingLevel2) < 0) {
 				throw new RuntimeException("TODO: Insert the heading");
 			}
-			String out = StringUtils.replaceOnce(lines, parentHeadingLevel2, parentHeadingLevel2 + "\n" + string);
+			String parentHeadingLevel2WithNewline = "\n" +parentHeadingLevel2 +"\n";
+			String out = StringUtils.replaceOnce(lines, parentHeadingLevel2WithNewline, parentHeadingLevel2 + "\n" + string);
 			FileUtils.writeStringToFile(dest.toFile(), out);
 			return out.length() - lines.length();
 		}
