@@ -9,8 +9,6 @@ isaac success
 === Barclays bank balances ===
 2016-10-02
 
-
-
 === Guice ===
 Whenever the injector needs an instance of that type, it will invoke the @Provides method.
 
@@ -45,21 +43,10 @@ focus via wmctrl
 
 === Meetup - Linux device drivers (13 Aug 2014) ===
 Block device - aysnchronous
-Character device - synchronous/blocking
-
-
-drivers/char/mem.c
-
-the struct containing fops_null is the implementation of /dev/null
-
-ram file system - i.e. no backing store. But useful at boot time.
 
 === Neo4j evaluation (why I like Neo4j) - MASTER COPY, but an alternate version for Objy created ===
 
 I'm talking (mostly) as a newbie developer who is learning to use the DB, not an enterprise architect trying to scale to hundreds of hits at a time.
-
-
-
 
 ==== in gdb: ====
 
@@ -118,64 +105,26 @@ Empires rise - Empires fall.
 Empires do not rise again.
 ===  ===
 Indians began arriving in the UK in large numbers shortly after their country gained independence in 1947, although there were a number of people from India living the UK even in the earlier years. More than 60,000 arrived before 1955, many of whom drove buses, or worked in foundries or textile factories. Later arrivals opened corner shops or ran post offices. The flow of Indian immigrants peaked between 1965 and 1972, boosted in particular by Idi Amin's sudden decision to expel all 50,000 Gujarati Indians from Uganda. Around 30,000 Ugandan Asians migrated to the UK.[25]
-
-https://en.wikipedia.org/wiki/Modern_immigration_to_the_United_Kingdom#Post-war_immigration_.281945.E2.80.931983.29
-
-20th century
-
-Although post-war immigration was continuous, several distinct phases can be identified:
-* workers were recruited to fulfill the labour shortage that resulted from World War II. These included Anglo-Indians who were recruited to work on the railways as they had done in India.
-* Workers mainly from the Punjab and Gujarat regions arrived from India in the late 1950s and 1960s. Many worked in the foundries of the English Midlands. Large numbers of Gujaratis worked in the textile manufacturing sector in the northwest industrial towns of Blackburn, Dewsbury, Bolton, Lancaster, Manchester and Preston. Sikhs coming to London either migrated to the East to set up businesses where the wholesale, retail and manufacturing elements of the textile industry were located. Many Sikhs also moved to West London and took up employment at Heathrow airport and the associated industries and in the plants and factories of major brands such as Nestle around it.
-* During the same time, medical staff from India were recruited for the newly formed National Health Service. These people were targeted as the British had established medical schools in the Indian subcontinent which conformed to the British standards of medical training.
-* During the 1960s and 1970s, large numbers of East African Indians, predominantly Gujaratis but also sizeable numbers of Punjabis who already held British passports, entered the UK after they were expelled from Kenya, Uganda and Zanzibar. Many of these people had been store-keepers and wholesale retailers in Africa and opened shops when they arrived in the UK.
-
-https://en.wikipedia.org/wiki/British_Indian#20th_century
-
-In the nine-year period between 2001 and 2010, the number of Indian-born people in the UK has increased in size by 43% from 467,634 to around 669,000 (an increase of over 200,000).[12]
 ====   ====
 
 20th century South Asian Immigration to Brazil
-
-* The first wave of Indian immigration to Brazil began when a small number of Sindhis had arrived there from Suriname and Central America (mainly from Belize and Panama) in the 1960s to set up shop as traders in the city of Manaus.
-* The second wave of immigration consisted of university professors to Rio de Janeiro from Bengaluru, Goa and Delhi who arrived in the 1960s and also in the 1970s.
-* Other people of Indian Origin migrated to that country from various African countries, mainly from former Portuguese colonies (especially Mozambique), soon after their independence in the 1970s. The number of PIOs in Brazil has been augmented in recent years by the arrival of nuclear scientists and computer professionals.
-
-https://en.wikipedia.org/wiki/Indian_immigration_to_Brazil
 ====   ====
 According to the 2010 United States Census,[15] the Asian Indian population in the United States grew from almost 1,678,765 in 2000 (0.6% of U.S. population) to 2,843,391 in 2010 (0.9% of U.S. population), a growth rate of 69.37%, one of the fastest growing ethnic groups in the United States, although it is still one of the smallest communities in the US, not even completely one percent.[16][17][18][19]
 
 ===  ===
 The first major wave of migration, albeit forced, was the mass importation of slaves, predominantly from Africa, in the time period between America's founding and the early 19 century. Slave importation was banned in 1808, ostensibly ending this mass migration. African migrants' early and tragically immoral introduction to the United States has plagued America’s conscience arguably more than any other historical event. Their presence resulted in seminal legislation and legal decisions, most notably in the Thirteenth Amendment to the Constitution, the Brown v. Board of Education Supreme Court ruling, and the Voting Rights Act of 1965, all of which have helped define American identity.
 
-The second mass influx of individuals from foreign countries into the United States was the result of famine, revolution, and the emergence of industrialization. These three realities combined resulting in numerous Irish, German, and other European immigrants flooding into the United States just a decade and a half before America's own civil war. Though roughly 40 years before the dedication of the Statue of Liberty, the world's tired and poor sought refuge in the new, promising land of America. This huge influx renewed the European heritage of young America such that until the 1970s, the majority of naturalized citizens in America were born in Europe. The shear volume of immigrants during this period also created much of the impetus behind expanding and honing the quota system still at the heart of much American immigration debate.
-
-The third major wave of American immigration came in the form of laborers from Central and South America. This wave has prompted intense debate across the political spectrum that reaches every policy sphere. The breadth of this spectrum of opinions has exhibited everything from xenophobia to policy opinions that raise substantial security concerns. Regardless of one's opinion on the massive population of Hispanic individuals currently residing in the United States, it is important to understand this population's historical relationship with America. In 1848, the U.S. signed the Treaty of Guadalupe Hidalgo, which incorporated 80,000 Mexicans into the United States without their consent overnight. The geographic proximity to Central America, coupled with the massive and porous Southern border, contribute to the overwhelmingly large migration of Hispanic laborers.
-
-http://mic.com/articles/44183/immigration-reform-2013-3-waves-of-immigration-that-changed-america#.BOaBy4nB4
-
 ===  ===
 ==== Third Wave of Irish Immigration ====
 
 
 Poor Irish in Dublin in 1920s
-Centuries-old problems continued to plague Ireland in the early 20th century as a majority of its people lived and died with agriculture.  As agricultural exports sagged, many young Irishmen flocked to the cities for work, but low industrial wages and the condition of urban slums made life unbearable.  In the 1920s, over 20% of the Irish urban population lived in inadequate, overcrowded housing.
-
-Facing little opportunity on the farms and squalid conditions in the cities, the young people of Ireland continued their mass exodus to other lands of opportunity.  For most Irish emigrants, departure for America would be preceded by a gathering of friends and family.  It was called the American wake, because so often those left behind would be saying their final goodbyes.
-
-Nowhere was the influence of the Irish immigrant more pronounced than in America's most powerful city, New York.  75% of the famine Irish landed in New York harbor, and by 1860 a quarter of New York City's population was Irish.
-
-http://www.irishamericanjourney.com/2011/09/irish-immigration-to-america.html
-
 
 ===  ===
 
 indian diaspora with friends
 
 * Anglo Indian - Pavithra
-* to NHS British  - Sridhar
-* University Professors to Brazil - Murali
-* Goa Portuguese - Tanuja?
-* Gujurats from Kenya - Dhruv
 
 ===  ===
 
@@ -201,9 +150,6 @@ favorite words
 ===  ===
 errands
 
-[cygwin] Add Ssh-copy-id So Git Pushes Are Touchless  
-Buy cool spray from pharmacy (to stay cool in apt during summer)
-Read About Inetd  
 ===  ===
 
 apache web server on Windows to serve Atletico Html folder
@@ -228,42 +174,11 @@ empty camcorder
 Madrid
 
 
-//ATT international data
-empty iPhone media
-shave
-
-travel adapter
-medicine
-printed tickets
-
-
-pyjamas
-atletico shirt
-tripod + both cameras
-mac + charger
-
-
-
 ===  ===
 brecon - Jay
-Monmouth - Monty
-Porthcawl - Prakash, Deepak Mannari
-Dinas Powys - Robert Wall
-Alvern - competition
-Merthyr - Barker
-Aberdare - Perkins
-
-
-
 
 ===  ===
 Why is bollywood so western obsessed ? There is absolutely nothing indian about this dance or video except the song. Where are the indian clothes? Indian steps? And its not just this song, most of the videos these days are the same. Is it "cool" to act/dress like a westerner in India? ???
-Reply  ??  123
-View all 42 replies
-
-Soeraya Sewdien3 weeks ago
- 
-And none of the western girls with Indian roots wear these sleazy clothes. In fact: every time I see one of these so called 'western' Indian video clips, I find it shamefull and wouldn't even watch it with my parents.???
 
 ===  ===
 bitch throne (made up by Ketki)
@@ -286,10 +201,6 @@ For the geographically curious, here are the origins of some of your favorite ar
 ===  ===
 when a race emigrates, it preserves its native culture as it was at that point in time, while the source evolves. There are many examples of this:
 
-* Gujurati ladies who left India and moved to Africa (and later UK) still wear Gujurati sarees from 100 years ago while people in Gujurat today do not (except for festivals) <!-- told by mom -->
-* Tamlian in Sri Lanka resembles Tamilian in Tamil Nadu from 300 years ago <!-- told by Krupa -->
-* Indian emigrants do classical singing while mainland India barely does anymore  <!-- told by Gautum -->
-* American English today resembles British English of the 1800s more than British English today does. <!-- Bill Bryson does -->
 ===  ===
 UK vs US
 ===  ===
@@ -302,20 +213,7 @@ pop (soda)
 === british slang ===
 
 dross
-bloody
-bugger
-pop (pop it in the oven)
 
-british slang
-
-bollocks
-bloke
-wanker
-twat
-knackered
-scabby
-snob
-boogey / bogey
 ===  ===
 
 ===  ===
@@ -338,26 +236,6 @@ plaintiff
 ===  ===
 things that transcend their country
 
-Ireland
-* Corrs
-* Deff Leppard
-* Setanta
-
-
-Canada
-* Bryan Adams
-* Pamela Anderson
-
-Australia
-* Rupert Murdoch
-* Outback's steakhouse
-* Harry Kewell
-
-South Africa
-* Nandos
-
-France
-* Dailymotion
 
 ===  ===
 autonomous regions
@@ -368,11 +246,6 @@ monaco
 ===  ===
 famous people who moved abroad (especially before air travel was common)
 
-* Alfred Hitchcock
-* stu hart's father?
-* bob hope
-* rod robbie?
-* swami vivekananda
 ===  ===
 Ah-ha (wrote "Take on Me)
 Norwegian
@@ -397,10 +270,6 @@ britannic vs imperial - I don't know the difference
 ===  ===
 
 civilizations, cultures, colonies, empires
-
-imperial celts saxons vikings gallic romans indians cowboys zulus persians arabians dravidian
-
-http://en.wikipedia.org/wiki/List_of_largest_empires#Modern_empires
 
 ===  ===
 Urban Dictionary term I made up
