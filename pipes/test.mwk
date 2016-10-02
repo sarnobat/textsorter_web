@@ -9,14 +9,7 @@ isaac success
 === Barclays bank balances ===
 2016-10-02
 
-	0079 8959 - £3.28
-	8025 8806 - £33,930
 
-Cannot have foreign address
-
-statements received on yearly basis
-
-requested one-off statement
 
 === Guice ===
 Whenever the injector needs an instance of that type, it will invoke the @Provides method.
@@ -28,12 +21,6 @@ These are not for built in shortcuts. They're for ones that you must configure y
 ==== Command Line ====
 * Alt-f : find
 * Alt-g : pipe xargs grep
-* Alt-p : pwd
-* Alt-shift-d : dir stack
-* Alt-l : list directory
-* Alt-j : SSH connect
-* ? Alt-m : mount all
-* Alt-v : paste
 
 ==== Development environment (e.g. Eclipse) ====
 * ? Ctrl-o : Open resource
@@ -45,12 +32,6 @@ These are not for built in shortcuts. They're for ones that you must configure y
 
 focus via wmctrl
 
-* Focus Development Environment
-* Focus terminal
-* Focus browser
-* Focus text editor
-* Launch terminal
-
 ==== Source control ====
 * alt-s : Status
 * alt-c : Check In / Commit
@@ -61,24 +42,6 @@ focus via wmctrl
 
 
 ==== Textmate ====
-
-* Ctrl-= : === ===
-* Ctrl-3 : ==== existing text ====
-* Ctrl-3 : === existing text ===
-* Ctrl-2 : == existing text ==
-* Ctrl-1 : == existing text ==
-* Alt-d : today's date
-
-Level 2 categories (not sure these are useful anymore)
-* Cmd-t : == Tech ==
-* Cmd-d : == Doc ==
-* Cmd-e : == Media & Entertainment ==
-* Cmd-r : == Career ==
-* Cmd-y : == Travel, Geography, Language, Culture ==
-* Cmd-p : == Productivity ==
-* Cmd-o : == People ==
-* Cmd-l : == Self, Personal Development ==
-* Cmd-a : == Academic ==
 
 
 ==== Tips ====
