@@ -34,11 +34,6 @@ focus via wmctrl
 
 ==== Source control ====
 * alt-s : Status
-* alt-c : Check In / Commit
-* alt-d : Diff
-* shift-alt-l : Log
-
-
 
 
 ==== Textmate ====
@@ -46,14 +41,6 @@ focus via wmctrl
 
 ==== Tips ====
 * shortcuts bound to Modified keys (alt-tab) cause more strain than unmodified ones (e.g F1)
-* One idea for ordering F1 to F12 shortcuts is by:
-** how much of your time the application is focussed 
-** how far-reaching the application is network-wise
-* The more often a command is required, the less buttons one should have to press
-
-Is there a such thing as a set of standards for keyboard shortcuts? Maybe I should start one ;)
-* There are but they aren't standardized for commands that are specialized or core to productivity
-
 
 
 === Meetup - Linux device drivers (13 Aug 2014) ===
@@ -71,24 +58,6 @@ ram file system - i.e. no backing store. But useful at boot time.
 
 I'm talking (mostly) as a newbie developer who is learning to use the DB, not an enterprise architect trying to scale to hundreds of hits at a time.
 
-* neo4j-shell FUSE-like file system (but FUSE would be better so you can use key bindings, command history search, tab completion, dir colors, find command to quickly print paths)
-* Embedded mode (preferred initially because of type safety, targetted exception handling)
-** https://github.com/sarnobat/neo4j_embedded/blob/master/test.groovy
-** Pure java to get all nodes, without ever having to care about any query language (initially)
-* Cypher - readable, handles all cases I care about
-* Cypher over REST. Not restricted to pure REST GET, PUT, POST, DELETE requests
-* No need for strong types. It's just an extension of a java.util.Map
-* Replication (though master-slave only; not free. Better than nothing - it's reassuring)
-
-
-What I don't like:
-* No remote java database connections like SQL (so non-rest java code must reside on server)
-* Pure REST querying - can only do basic queries; output is bloated; no results without autoindexing (I don't want to learn about indexing yet - I still don't know what indexes are)
-** REST Output is bloated - but done for discoverability (which in practice isn't that useful)
-* Cypher - having to check a property exists before evaluating a predicate on it
-* Transactions over REST not possible
-* No introspection (I assume; but I've never tried it)
-* No asynchronous transactions like Couchbase
 
 
 
@@ -104,28 +73,6 @@ Backtrace (stack trace)
 === What is an Operating system ===
 
 Resource management - reduce slack time (that's the main reason for multitasking)
-
-
-
-An I/O operation is orders of magnitude slower than instruction execution.  For this reason the processor would sit idle a large proportion of the time, despite the efficiency improvements brought about by batch systems.  Instead of doing useful work, the processor would wait for an I/O operation to complete.  The observation was made that more than one job could be read into memory, allowing the processor to switch back and forth between jobs (or processes, as they came to be known).  While one process was involved in I/O, another could be running - i.e., making use of the processor.  The introduction of multiprogramming or multitasking laid the foundation for many features found in today???s operating systems.
-
-As the price of machines came down and wages went up, the programmers??? and users??? time became an important commodity.  The importance of good response time and short turnaround time were factored into the OS design process.  The major step taken was the advent of time shared systems.  Instead of just submitting jobs, the user was given interactive access to the machine via a command line interface.  Since the processor speed was many orders of magnitude faster than the actions taken by the user, under ideal conditions the user could work as if she had sole access to the machine.
-
-
-http://faculty.kutztown.edu/rieksts/343/notes/osdevpt.html
-
-
-First, detailed instructions had to be written defining the problem and a procedure for solving it. These instructions were programmed by adjusting switches manually and inserting thousands of cables into as many as forty large plug boards. A team of five operators might work several days on the external wiring and many more days searching for errors and correcting them.???
-
-
-???The switches and controls of ENIAC [which are] now arranged to be operated manually, can be positioned by mechanical relays and electromagnetic telephone switches which are instructed by a Teletype tape. [With this arrangement] tapes could be cut for many given problems and reused when needed???
-
-It soon became apparent that much of the code written for each program was duplicated effort because it dealt with routine input and output procedures, such as reading input from a tape device, or sending output to the printer. Common program procedures were therefore developed to handle input and output via the standard I/O hardware devices. These "device drivers", as they became known, eliminated the need for programmers to write their own I/O routines, which meant that programs could be produced more efficiently.
-
-The operating system, then, controls the operation of the computer. This includes determining which programs may use the processor at any given time, managing system resources such as working memory and secondary storage, and controlling access to input and output devices.
-
-In the early days of computing, scheduling computing tasks was a problem because time on the computer had to be booked in advance, typically in half-hour blocks or multiples thereof. If the operator encountered problems and the program did not successfully run to completion in the allotted time, a new time slot had to be booked and the program would have to be run again from the beginning.
-
 
 
 == Travel, Geography, Language, Culture ==
@@ -271,28 +218,7 @@ syllabus - article on connecctedness vs isolation (either mgmt619 or mgmt503 I t
 ===  ===
 
 //passport card
-//W4
-//job offer acceptance
 
-//cash check
-//toni form
-unemployment application
-
-//passports
-//flags
-//extra antidepressants
-//dictation machine
-//old mini usb charging wire
-//video camera
-//hairbands
-//atletico shirt
-//bluetooth keyboard
-//HSBC security key
-//apple world adapters
-//travel adapter
-//iphone dock + wire
-//multi-way usb power outlet
-//camera
 
 check for elizabeth
 test reboot computer
