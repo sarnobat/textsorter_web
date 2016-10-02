@@ -500,61 +500,6 @@ Ubuntu
 
 yurl error (non-deterministic?)
 
-Sep 28, 2013 3:41:29 PM org.glassfish.jersey.server.ServerRuntime$Responder writeResponse
-SEVERE: An I/O error has occurred while writing a response message entity to the container output stream.
-org.glassfish.jersey.server.internal.process.MappableException: java.io.IOException: Broken pipe
-        at org.glassfish.jersey.server.internal.MappableExceptionWrapperInterceptor.aroundWriteTo(MappableExceptionWrapperInterceptor.java:96)
-        at org.glassfish.jersey.message.internal.WriterInterceptorExecutor.proceed(WriterInterceptorExecutor.java:139)
-        at org.glassfish.jersey.message.internal.MessageBodyFactory.writeTo(MessageBodyFactory.java:1005)
-        at org.glassfish.jersey.server.ServerRuntime$Responder.writeResponse(ServerRuntime.java:471)
-        at org.glassfish.jersey.server.ServerRuntime$Responder.processResponse(ServerRuntime.java:333)
-        at org.glassfish.jersey.server.ServerRuntime$Responder.process(ServerRuntime.java:323)
-        at org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:227)
-        at org.glassfish.jersey.internal.Errors$1.call(Errors.java:271)
-        at org.glassfish.jersey.internal.Errors$1.call(Errors.java:267)
-        at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
-        at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
-        at org.glassfish.jersey.internal.Errors.process(Errors.java:267)
-        at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:317)
-        at org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:198)
-        at org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:946)
-        at org.glassfish.jersey.jdkhttp.JdkHttpHandlerContainer.handle(JdkHttpHandlerContainer.java:164)
-        at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:77)
-        at sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:83)
-        at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:80)
-        at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:677)
-        at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:77)
-        at sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:649)
-        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
-        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
-        at java.lang.Thread.run(Thread.java:724)
-Caused by: java.io.IOException: Broken pipe
-        at sun.nio.ch.FileDispatcherImpl.write0(Native Method)
-        at sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:47)
-        at sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:94)
-        at sun.nio.ch.IOUtil.write(IOUtil.java:65)
-        at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:466)
-        at sun.net.httpserver.Request$WriteStream.write(Request.java:394)
-        at sun.net.httpserver.ChunkedOutputStream.writeChunk(ChunkedOutputStream.java:125)
-        at sun.net.httpserver.ChunkedOutputStream.write(ChunkedOutputStream.java:95)
-        at sun.net.httpserver.PlaceholderOutputStream.write(ExchangeImpl.java:444)
-        at org.glassfish.jersey.message.internal.CommittingOutputStream.write(CommittingOutputStream.java:231)
-        at sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:221)
-        at sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:282)
-        at sun.nio.cs.StreamEncoder.write(StreamEncoder.java:125)
-        at java.io.OutputStreamWriter.write(OutputStreamWriter.java:207)
-        at java.io.BufferedWriter.flushBuffer(BufferedWriter.java:129)
-        at java.io.BufferedWriter.write(BufferedWriter.java:230)
-        at org.glassfish.jersey.message.internal.ReaderWriter.writeToAsString(ReaderWriter.java:188)
-        at org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider.writeToAsString(AbstractMessageReaderWriterProvider.java:129)
-        at org.glassfish.jersey.message.internal.StringMessageProvider.writeTo(StringMessageProvider.java:99)
-        at org.glassfish.jersey.message.internal.StringMessageProvider.writeTo(StringMessageProvider.java:59)
-        at org.glassfish.jersey.message.internal.WriterInterceptorExecutor$TerminalWriterInterceptor.aroundWriteTo(WriterInterceptorExecutor.java:194)
-        at org.glassfish.jersey.message.internal.WriterInterceptorExecutor.proceed(WriterInterceptorExecutor.java:139)
-        at org.glassfish.jersey.server.internal.JsonWithPaddingInterceptor.aroundWriteTo(JsonWithPaddingInterceptor.java:103)
-        at org.glassfish.jersey.message.internal.WriterInterceptorExecutor.proceed(WriterInterceptorExecutor.java:139)
-        at org.glassfish.jersey.server.internal.MappableExceptionWrapperInterceptor.aroundWriteTo(MappableExceptionWrapperInterceptor.java:88)
-        ... 24 more
 === ===
 Windows 8.1 key
 RRYGR-8JNBY-V2RJ9-TJP4P-749T7 Professional 
@@ -1100,50 +1045,6 @@ errands
 [cygwin] Add Ssh-copy-id So Git Pushes Are Touchless  
 Buy cool spray from pharmacy (to stay cool in apt during summer)
 Read About Inetd  
-D3 Phrase Sheet  
-Create A 100 Items List  
-[iPod] Drive Audiobook  
-Fstab Phrases  
-//[not_now] Hover - Show Full Title	
-[ubuntu] httrack phrase that doesn't miss http://www.estadiometropolitano.es/videos.html
-[textsorter] Make Level 1->2 Sorting Lossless	
-Create Feedly Query For Starred Items	
-[coagulate] filter (simple client side) - server search not as important
-email Siddartha Chakravathy when you want to request a rate renegotiation
-Create Lookalikes App?	
-[not_now] 16 Hour Postpone	
-r gantt chart of player careers - to help with Atletico documentary
-read about relationship between rsnapshot and rsync
-Create Rsnapshot For Mac Desktop	
-[atletico] Avi2wmv Script	
-ITerm Ssh On Opening New Tab?	
-Read Some Vim Tips	
-[buy] Biscuits	
-[vhs] Avi2mp4 Script	
-[mac] Rsync Macbook To 3TB	
-[mac] Write scripts to save soccernet match reports (and other annual soccer info)
-[mac] Sandisk Atletico Project (rsynced)	
-[ssh] Dav Server	
-[yurl] Add Stars And Reviews To Amazon Links
-[yurl] Breadcrubs (page Names Are Ambiguous)
-Set Up A Remote Http File Browser
-[coagulate] Json Cache In IndexDB ?
-Scan Networks Notes From Imperial
-[yurl] Perhaps reverse the video saving from large to unsorted (rather than vice versa)
-[yurl] export to json (or graphml) before creating stack trace app
-Instrumentation spreadsheet for favorite songs
-[not_now] copy code to create GMail mobile notes
-[yurl] rsnapshot for database?
-[yurl] stash bookmarklet dialog for custom categories?
-Text sorter web - add buttons to move snippets to right file
-[textsorter] Create composable script to convert mwk to JSON and vice versa
-[atletico] Flv2avi Script	
-[atletico] Mp42avi Script	
-Find GComp Files	
-[Atletico] - audio should drive video, so write the high-level story (low level will not be smooth)
-[ssh] Ffmpeg Scratch Avi Files	
-[mwk] Dot Boxes - Add To Cheat Sheet	
-[yurl] <img onerror=''> to remove non-existent images
 ===  ===
 
 apache web server on Windows to serve Atletico Html folder
@@ -1896,25 +1797,6 @@ Van Morrison
 Help understanding the difference btw Saxon, Norman, Celtic, Gallic, English
 
 
-
-The best thing you can do to sort out the confusion is read the early chapters of 1066 and all that :-)
-
-Bare essentials (I'm sure more knowledgeable people will leap in with more detail):
-
-Celts, broadly speaking, were the people living in the British Isles at the time of the Roman conquest. They spoke languages that were the ancestors of modern Breton, Welsh, Scots Gaelic and Irish. 
-
-Saxons (and their neighbours the Angles and Jutes) started arriving in the British Isles from about the 5th century AD. They came from what is now Denmark, North Germany and Friesland, though they probably lived further East before that. They spoke Germanic languages. These languages (usually lumped together as "Old English" or "Anglo-Saxon") became dominant in most of England and southern Scotland, while Cornwall, Ireland, Wales and northern Scotland remained largely Celtic-speaking.
-
-Gallic is a tricky word: the Romans called most of north-western Europe "Gallia", so it gets used in several different ways, generally to refer to people or languages of Celtic origin. Nowadays, we tend to use "Gaelic" (pr. "gallic") for the Celtic languages of Scotland and Ireland; and "Gauls" for the Celtic people living in France during Roman times. 
-
-Franks were Germanic people who became dominant in most of NW Europe around the 6th century. They originally spoke a Germanic language, but those living in what is now France later became French-speaking. Clovis and Charlemagne were Franks. Confusingly, Muslims in the medieval period tended to refer to all Western Christians as Franks.
-
-Normans were from Normandy, in northern France. They seem to have been a mixture of local people (Franks/Gauls/whatever) with Vikings who came there from Norway around the ninth century. They spoke a dialect of French (a Romance language). Normans later spread to England (1066!), South Wales, Ireland, Sicily, and quite a few other places, taking their language with them.
-
-Mercia was one of the kingdoms of Anglo-Saxon England - at its greatest extent it stretched from the Thames and Severn to the Ribble and Humber. Offa was the most famous Mercian king.
-
-The term English tends to be used (more-or-less) for the period after the Norman conquest (1066), when England became a single political unit. The English were a mixture of Anglo-Saxons, Celts, Danes, and Normans. Anglo-Saxon gradually merged with Norman French to become a language called "Middle English" (Chaucer, etc.), and that evolved into modern English.
-
 === ===
 
 Indians look for social approval above material wealth I guess die to history
@@ -1994,43 +1876,6 @@ In Angular, the view is a projection of the model through the HTML template.
 
 ==== Look for the repeatable element ====
 The following looks daunting:
- angular.module('phonecat', []).
-   config(['$routeProvider', function($routeProvider) {
-   $routeProvider.
-       when('/phones', {templateUrl: 'partials/phone-list.html',   controller: PhoneListCtrl}).
-       when('/phones/:phoneId', {templateUrl: 'partials/phone-detail.html', controller: PhoneDetailCtrl}).
-       otherwise({redirectTo: '/phones'});
- }]);
-
-until you imagine that dozens more routes being added:
-
- angular.module('phonecat', []).
-   config(['$routeProvider', function($routeProvider) {
-   $routeProvider.
-       when('/phones', {templateUrl: 'partials/phone-list.html',   controller: PhoneListCtrl}).
-       when('/phones/:phoneId', {templateUrl: 'partials/phone-detail.html', controller: PhoneDetailCtrl}).
-       when().
-       when().
-       when().
-       when().
-       when().
-       when().
-       when().
-       when().
-       when().
-       when().
-       when().
-       when().
-       when().
-       when().
-       otherwise({redirectTo: '/phones'});
- }]);
-
-Now it's obvious that the intent of this code block is to specify all url routes. The other code can to some extent be ignored. Same with hello world in java (public static main etc. is boilerplate that you can ignore initially)
-
-
-
-
 
 
 === Company headquarters ===
@@ -2154,58 +1999,7 @@ and Uruguayan societies. Minor groups of Italians started to immigrate to Argent
 === my maps ===
 Archive - 1994 - Florida - Malls
 Archive - 1994 - Orlando vacation
-Archive - 1996 - vacation
-Archive - 2001 - Boston
-Archive - 2001 - Chicago
-Archive - Sridhar's educational housing
-Archive - UK Theme Parks
-Bangalore - Computer Stores
-Bangalore - misc
-Bangalore - residences
-Bangalore - shopping
-Bangalore - Stationery Stores
-Bay Area - Berkeley Indian businesses 
-Bay Area - Best Indian Restaurants
-Bay Area - Biryani Restaurants
-Bay Area - British products
-Bay Area - Chaat Restaurants
-Bay Area - Cupertino - Apartments for rent
-Bay Area - Cupertino - eating places
-Bay Area - Cupertino - Vallco dining
-Bay Area - Hindu Temples
-Bay Area - Hindu Temples
-Bay Area - Hot Dogs
-Bay Area - India Movie Theaters
-Bay Area - Indian - Pani Puri buffet
-Bay Area - Indian - Pizza?
-Bay Area - Indian evening Buffet Restaurants
-Bay Area - Indian Fine Dining
-Bay Area - Indian Grocery Stores
-Bay Area - Indian Pizza
-Bay Area - Indian restaurants with good buffets
-Bay Area - Krupa
-Bay Area - Malls
-Bay Area - Monta Vista Indians
-Bay Area - Mountain View dining
-Bay Area - Mountain View dining
-Bay Area - non South Indian Restaurants
-Bay Area - non-Indian Restaurants
-Bay Area - Objy dining
-Bay Area - Oracle dining
-Bay Area - pizza - New York style
-Bay Area - San Jose - dining
-Bay Area - San Jose - dining
-Bay Area - Santa Clara University - eating places
-Bay Area - Silicon Valley - non tech tourist attractions
-Bay Area - Silicon Valley - technology-themed tourist attractions
-Bay Area - South Indian Restaurants 
-Bay Area - South Peninsula apartments (Jan 2011)
-Bay Area - StepZ class locations
-Bay Area - Storage & Organization stores
-Bay Area - Sunnyvale dining
-Bay Area - Tandoor Restaurants
-Bay Area - vegetarian restaurants
-Bay Area Cupertino - Pizza (good quality)
+
 Bay Area Universities & colleges
 ====   ====
 British overseas territories
