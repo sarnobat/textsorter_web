@@ -30,7 +30,6 @@ public class JsonMoveMwk {
 			br = new BufferedReader(new InputStreamReader(System.in));
 			String line = "";
 			while ((line = br.readLine()) != null) {
-				System.out.println("JsonMoveMwk.main() - line = " + line);
 				JSONObject json;
 				try {
 					json = new JSONObject(line);
@@ -39,6 +38,14 @@ public class JsonMoveMwk {
 					e.printStackTrace();
 					return;
 				}				
+				
+				// TODO: if this json object exists more than once in the file,
+				// do not move it. You'll end up moving the wrong one. This is
+				// difficut to implement so for now just don't move anything
+				// that has no body.
+				if (json.getString("body").trim().length() == 0) {
+					continue;
+				}
 
 				if (json.getString("heading").length() > 0) {
 					// First add it to the destination
