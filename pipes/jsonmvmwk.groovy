@@ -30,6 +30,7 @@ public class JsonMoveMwk {
 			br = new BufferedReader(new InputStreamReader(System.in));
 			String line = "";
 			while ((line = br.readLine()) != null) {
+				System.out.println("JsonMoveMwk.main() - line = " + line);
 				JSONObject json;
 				try {
 					json = new JSONObject(line);
