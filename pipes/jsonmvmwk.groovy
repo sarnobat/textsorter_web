@@ -49,20 +49,20 @@ public class JsonMoveMwk {
 
 				if (json.getString("heading").length() > 0) {
 					// First add it to the destination
-					int linesAdded = addToFile(
+					int charsAdded = addToFile(
 							json.getString("heading") + "\n" + json.getString("body"), dest,
 							json.getString("parent"));
 
 					// Then remove it from the source
-					int linesRemoved = removeFromFile(json.getString("heading") + "\n" + json.getString("body"), src);
+					int charsRemoved = removeFromFile(json.getString("heading") + "\n" + json.getString("body"), src);
 					// The extra 1 is for the additional newline
-					if (Math.abs(linesAdded - linesRemoved) > 1) {
+					if (Math.abs(charsAdded - charsRemoved) > 1) {
 //						System.err.println("JsonMoveMwk.main() ADDED:\t"
 //								+ json.getString("heading") + "\n" + json.getString("body"));
 //						System.err.println("JsonMoveMwk.main() REMOVED\t: "
 //								+ json.getString("heading") + "\n" + json.getString("body"));
-						throw new RuntimeException("linesAdded != linesRemoved: " + linesAdded
-								+ " vs " + linesRemoved);
+						throw new RuntimeException("linesAdded != linesRemoved: " + charsAdded
+								+ " vs " + charsRemoved);
 					}
 					// TODO: count the number of snippets added and removed
 				}
