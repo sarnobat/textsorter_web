@@ -3,12 +3,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
@@ -57,10 +55,6 @@ public class JsonMoveMwk {
 					int charsRemoved = removeFromFile(json.getString("heading") + "\n" + json.getString("body"), src);
 					// The extra 1 is for the additional newline
 					if (Math.abs(charsAdded - charsRemoved) > 1) {
-//						System.err.println("JsonMoveMwk.main() ADDED:\t"
-//								+ json.getString("heading") + "\n" + json.getString("body"));
-//						System.err.println("JsonMoveMwk.main() REMOVED\t: "
-//								+ json.getString("heading") + "\n" + json.getString("body"));
 						throw new RuntimeException("linesAdded != linesRemoved: " + charsAdded
 								+ " vs " + charsRemoved);
 					}
@@ -82,7 +76,6 @@ public class JsonMoveMwk {
 
 	private static int removeFromFile(String string, Path dest) throws IOException {
 		String fileContentsBefore = FileUtils.readFileToString(dest.toFile());
-		System.err.println("JsonMoveMwk.removeFromFile() :" + string.replace("\n", ""));
 		String fileContentsAfter = StringUtils.replace(fileContentsBefore, string, "", 1)  ;
 
 		if (fileContentsBefore.length() != fileContentsAfter.length() + string.length()) {
@@ -100,7 +93,6 @@ public class JsonMoveMwk {
 			
 			// Insert it under level 1 heading "== =="
 			
-			System.err.println("JsonMoveMwk.addToFile() - no level 2 heading");
 			Pattern p = Pattern.compile("(.*?)(==\\s(2\\s)?==\\n.*?)(=*?)");
 			Matcher m = p.matcher(lines);
 			if (m.find()) {
@@ -110,31 +102,21 @@ public class JsonMoveMwk {
 				
 				// TODO: if snippet contains a dollar, it doesn't get preserved after the replacefirst operation. Groovy's syntax doesn't mirror java's so I get an error when trying to replace.
 				String snippetAdded = before + "" + level2Heading + escapeDollarSign(string);// + "\n";
-				System.out.println("JsonMoveMwk.addToFile() -  " + snippetAdded.replace("\n",""));
 				String out = unescapeDollarSign(m.replaceFirst(snippetAdded + remainder));
 				
-//				System.err.println("JsonMoveMwk.addToFile() :"+ string);
 				FileUtils.writeStringToFile(dest.toFile(), out);
-				System.err.println("JsonMoveMwk.addToFile() - out.length() = " + out.length());
-				System.err.println("JsonMoveMwk.addToFile() - lines.length() = " + lines.length());
-				
-//				System.out.println("JsonMoveMwk.addToFile() - out.replace() = " +out.replace("\n", ""));
-//				System.out.println("JsonMoveMwk.addToFile() - lines.replace() = " +lines.replace("\n", ""));
 				
 				return out.replace("\n", "").length() - lines.replace("\n", "").length();
 			} else {
 				throw new RuntimeException("Couldn't find a level 2 heading to attach snippet to.");
 			}
 		} else {
-			System.err.println("JsonMoveMwk.addToFile() - has a level 2 heading");
 			if (lines.indexOf(parentHeadingLevel2) < 0) {
 				throw new RuntimeException("TODO: Insert the heading");
 			}
 			String parentHeadingLevel2WithNewline = "\n" +parentHeadingLevel2 +"\n";
 			String out = StringUtils.replaceOnce(lines, parentHeadingLevel2WithNewline, parentHeadingLevel2 + "\n" + string);
 			FileUtils.writeStringToFile(dest.toFile(), out);
-			System.err.println("JsonMoveMwk.addToFile() - out.length() = " + out.length());
-			System.err.println("JsonMoveMwk.addToFile() - lines.length() = " + lines.length());
 			return out.replace("\n", "").length() - lines.replace("\n", "").length();
 		}
 		
