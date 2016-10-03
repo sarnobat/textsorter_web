@@ -97,6 +97,7 @@ public class JsonMoveMwk {
 	private static int addToFile(String string, Path dest, String parentHeadingLevel2) throws IOException {
 		String lines = FileUtils.readFileToString(dest.toFile());
 		if (parentHeadingLevel2 == null || lines.indexOf("\n" +parentHeadingLevel2 +"\n") < 1) {
+			System.err.println("JsonMoveMwk.addToFile() - no level 2 heading");
 			Pattern p = Pattern.compile("(.*?)(==\\s(2\\s)?==\\n.*?)(=*?)");
 			Matcher m = p.matcher(lines);
 			if (m.find()) {
@@ -109,17 +110,22 @@ public class JsonMoveMwk {
 				
 //				System.err.println("JsonMoveMwk.addToFile() :"+ string);
 				FileUtils.writeStringToFile(dest.toFile(), out);
+				System.err.println("JsonMoveMwk.addToFile() - out.length() = " + out.length());
+				System.err.println("JsonMoveMwk.addToFile() - lines.length() = " + lines.length());
 				return out.length() - lines.length();
 			} else {
 				throw new RuntimeException("Couldn't find a level 2 heading to attach snippet to.");
 			}
 		} else {
+			System.err.println("JsonMoveMwk.addToFile() - has a level 2 heading");
 			if (lines.indexOf(parentHeadingLevel2) < 0) {
 				throw new RuntimeException("TODO: Insert the heading");
 			}
 			String parentHeadingLevel2WithNewline = "\n" +parentHeadingLevel2 +"\n";
 			String out = StringUtils.replaceOnce(lines, parentHeadingLevel2WithNewline, parentHeadingLevel2 + "\n" + string);
 			FileUtils.writeStringToFile(dest.toFile(), out);
+			System.err.println("JsonMoveMwk.addToFile() - out.length() = " + out.length());
+			System.err.println("JsonMoveMwk.addToFile() - lines.length() = " + lines.length());
 			return out.length() - lines.length();
 		}
 		
