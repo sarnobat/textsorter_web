@@ -82,7 +82,7 @@ public class JsonMoveMwk {
 
 	private static int removeFromFile(String string, Path dest) throws IOException {
 		String fileContentsBefore = FileUtils.readFileToString(dest.toFile());
-		//System.err.println("JsonMoveMwk.removeFromFile() :"+string);
+		System.err.println("JsonMoveMwk.removeFromFile() :" + string.replace("\n", ""));
 		String fileContentsAfter = StringUtils.replace(fileContentsBefore, string, "", 1)  ;
 
 		if (fileContentsBefore.length() != fileContentsAfter.length() + string.length()) {
@@ -91,12 +91,15 @@ public class JsonMoveMwk {
 			throw new RuntimeException("Full string did not get replaced. Wanted to remove " + string.length() + " chars but only removed " + (fileContentsBefore.length() - fileContentsAfter.length()));
 		}
 		FileUtils.writeStringToFile(dest.toFile(), fileContentsAfter);
-		return fileContentsBefore.length() - fileContentsAfter.length();
+		return fileContentsBefore.replace("\n","").length() - fileContentsAfter.replace("\n","").length();
 	}
 
 	private static int addToFile(String string, Path dest, String parentHeadingLevel2) throws IOException {
 		String lines = FileUtils.readFileToString(dest.toFile());
 		if (parentHeadingLevel2 == null || lines.indexOf("\n" +parentHeadingLevel2 +"\n") < 1) {
+			
+			// Insert it under level 1 heading "== =="
+			
 			System.err.println("JsonMoveMwk.addToFile() - no level 2 heading");
 			Pattern p = Pattern.compile("(.*?)(==\\s(2\\s)?==\\n.*?)(=*?)");
 			Matcher m = p.matcher(lines);
@@ -106,13 +109,22 @@ public class JsonMoveMwk {
 				String remainder = m.group(4);
 				
 				// TODO: if snippet contains a dollar, it doesn't get preserved after the replacefirst operation. Groovy's syntax doesn't mirror java's so I get an error when trying to replace.
-				String out = unescapeDollarSign(m.replaceFirst(before + "" + level2Heading +escapeDollarSign(string) + "\n" + remainder));
+				String snippetAdded = before + "" + level2Heading + escapeDollarSign(string) + "\n";
+				if (snippetAdded.replace("\n", "").startsWith("")) {
+					
+				}
+				System.out.println("JsonMoveMwk.addToFile() -  " + snippetAdded.replace("\n",""));
+				String out = unescapeDollarSign(m.replaceFirst(snippetAdded + remainder));
 				
 //				System.err.println("JsonMoveMwk.addToFile() :"+ string);
 				FileUtils.writeStringToFile(dest.toFile(), out);
 				System.err.println("JsonMoveMwk.addToFile() - out.length() = " + out.length());
 				System.err.println("JsonMoveMwk.addToFile() - lines.length() = " + lines.length());
-				return out.length() - lines.length();
+				
+//				System.out.println("JsonMoveMwk.addToFile() - out.replace() = " +out.replace("\n", ""));
+//				System.out.println("JsonMoveMwk.addToFile() - lines.replace() = " +lines.replace("\n", ""));
+				
+				return out.replace("\n", "").length() - lines.replace("\n", "").length();
 			} else {
 				throw new RuntimeException("Couldn't find a level 2 heading to attach snippet to.");
 			}
@@ -126,7 +138,7 @@ public class JsonMoveMwk {
 			FileUtils.writeStringToFile(dest.toFile(), out);
 			System.err.println("JsonMoveMwk.addToFile() - out.length() = " + out.length());
 			System.err.println("JsonMoveMwk.addToFile() - lines.length() = " + lines.length());
-			return out.length() - lines.length();
+			return out.replace("\n", "").length() - lines.replace("\n", "").length();
 		}
 		
 	}
@@ -135,19 +147,25 @@ public class JsonMoveMwk {
 	    StringBuilder b = new StringBuilder();
 
 	    for (char c : input.toCharArray()) {
-	        if (c == '\u0024'){
-	            b.append("__0024__");//"\\u").append(String.format("%04X", (int) c));
+	        if (c == '\u0024'){ // dollar sign
+	            b.append("__0024__");
 	        }
+//	        else if (c == '\n'){ // dollar sign
+//	            b.append("__NEWLINE__");
+//	        }
 	        else {
 	            b.append(c);
 	        }
 	    }
 
-	    return b.toString();
+	    return b.toString().replace("\\n", "__NEWLINE__");
 	}
 	
 	private static String unescapeDollarSign(String input) {
-		String s = new StringBuffer().append('\u0024').toString();
-		return input.replace("__0024__", s);
+		// We can't use "$" directly in groovy so have to use this indirect way
+		String dollarSign = new StringBuffer().append('\u0024').toString();
+		return input.replace("__0024__", dollarSign)
+				.replace("__NEWLINE__", "\\n")
+				;
 	}
 }
