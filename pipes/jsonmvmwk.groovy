@@ -151,7 +151,7 @@ public class JsonMoveMwk {
 	        }
 	    }
 
-	    return b.toString().replace("\\n", "__NEWLINE__");
+	    return b.toString().replace("\\n", "__NEWLINE__").replace("\\", "__BACKSLASH__");
 	}
 	
 	private static String unescapeDollarSign(String input) {
@@ -159,6 +159,7 @@ public class JsonMoveMwk {
 		String dollarSign = new StringBuffer().append('\u0024').toString();
 		return input.replace("__0024__", dollarSign)
 				.replace("__NEWLINE__", "\\n")
+				.replace("__BACKSLASH__", "\\")
 				;
 	}
 }
