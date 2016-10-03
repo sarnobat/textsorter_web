@@ -12,56 +12,6 @@ isaac success
 === Guice ===
 Whenever the injector needs an instance of that type, it will invoke the @Provides method.
 
-
-=== keyboard shortcuts recommended ===
-These are not for built in shortcuts. They're for ones that you must configure yourself and would forget each time they get wiped, or get inconsistent ones
-
-==== Command Line ====
-* Alt-f : find
-* Alt-g : pipe xargs grep
-
-==== Development environment (e.g. Eclipse) ====
-* ? Ctrl-o : Open resource
-* Ctrl-shift-w : Close All
-* Ctrl-w : Close
-* Close Others
-
-==== Operating System Window Manager ====
-
-focus via wmctrl
-
-==== Source control ====
-* alt-s : Status
-
-
-==== Textmate ====
-
-
-==== Tips ====
-* shortcuts bound to Modified keys (alt-tab) cause more strain than unmodified ones (e.g F1)
-
-
-=== Meetup - Linux device drivers (13 Aug 2014) ===
-Block device - aysnchronous
-
-=== Neo4j evaluation (why I like Neo4j) - MASTER COPY, but an alternate version for Objy created ===
-
-I'm talking (mostly) as a newbie developer who is learning to use the DB, not an enterprise architect trying to scale to hundreds of hits at a time.
-
-==== in gdb: ====
-
-Backtrace (stack trace)
- bt
- 
-
-=== Prakash wifi network password ===
-02221679
-
-=== What is an Operating system ===
-
-Resource management - reduce slack time (that's the main reason for multitasking)
-
-
 == Travel, Geography, Language, Culture ==
 == Travel, Geography, Language, Culture ==
 == Travel, Geography, Language, Culture ==
