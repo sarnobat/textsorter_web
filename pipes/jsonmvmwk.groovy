@@ -149,11 +149,7 @@ public class JsonMoveMwk {
 	    for (char c : input.toCharArray()) {
 	        if (c == '\u0024'){ // dollar sign
 	            b.append("__0024__");
-	        }
-//	        else if (c == '\n'){ // dollar sign
-//	            b.append("__NEWLINE__");
-//	        }
-	        else {
+			} else {
 	            b.append(c);
 	        }
 	    }
