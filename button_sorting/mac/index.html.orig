@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Text Sorter</title>
+
+<link rel="shortcut icon" href="/static/icons/Orb_Icons_009.png" type="image/x-icon" />
+
+<<<<<<< HEAD
+<script src="/js/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/purl.js"></script>
+</script>
+
+=======
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/purl.js"></script>
+</script>
+<style>
+.item {
+        border-radius: 15px;
+        box-shadow:
+                inset 0 0 9px #222222,
+                10px 10px 14px #474747;// internal and external shadow
+        background-color:#E6FAD2;
+}
+
+/* I can't get this to work.
+.up {
+	max-height: 0;
+}
+
+.slider {
+	overflow-y: hidden;
+	max-height: 500px;
+
+	transition-property: all;
+	transition-duration: .5s;
+	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+*/
+.fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 5s, opacity 5s linear;
+}
+</style>
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+<script>
+
+//var BASE_URL_NO_PORT = "http://netgear.rohidekar.com";
+var BASE_URL_NO_PORT = "http://localhost";
+var BASE_URL = BASE_URL_NO_PORT + ":4455";
+<<<<<<< HEAD
+
+
+var limit;
+
+// Not currently being used even though it's useful
+=======
+var jq = jQuery;
+
+var limit;
+
+
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+var loadedTextLength;
+
+// TODO: bad: global state
+var headingNames = [];
+<<<<<<< HEAD
+
+// I forgot why we need this. One of the libraries needs dollar for something
+// else, but I don't remember which one
+var jq = jQuery;
+
+jq.noConflict();
+
+jq(document).ready(function() {
+
+	updateURLIfEmpty(jq.url().param('limit'));
+	self.limit = jq.url().param('limit');
+	
+	var dir = jq("#dir").val();
+	var urlFilePath = jq.url().param('filePath');
+
+	var url = getUrl(dir, urlFilePath);
+	loadFile(url);
+
+});
+
+
+function getUrl(dir, filePathInListbox) {
+	var url = "";
+	if (window.location.search.length == 0) {
+		url = dir;
+	} else {
+		url = decodeURIComponent(filePathInListbox);
+	}
+	return url;
+}
+
+function updateURLIfEmpty(limit2) {
+	if (limit2 == null) {
+		limit2 = 200;
+		window.history.pushState("object or string", "Title", document.URL + "&limit=" + limit2);
+	}
+}
+
+function loadFile(docUrl){
+
+	{
+		jq("#dir").val(docUrl);
+
+		window.history.pushState(null, "vi", "index.html?filePath="
+				+ encodeURIComponent(docUrl) + "&limit=" + limit);
+	}
+
+	jq.getJSON(
+			BASE_URL + "/helloworld/json?filePath=" + encodeURIComponent(docUrl))
+=======
+//no conflict jQuery
+jq.noConflict();
+//jQuery stuff
+jq(document).ready(function(){
+
+	updateURLIfEmpty();
+
+	var url = "";
+	if (window.location.search.length == 0) {
+		url = jq("#dir").val();
+	} 
+	// Textbox
+	else {
+		url = decodeURIComponent(jq.url().param('filePath'));
+	}
+	loadFile(url);
+	
+});
+
+function updateURLIfEmpty() {
+  	limit = jq.url().param('limit');
+	if (limit == null) {
+		limit = 200;
+		window.history.pushState("object or string", "Title", document.URL + "&limit=" + limit);
+	}
+}
+
+
+function clearTextArea() {
+	jq("#snippets").text("");
+}
+
+function loadFile(docUrl){
+	var url = docUrl;
+	jq("#dir").val(url);
+	window.history.pushState(null,"vi", "index.html?filePath=" + encodeURIComponent(url)  + "&limit=" + limit);
+	jq.getJSON(BASE_URL + "/helloworld/json?filePath=" 
+			+ encodeURIComponent(url))
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+		.done(function(result) {
+			printTreeAsHtml(result);			
+		})
+		.fail(function() {
+			alert('Failed. Is the server running?');
+		});
+}
+
+function printTreeAsHtml(response) {
+	var level = 0;
+	jq("#snippets").val();
+	var tree = response.tree;	
+<<<<<<< HEAD
+	tree.heading = "-root-";
+=======
+	tree.heading = "-root-"
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+	var text = "";
+	printedSnippetCount = 0;
+	var headings = {
+		0 : {},
+		1 : {},
+		2 : {},
+		3 : {},
+		4 : {},
+		5 : {},
+		6 : {},
+		7 : {},
+	};
+	for (var i = 0; i < tree.length; i++) {
+<<<<<<< HEAD
+		//var snippet = tree[i];
+=======
+		var snippet = tree[i];
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+		getHeadingLevelToHeadings(tree[i], 0, headings);
+	}
+	for (var i = 0; i < tree.length; i++) {
+		var snippet = tree[i];
+		text += printSnippet2(snippet, level + 1, tree, headings, tree);
+	}
+	jq("#snippets").append(headings + text);
+}
+<<<<<<< HEAD
+
+var printedSnippetCount = 0;
+
+var colors = ['red','white','SteelBlue','MistyRose','red'];
+
+function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
+
+	++printedSnippetCount;
+
+	// TODO: bad - global variable
+	if (printedSnippetCount > limit) {
+		return "";
+	}
+
+	var text = "<blockquote><div id="+snippet.id+" class='item' style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
+	text += snippet.heading + "<br>(" 
+		+ snippet.id
+		+"<br><span style='background-color : pink'>"
+		+parentSnippet.heading+"</span>)"
+		+"<br>";
+	var forbiddenLevel = 1;
+
+	if (level > forbiddenLevel && level < 5) // Level 4 is also best left alone
+	{
+		var textareaColor = 'white';
+
+=======
+var printedSnippetCount = 0;
+var colors = ['red','white','SteelBlue','MistyRose','red'];
+function printSnippet2(snippet, level, rootTree, headings, parentSnippet) {
+	++printedSnippetCount;
+	if (printedSnippetCount > limit) {
+		return "";
+	}
+	var text = "";
+	var text = "<blockquote><div id="+snippet.id+" class='item' style='border-width : \"15px\"; background-color: "+colors[level]+"'><table><tr><td>"; 
+	text += snippet.heading + "(" 
+		+snippet.id
+		+"<span style='background-color : pink'>"
+		+parentSnippet.heading+"</span>)"
+		+"<br>";
+	var forbiddenLevel = 1;
+	if (level > forbiddenLevel && level < 5) // Level 4 is also best left alone
+	{
+		var textareaColor = 'white';
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+		if (snippet.freetext == null) {
+			textareaColor = 'orange';
+		}
+		else if (snippet.freetext.trim().length == 0) {
+			if (snippet.subsections.length == 0) {
+				textareaColor = 'purple';
+			} else {
+				textareaColor = 'red';
+			}
+		}
+		text += "<textarea cols=60 rows=10 style='background-color : "+textareaColor+"'>" + snippet.freetext + "</textarea><br></td><td>";
+	
+		var categories = [];
+		if (level > forbiddenLevel) {
+			categories = headings[level-2];
+		}
+		var sortedCategories = [];
+		
+		jq.each(categories, function(heading, id) {
+			var p = {
+				id : id,
+				heading : heading,
+			};
+		    sortedCategories.push(p);
+		});
+
+<<<<<<< HEAD
+		var sortedCategoriesDeDuped = deDupe(sortedCategories);
+=======
+		var deDupedCategories = [];
+		var deDupedCategoryHeadings = [];
+		jq.each(sortedCategories, function(heading, id) {
+		    var capitalizedHeading = sortedCategories[heading].heading.replace(/(=+\s+)(\w*)/, capitalizeHeadingFunction); 
+		    if (deDupedCategoryHeadings.indexOf(capitalizedHeading) < 0) {
+                        deDupedCategoryHeadings.push(capitalizedHeading);
+			deDupedCategories.push(sortedCategories[heading]);
+		    }
+		});
+		deDupedCategories.sort(function(a,b){
+ 		    if(a.heading.toLowerCase() > b.heading.toLowerCase()){ return 1}
+			if(a.heading.toLowerCase() < b.heading.toLowerCase()){ return -1}
+			  return 0;
+		});
+		sortedCategoriesDeDuped = deDupedCategories;
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+
+		// This doesn't work for empty headings. Besides the code is written badly. Try it again and do it properly
+		//		sortedCategoriesDeDuped = getWithoutDuplicates(sortedCategories, headingNames);
+
+		var i = 0;
+		text += "<table><tr><td>";
+<<<<<<< HEAD
+
+		jq.each(sortedCategoriesDeDuped, function(pos, obj) {
+			i++;
+			var buttonColor ;
+			buttonColor = 'none';
+			if (new RegExp(".*Trash.*").test(obj.heading)) {
+				buttonColor = 'purple';
+			} else if (new RegExp(".*prod.*").test(obj.heading)) {
+				buttonColor = 'yellow';
+			} else if (new RegExp(".*usiness.*").test(obj.heading)) {
+				buttonColor = 'green';
+			} else if (new RegExp(".*areer.*").test(obj.heading)) {
+				buttonColor = 'orange';
+			} else if (new RegExp(".*rogramming.*ips.*").test(obj.heading)) {
+				buttonColor = 'blue';
+			} else if (new RegExp(".*tech.*").test(obj.heading)) {
+				buttonColor = 'lightblue';
+			} else if (new RegExp(".*travel.*").test(obj.heading)) {
+				buttonColor = 'lightgreen';
+			}
+			if (i %20 == 0) {
+				text += "</td><td>";
+			}
+=======
+		jq.each(sortedCategoriesDeDuped, function(pos, obj) {
+			i++;
+			var buttonColor = 'none';
+			if (i %20 == 0) {
+				text += "</td><td>";
+			}
+			if (new RegExp(".*Trash.*").test(obj.heading)) {
+				buttonColor = 'purple';
+			}
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+			text += "<input type=button value='"
+				+ obj.heading.replace('\n','').substring(0,14) 
+				+'\' onclick=\x22moveTo(\x27'
+				+snippet.id+'\x27,\x27'
+				+ obj.id 
+<<<<<<< HEAD
+				+'\x27)\x22 '
+				+ ' title="' + obj.heading.replace(new RegExp('=+\s*(.*)\s*===?'),'$1') + '" '
+				+' style="background-color : '
+				+buttonColor+'"><br>\n';
+		});
+
+=======
+				+'\x27)\x22 style="background-color : '
+				+buttonColor+'"><br>\n';
+		});
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+		text += "</td></tr></table>";
+	
+	}
+	text += "<br></td></tr>";
+	text += "</table>";
+	jq.each(snippet.subsections, function(i, item) {
+		text += printSnippet2(item, level + 1, rootTree,headings, snippet);
+	});
+	text += "</div></blockquote>";
+	
+	for (var j = 4; j > 0; j--) {
+		var numberOfNewlines = j-level;
+		for (var k = numberOfNewlines; k >0; k--) {
+			text += "<br>";
+		}
+	}
+	return text;
+}
+
+<<<<<<< HEAD
+function deDupe(sortedCategories) {
+	var deDupedCategories = [];
+	var deDupedCategoryHeadings = [];
+	var capitalizedCategoryHeadings = [];
+	jq.each(sortedCategories, function(heading, id) {
+	    var capitalizedHeading = sortedCategories[heading].heading.replace(/=+\s+(\w+)\s+=+/, capitalizeHeadingFunction); 
+	    if (deDupedCategoryHeadings.indexOf(capitalizedHeading) < 0) {
+	    	if (capitalizedCategoryHeadings.indexOf(capitalizedHeading.toUpperCase()) < 0) {
+				deDupedCategoryHeadings.push(capitalizedHeading);
+				deDupedCategories.push(sortedCategories[heading]);
+				capitalizedCategoryHeadings.push(capitalizedHeading.toUpperCase());
+	    	}
+	    }
+	});
+	deDupedCategories.sort(function(a,b){
+	    if(a.heading.toLowerCase() > b.heading.toLowerCase()){ return 1;}
+		if(a.heading.toLowerCase() < b.heading.toLowerCase()){ return -1;}
+		  return 0;
+	});
+	return deDupedCategories;
+}
+
+function capitalizeHeadingFunction(match, p2, offset, totalString) {
+	return p2.charAt(0).toUpperCase() + p2.slice(1);
+};
+
+// Unused
+// TODO: bad: parameter headingNames gets modified
+=======
+function capitalizeHeadingFunction (match, p1, p2, offset, totalString) { return p1
+                        + p2.charAt(0).toUpperCase() + p2.slice(1);
+                    };
+
+// TODO: bad: mutable state
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+function getWithoutDuplicates(sortedCategories, headingNames) {
+	var deDuped = [];
+	jq.each(sortedCategories, function(pos, obj) {
+		var substitutionFunction = function(match, p1, p2, offset, totalString) { return p1
+<<<<<<< HEAD
+			+ p2.charAt(0).toUpperCase() + p2.slice(1).toLowerCase();
+=======
+			+ p2.charAt(0).toUpperCase() + p2.slice(1);
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+		 };
+		var capitalizedHeading = obj.heading.replace(/(=+\s+)(\w*)/, substitutionFunction);
+		if (headingNames.indexOf(capitalizedHeading) > -1) {
+			// do nothing
+		} else {
+			headingNames.push(capitalizedHeading);
+			deDuped.push(obj);
+		}
+	});
+	return deDuped;
+}
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+function getHeadingLevelToHeadings(subtree, level, headingsAtLevels) {
+	
+	if (subtree.subsections != null) {	
+		if (level > -1) {
+			headingsAtLevels[level][subtree.heading] = subtree.id;
+		}
+		for (var i = 0; i < subtree.subsections.length; i++) {
+			getHeadingLevelToHeadings(subtree.subsections[i],level+1,headingsAtLevels);
+		}
+	}
+	
+	return headingsAtLevels;
+	
+}
+<<<<<<< HEAD
+
+// Unused
+=======
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+// Rarely used
+function dump(result)
+{
+	var text = "";
+	jq.each(result['tree'], function(i, item) {
+		text += printSnippet(item);
+	});
+	
+	jq("#myTextArea").val(text);
+	loadedTextLength = jq("#myTextArea").val().length;
+}
+
+// Deprecated - only used by dump()
+function printSnippet(jsonObject) {
+	var ret = "";
+	ret += jsonObject.heading;
+	ret += jsonObject.freetext;
+	
+	console.debug(jsonObject.heading);
+	console.debug(jsonObject.freetext);
+	jq.each(jsonObject.subsections, function(i, item) {
+		ret += printSnippet(item);
+	});
+	return ret;
+}
+
+function persistChanges() {
+   var latestTextLength = jq("#myTextArea").val().length;
+   
+   if (latestTextLength == loadedTextLength) {
+		console.debug('text has not changed length');
+		return;
+   }
+
+   
+   jq.ajax({          
+            type:  'POST',
+            url:   BASE_URL + '/helloworld/persist',
+			 data: { 
+			 	filePath: encodeURIComponent(jq("#dir option:selected").val()),
+			 	newFileContents : encodeURIComponent(jq("#myTextArea").val()),
+			 }
+         }).done(function() {
+			console.debug("successfully written");
+			loadedTextLength = latestTextLength;
+<<<<<<< HEAD
+         }).fail(function(){alert("fail");});
+=======
+         }).fail(function(){alert("fail")});
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+}
+
+function moveTo(idToBeMoved, idOfTarget) {
+	var filePath = jq("#dir").val();
+
+
+	jq("#"+idToBeMoved).css('background-color','orange');
+	jq("#"+idToBeMoved).addClass('fadeOut');
+
+	// javascript animation is expensive. CSS animation is a lot smoother.
+	jq.ajax({          
+		type:  'POST',
+		url:   BASE_URL + '/helloworld/move?filePath=' +filePath +"&id=" +idToBeMoved+ "&destId=" + idOfTarget,
+		 data: { 
+			//filePath: encodeURIComponent(jq("#dir option:selected").val()),
+			//newFileContents : encodeURIComponent(jq("#myTextArea").val()),
+		 }
+	}).done(function() {
+		jq("#"+idToBeMoved).remove();
+		console.debug("successfully written: " + idToBeMoved);
+<<<<<<< HEAD
+	}).fail(function(){alert("fail");});
+}
+
+
+function clearTextArea() {
+	jq("#snippets").text("");
+}
+
+
+
+</script>
+
+<style>
+.item {
+        border-radius: 15px;
+        box-shadow:
+                inset 0 0 9px #222222,
+                10px 10px 14px #474747;// internal and external shadow
+        background-color:#E6FAD2;
+}
+
+/* I can't get this to work.
+.up {
+	max-height: 0;
+}
+
+.slider {
+	overflow-y: hidden;
+	max-height: 500px;
+
+	transition-property: all;
+	transition-duration: .5s;
+	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+*/
+.fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 5s, opacity 5s linear;
+}
+</style>
+=======
+	}).fail(function(){alert("fail")});
+}
+</script>
+
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+</head>
+<body style="background-color : #CCCCFF">
+
+
+<script> 
+    jq(function(){
+      jq("#menubar").load(BASE_URL_NO_PORT + "/menu.html"); 
+    });
+</script>
+<div id="menubar"></div>
+
+	<a href='/textsorter/editor/'>Heading Outline</a><br>
+	<!-- TODO: remove all references to myTextArea -->
+	<textarea id="myTextArea" rows=2 cols=150 onkeyup="persistChanges()"></textarea>
+
+	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jq('#dir option:selected').val())">	
+<<<<<<< HEAD
+		<option>/home/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk</option>		
+		<option>/Users/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk</option>
+		<option>/Users/sarnobat/sarnobat.git/mwk/geography.mwk<option>
+		<option>/Users/sarnobat/sarnobat.git/mwk/programming-tips.mwk</option>
+		<option>/Users/sarnobat/sarnobat.git/mwk/self.mwk</option>
+		<option>/Users/sarnobat/sarnobat.git/mwk/girls.mwk</option>
+		<option>/Users/sarnobat/sarnobat.git/mwk/career.mwk</option>
+		<option>/Users/sarnobat/sarnobat.git/mwk/atletico_documentary.mwk</option>
+		<option>/sarnobat.garagebandbroken/Desktop/git-repo/mwk/atletico_madrid.mwk</option>
+		<option>/sarnobat.garagebandbroken/Desktop/git-repo/mwk/humor.mwk</option>
+=======
+		<option>/home/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>		
+		<option>/Users/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
+		<!--<option>/home/sarnobat/sarnobat.git/mwk/new.mwk</option>-->
+		<option>/home/sarnobat/sarnobat.git/mwk/programming_tips/functional_programming.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/programming_tips/unglorification.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/programming-tips.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/work/google/gtt/work.txt</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/atletico_documentary.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/humor-cheat-sheet.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/programming-tips.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/productivity-cheat-sheet.mwk</option>
+
+		<option>/home/sarnobat/sarnobat.git/mwk/technology.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/technology-linux.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/new.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/academic-class-notes.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/academic.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/business.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/career.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/communication.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/docs.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/entertainment.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/finance.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/geography.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/girls.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/git.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/health.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/humor-cheat-sheet.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/learning.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/life-story.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/misc.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/new.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/new_google.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/people.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/poster.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/productivity-cheat-sheet.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/self.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/session.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/soccer.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/stepz.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/technology/eclipse.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/technology-apps.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/technology-linux.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/technology.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/winning-cheat-sheet.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/youtube_finished.mwk</option>
+		<option>/home/sarnobat/sarnobat.git/mwk/yurled.mwk</option>
+	</select>
+	
+	<div id="snippets">
+
+	
+		<div id="output"></div>
+	
+	</DIV>
+
+</body>
+</html>

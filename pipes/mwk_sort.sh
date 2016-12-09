@@ -1,0 +1,1 @@
+cat ~/mwk/programming-tips.mwk| groovy mwkSort.groovy | tee ~/mwk/programming-tips-sorted.mwk
