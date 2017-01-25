@@ -32,7 +32,7 @@ if (true) {
 			String line = "";
 			boolean insideLevel3Snippet = false;
 			while ((line = br.readLine()) != null) {
-System.err.println("current line: " + line);
+//System.err.println("current line: " + line);
 				if (isHeading(line)) {
 					if (getHeadingLevel(line) == 3) {
 						if (insideLevel3Snippet) {
