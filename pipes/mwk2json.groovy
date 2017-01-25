@@ -17,6 +17,10 @@ import com.google.common.base.Joiner;
 public class Mwk2Json {
 
 	public static void main(String[] args) {
+if (true) {
+//System.err.println("=== ABC ===".matches("[=]+[^=]+[=]+"));
+//return;
+}
 		BufferedReader br = null;
 		try {
 
@@ -45,7 +49,7 @@ public class Mwk2Json {
 						// continue appending
 						level3snippet += line + "\n";
 						if (!insideLevel3Snippet) {
-							throw new RuntimeException("We must be inside a level 3 snippet");
+							throw new RuntimeException("We must be inside a level 3 snippet: " + line);
 						}
 					} else if (getHeadingLevel(line) < 3) {
 
@@ -135,12 +139,14 @@ public class Mwk2Json {
 	}
 
 	private static boolean isHeading(String line) {
-		return line.startsWith("=");
+//		return line.startsWith("=");// && line.matches("");
+		return line.matches("[=]+[^=]+[=]+") && line.startsWith("=");
 	}
 
 	private static int getHeadingLevel(String line) {
 		int level = 0;
 		int i = 0;
+System.err.println("getHeadingLevel() : " +line);
 		while (line.charAt(i) == '=') {
 			++i;
 			++level;
