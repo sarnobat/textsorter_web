@@ -32,7 +32,7 @@ if (true) {
 			String line = "";
 			boolean insideLevel3Snippet = false;
 			while ((line = br.readLine()) != null) {
-
+System.err.println("current line: " + line);
 				if (isHeading(line)) {
 					if (getHeadingLevel(line) == 3) {
 						if (insideLevel3Snippet) {
@@ -146,7 +146,7 @@ if (true) {
 	private static int getHeadingLevel(String line) {
 		int level = 0;
 		int i = 0;
-System.err.println("getHeadingLevel() : " +line);
+//System.err.println("getHeadingLevel() : " +line);
 		while (line.charAt(i) == '=') {
 			++i;
 			++level;
@@ -158,5 +158,4 @@ System.err.println("getHeadingLevel() : " +line);
 			return i;
 		}
 	}
-
 }
