@@ -1,0 +1,6 @@
+while read line
+do
+  echo '<block><div style="background-color : #FDFD96; margin: 25px; border-radius: 15px; box-shadow: inset 0 0 9px #222222, 10px 10px 14px #999999;">'
+  echo "$line"
+  echo '</div></block>'
+done < "${1:-/dev/stdin}"
