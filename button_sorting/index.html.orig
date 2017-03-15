@@ -39,8 +39,13 @@
 </style>
 <script>
 
+<<<<<<< HEAD
+var BASE_URL_NO_PORT = "http://netgear.rohidekar.com";
+//var BASE_URL_NO_PORT = "http://localhost";
+=======
 //var BASE_URL_NO_PORT = "http://netgear.rohidekar.com";
 var BASE_URL_NO_PORT = "http://localhost";
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
 var BASE_URL = BASE_URL_NO_PORT + ":4455";
 var jq = jQuery;
 
@@ -346,9 +351,12 @@ function moveTo(idToBeMoved, idOfTarget) {
 	<textarea id="myTextArea" rows=2 cols=150 onkeyup="persistChanges()"></textarea>
 
 	<select id="dir" name="sometext" onchange="clearTextArea();loadFile(jq('#dir option:selected').val())">	
-		<option>/home/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>	
-		<option>/Users/sarnobat/sarnobat.git/mwk/new.mwk<ioption>	
+		<option>/home/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>		
+<<<<<<< HEAD
+		<option>/Users/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<option>
+=======
 		<option>/Users/sarnobat/sarnobat.git/mwk/new_ubuntu.mwk<ioption>
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
 		<!--<option>/home/sarnobat/sarnobat.git/mwk/new.mwk</option>-->
 		<option>/home/sarnobat/sarnobat.git/mwk/programming_tips/functional_programming.mwk</option>
 		<option>/home/sarnobat/sarnobat.git/mwk/programming_tips/unglorification.mwk</option>
