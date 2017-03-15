@@ -308,7 +308,11 @@ public class TextSorter {
 		List<String> _lines;
 		File f = new File(iFilePath);
 		if (!f.exists()) {
+<<<<<<< HEAD
+			throw new RuntimeException("Does not exist: " + iFilePath);
+=======
 			throw new RuntimeException();
+>>>>>>> a5297dba2677a72b1648200ef713a323e4581991
 		}
 		_lines = FileUtils.readLines(f);
 		int level = 1;

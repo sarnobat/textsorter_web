@@ -1,0 +1,1 @@
+cat new.mwk| groovy mwk2json.groovy | grep -v http | grep -i cygwin | groovy jsonmvmwk.groovy /sarnobat.garagebandbroken/Desktop/sarnobat.git/mwk/new.mwk /sarnobat.garagebandbroken/Desktop/sarnobat.git/mwk/technology.mwk

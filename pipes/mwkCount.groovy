@@ -1,10 +1,9 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
+import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,299 +11,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.concurrent.CopyOnWriteArrayList;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 
-// Insertion-sort into "sorted" is not implemented
-public class TextSorter {
-	public static void main(String[] args) throws URISyntaxException {
-		try {
-			JdkHttpServerFactory.createHttpServer(new URI("http://localhost:4455/"),
-					new ResourceConfig(HelloWorldResource.class));
-		} catch (Exception e) {
-			System.out.println("Already running");
+public class MwkCountNodes {
+
+	public static void main(String[] args) throws IOException {
+		InputStreamReader isr = new InputStreamReader(System.in);
+		BufferedReader br = new BufferedReader(isr);
+		String filePath = br.readLine();
+		System.out.println("File\tHeading\tBody\tTotal");
+		while (filePath != null) {
+			List<String> lines = FileUtils.readLines(Paths.get(filePath).toFile());
+			Defragmenter.defragmentFile(filePath, lines);
+			filePath = br.readLine();
 		}
-	}
-
-	@Path("helloworld")
-	public static class HelloWorldResource { // Must be public
-
-		@GET
-		@Path("json")
-		@Produces("application/json")
-		public Response read(@QueryParam("filePath") String iFilePath) throws JSONException,
-				IOException {
-
-			System.out.println("TextSorter.HelloWorldResource.read() - begin");
-			createSortedCopyOfFile(iFilePath);
-
-			try {
-				JSONObject mwkFileAsJson = new JSONObject();
-				File mwkFile = new File(iFilePath);
-				if (!mwkFile.exists()) {
-					throw new RuntimeException();
-				}
-				JSONArray o = toJson(iFilePath);
-				mwkFileAsJson.put("tree", o);
-				System.out.println("TextSorter.HelloWorldResource.read() - end");
-				return Response.ok().header("Access-Control-Allow-Origin", "*")
-						.entity(mwkFileAsJson.toString()).type("application/json").build();
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-
-		private void createSortedCopyOfFile(String iFilePath) {
-			System.out.println("TextSorter.HelloWorldResource.createSortedCopyOfFile() - begin");
-			try {
-				Defragmenter.defragmentFile(iFilePath);
-				System.out.println("TextSorter.HelloWorldResource.createSortedCopyOfFile() - sort successful");
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException();
-			}
-		}
-
-		@SuppressWarnings("unused")
-		@POST
-		@Path("persist")
-		@Deprecated
-		// I don't think we're using this
-		public Response persist(final String body) throws JSONException, IOException,
-				URISyntaxException {
-			System.out.println("persist() - begin");
-			System.out.println(body);
-			// Save the changes to the file
-			save: {
-				List<NameValuePair> params = URLEncodedUtils.parse(new URI("http://www.fake.com/?"
-						+ body), "UTF-8");
-				Map<String, String> m = new HashMap<String, String>();
-				for (NameValuePair param : params) {
-					m.put(param.getName(), URLDecoder.decode(param.getValue(), "UTF-8"));
-				}
-				FileUtils.write(new File(m.get("filePath")), m.get("newFileContents"));
-				System.out.println("persist() - write successful");
-			}
-			return Response.ok().header("Access-Control-Allow-Origin", "*")
-					.entity(new JSONObject().toString()).type("application/json").build();
-		}
-
-		@POST
-		@Path("move")
-		public Response move(@QueryParam("filePath") String iFilePath,
-				@QueryParam("id") final String iIdOfObjectToMove,
-				@QueryParam("destId") final String iIdOfLocationToMoveTo) throws JSONException,
-				IOException, URISyntaxException {
-
-			try {
-				JSONArray topLevelArray = toJson(iFilePath);
-
-				JSONObject destination = findSnippetById(iIdOfLocationToMoveTo, topLevelArray);
-				if (destination == null) {
-					throw new RuntimeException("couldn't find " + iIdOfLocationToMoveTo);
-				}
-				JSONObject snippetOriginalParent = findParentOfSnippetById(iIdOfObjectToMove,
-						topLevelArray);
-				if (snippetOriginalParent == null) {
-					throw new RuntimeException("couldn't find " + iIdOfObjectToMove);
-				}
-				JSONObject snippetToMove = removeObject(iIdOfObjectToMove, topLevelArray,
-						snippetOriginalParent);
-				if (snippetToMove == null) {
-					throw new RuntimeException("Couldn't find snippet " + iIdOfObjectToMove);
-				}
-				if (!destination.getString("id").equals(iIdOfLocationToMoveTo)) {
-					System.out.println("Wrong location");
-					throw new RuntimeException("Wrong destination");
-				}
-				System.out.println("move() - Snippet to move: " + snippetToMove);
-				destination.getJSONArray("subsections").put(snippetToMove);
-
-				try {
-					String string = asString(topLevelArray).toString();
-					FileUtils.writeStringToFile(new File(iFilePath), string);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				System.out.println("TextSorter.HelloWorldResource.move() - success");
-				return Response.ok().header("Access-Control-Allow-Origin", "*")
-						.entity(topLevelArray.toString()).type("application/json").build();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-
-		}
-
-		// TODO: why do we need the top level array?
-		private JSONObject removeObject(final String iIdOfObjectToRemove, JSONArray topLevelArray,
-				JSONObject snippetOriginalParent) {
-			JSONObject rDesiredSnippet = null;
-			if (snippetOriginalParent == null) {
-				throw new IllegalArgumentException();
-			}
-			JSONArray subsectionsOfParent = snippetOriginalParent.getJSONArray("subsections");
-			for (int i = 0; i < subsectionsOfParent.length(); i++) {
-				JSONObject aSubsection = subsectionsOfParent.getJSONObject(i);
-				if (aSubsection.getString("id").equals(iIdOfObjectToRemove)) {
-					// System.out.println("removeObject(): aSubsection: " +
-					// aSubsection);
-					rDesiredSnippet = (JSONObject) subsectionsOfParent.remove(i);
-					// System.out.println("removeObject(): rDesiredSnippet: " +
-					// rDesiredSnippet);
-					rDesiredSnippet = aSubsection;
-					// String r = rDesiredSnippet.toString();
-					// System.out.println("removeObject(): subsectionsOfParent: "
-					// + subsectionsOfParent);Too long
-					// System.out.println("removeObject(): r: " + r);
-					break;
-				}
-			}
-			if (rDesiredSnippet == null) {
-				throw new RuntimeException("Did not find snippet in parent");
-			}
-			return rDesiredSnippet;
-		}
-
-		@Deprecated
-		private JSONObject notWorking(final String iIdOfObjectToRemove, JSONArray topLevelArray,
-				JSONObject snippetOriginalParent) {
-			System.out.println("snippetOriginalParent - " + snippetOriginalParent.getString("id"));
-			System.out.println("IdOfObjectToRemove - " + iIdOfObjectToRemove);
-			System.out.println();
-			JSONObject rDesiredSnippet = null;
-			JSONArray subsectionsArray = (JSONArray) snippetOriginalParent.get("subsections");
-			for (int i = 0; i < topLevelArray.length(); i++) {
-				if (rDesiredSnippet != null) {
-					throw new RuntimeException(
-							"Bug. We already found the snippet. We don't want to keep searching");
-				}
-				if (topLevelArray.get(i) != null) {
-					for (int j = 0; j < subsectionsArray.length(); j++) {
-						if (rDesiredSnippet != null) {
-							throw new RuntimeException(
-									"Bug. We already found the snippet. We don't want to keep searching");
-						}
-						JSONObject subtreeRootJsonObject = subsectionsArray.getJSONObject(j);
-						JSONObject aParentSnippet = findSnippetById(iIdOfObjectToRemove,
-								subtreeRootJsonObject);
-						if (aParentSnippet != null) {
-
-							rDesiredSnippet = aParentSnippet;
-							JSONArray allParentSubsections = snippetOriginalParent
-									.getJSONArray("subsections");
-							boolean foundParent = false;
-							for (int k = 0; i < allParentSubsections.length(); i++) {
-								System.out.println(allParentSubsections.getJSONObject(k).getString(
-										"id"));
-								if (iIdOfObjectToRemove.equals(allParentSubsections
-										.getJSONObject(k).getString("id"))) {
-									allParentSubsections.remove(k);
-									foundParent = true;
-									break;
-								}
-							}
-							if (foundParent) {
-								break;
-							} else {
-								throw new RuntimeException(
-										"Found parent but did not remove snippet.");
-							}
-						} else {
-							throw new RuntimeException("Parent Snippet not found");
-						}
-					}
-					break;
-				}
-			}
-			return rDesiredSnippet;
-		}
-
-		private JSONObject findParentOfSnippetById(String iIdOfObjectToMove, JSONArray a) {
-			for (int i = 0; i < a.length(); i++) {
-				JSONObject jsonObject = a.getJSONObject(i);
-				JSONObject p = findParentOfSnippetById(iIdOfObjectToMove, jsonObject);
-				if (p != null) {
-					return p;
-				}
-			}
-			throw new RuntimeException("Couldn't find parent of " + iIdOfObjectToMove);
-		}
-
-		private JSONObject findParentOfSnippetById(String iIdOfObjectToMove, JSONObject jsonObject) {
-			JSONArray a = jsonObject.getJSONArray("subsections");
-			for (int i = 0; i < a.length(); i++) {
-				if (iIdOfObjectToMove.equals(a.getJSONObject(i).getString("id"))) {
-					return jsonObject;
-				} else {
-					JSONObject parentCandidate = findParentOfSnippetById(iIdOfObjectToMove,
-							a.getJSONObject(i));
-					if (parentCandidate != null) {
-						return parentCandidate;
-					}
-				}
-				// JSONObject jsonObject2 = a.getJSONObject(i);
-				// JSONObject o = findSnippetById(iIdOfObjectToMove,
-				// jsonObject2);
-				// if (o != null) {
-				// return jsonObject2;
-				// }
-			}
-			return null;
-		}
-
-		private JSONObject findSnippetById(String iIdOfObjectToMove, JSONArray a) {
-			for (int i = 0; i < a.length(); i++) {
-				JSONObject o = findSnippetById(iIdOfObjectToMove, a.getJSONObject(i));
-				if (o != null) {
-					return o;
-				}
-			}
-			return null;
-		}
-
-		private JSONObject findSnippetById(String iIdOfObjectToMove, JSONObject jsonObject) {
-			String string2 = jsonObject.getString("id");
-			if (iIdOfObjectToMove.equals(string2)) {
-				return jsonObject;
-			}
-			JSONArray arr = (JSONArray) jsonObject.getJSONArray("subsections");
-
-			for (int j = 0; j < arr.length(); j++) {
-				JSONObject jsonObject2 = arr.getJSONObject(j);
-				JSONObject o = findSnippetById(iIdOfObjectToMove, jsonObject2);
-				if (o != null) {
-					return o;
-				}
-			}
-			return null;
-		}
+		// Prints to stdout
 	}
 
 	public static JSONArray toJson(String iFilePath) throws JSONException, IOException {
-		System.out.println("TextSorter.toJson() - begin");
 		List<String> _lines;
 		File f = new File(iFilePath);
 		if (!f.exists()) {
@@ -434,19 +168,24 @@ public class TextSorter {
 		public static final String PUBLISHING = "publishing";
 
 		/**
-		 * This only writes it to stdout, it doesn't modify the file.
+		 * This only writes it to stdout, it doesn't modify the file. Hmmmm,
+		 * this comment looks wrong.
+		 * 
+		 * @param filePath
 		 */
-		public static void defragmentFile(String fileToOrganizePath) {
-			System.out.println("TextSorter.Defragmenter.defragmentFile() - begin: " + fileToOrganizePath);
-			List<String> lines = TextSorterControllerUtils.readFile(fileToOrganizePath);
+		public static void defragmentFile(String filePath, List<String> lines) {
 			MyTreeNode treeRootNode = TreeCreator.createTreeFromLines(lines);
-			MyTreeNode.validateTotalNodeCount(treeRootNode);
-			MyTreeNode.dumpTreeToFileAndVerify(treeRootNode, fileToOrganizePath,
-					Utils.countNonHeadingLines(lines));
-			MyTreeNode.resetValidationStats();
-			System.out.println("TextSorter.Defragmenter.defragmentFile() - end");
+			int subtreeNodeCount = treeRootNode.countNodesInSubtree();
+			int nonHeadingLines = Utils.countNonHeadingNonBlankLines(lines);
+			System.out.println(filePath + "\t" + subtreeNodeCount + "\t" + nonHeadingLines + "\t"
+					+ lines.size());
+			// System.out.println(filePath + "\tNumber of lines\t\t:\t"+
+			// lines.size());
+			// System.out.println(filePath +
+			// "\tNon-heading non-blank lines\t:\t" + nonHeadingLines);
+			// System.out.println(filePath + "\tNumber of nodes\t\t:\t"+
+			// subtreeNodeCount);
 		}
-
 	}
 
 	private static class Utils {
@@ -463,7 +202,7 @@ public class TextSorter {
 			return headingLevel;
 		}
 
-		public static int countNonHeadingLines(List<String> readFile) {
+		public static int countNonHeadingNonBlankLines(List<String> readFile) {
 			int count = 0;
 			for (String line : readFile) {
 				if (line.trim().length() > 0 && !line.startsWith("=")) {
@@ -472,42 +211,16 @@ public class TextSorter {
 			}
 			return count;
 		}
-
-		public static String getDeragmentedFilePath(String fragmentedFilePath) {
-			return fragmentedFilePath.replace(".mwk", "-sorted.mwk");
-		}
-	}
-
-	private static class TextSorterControllerUtils {
-		public static List<String> readFile(String inputFilePath) {
-			System.out
-					.println("TextSorter.TextSorterControllerUtils.readFile() - " + inputFilePath);
-			List<String> theLines = null;
-			try {
-				theLines = FileUtils.readLines(new File(inputFilePath));
-
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-//			System.out.println("TextSorter.TextSorterControllerUtils.readFile() - " + theLines);
-			// To ensure we don't lose text before the first heading
-			if (!theLines.get(0).startsWith("=")) {
-				theLines.add(0, "= =");
-			}
-			return new CopyOnWriteArrayList<String>(theLines);
-		}
 	}
 
 	private static class TreeCreator {
 		@SuppressWarnings("unchecked")
 		public static MyTreeNode createTreeFromLines(List<String> lines) {
-			System.out.println("TextSorter.TreeCreator.createTreeFromLines() - begin");
 			List<Snippet> theSnippetList = getSnippetList(lines);
 			Stack<MyTreeNode> snippetTreePath = new Stack<MyTreeNode>();
 			MyTreeNode.totalNodeCount = 0;
-			System.out.println("TextSorter.TreeCreator.createTreeFromLines() - before loop");
 			for (Snippet aSnippet : theSnippetList) {
-				System.out.print(".");
+				// System.err.print(".");
 				// Find the parent node
 				MyTreeNode aParentNode = null;
 				findParentForCurrentSnippet: {
@@ -534,8 +247,6 @@ public class TextSorter {
 				// MyTreeNode.dumpTree(aParentNode);
 				MyTreeNode.validateCount(aParentNode);
 			}
-			System.out.println("");
-			System.out.println("TextSorter.TreeCreator.createTreeFromLines() - after loop");
 			// Pop the stack and return the root
 			MyTreeNode root = null;
 			while (!snippetTreePath.isEmpty()) {
@@ -557,7 +268,6 @@ public class TextSorter {
 		}
 
 		private static List<Snippet> getSnippetList(List<String> lines) {
-			System.out.println("TextSorter.TreeCreator.getSnippetList() - begin");
 			List<Snippet> snippets = new LinkedList<Snippet>();
 			int firstHeadingLine = 0;
 			while (!isHeadingLine(lines.get(firstHeadingLine))) {
@@ -755,19 +465,8 @@ public class TextSorter {
 			return getText().toString();
 		}
 
-		public StringBuffer getTextNoHeading() {
-			StringBuffer sb = new StringBuffer();
-
-			for (int i = 1; i < snippetLines.size(); i++) {
-				sb.append(snippetLines.get(i));
-				sb.append("\n");
-			}
-			return sb;
-		}
-
 		public StringBuffer getText() {
 			StringBuffer sb = new StringBuffer();
-			int i = 0;
 			for (String line : snippetLines) {
 				sb.append(line);
 				// if (i == snippetLines.size()-1) {
@@ -778,7 +477,6 @@ public class TextSorter {
 				// } else {
 				sb.append("\n");
 				// }
-				i++;
 			}
 			return sb;
 		}
@@ -831,7 +529,7 @@ public class TextSorter {
 				parentNode.addChild(this);
 			}
 			++totalNodeCount;
-			// System.out.println(currentSnippet.getHeadingLine());
+			// System.err.println(currentSnippet.getHeadingLine());
 		}
 
 		// Only necessary for virtual nodes. Otherwise there's no need to
@@ -862,11 +560,11 @@ public class TextSorter {
 		private void validateSizeBeforeAndAfterNotSame(MyTreeNode currentNode, int sizeBefore) {
 			int sizeAfter = childNodes.get(currentNode.getSnippetHeadingLine()).size();
 			if (sizeBefore == sizeAfter) {
-				System.out.println("####################################");
-				System.out.println(childNodes.get(currentNode.getSnippetHeadingLine()).iterator()
+				System.err.println("####################################");
+				System.err.println(childNodes.get(currentNode.getSnippetHeadingLine()).iterator()
 						.next().getSnippetText());
-				System.out.println("##################");
-				System.out.println(currentNode.getSnippetText());
+				System.err.println("##################");
+				System.err.println(currentNode.getSnippetText());
 				throw new RuntimeException("Developer Error");
 			}
 		}
@@ -890,10 +588,6 @@ public class TextSorter {
 
 		StringBuffer getSnippetText() {
 			return snippet.getText();
-		}
-
-		StringBuffer getSnippetTextNoHeading() {
-			return snippet.getTextNoHeading();
 		}
 
 		private ImmutableList<MyTreeNode> getChildNodes() {
@@ -1000,203 +694,6 @@ public class TextSorter {
 		// TODO: Bad. A method that has side effects AND returns something. This
 		// is
 		// why this algorithm is difficult to understand
-		private static MyTreeNode printNonPublishedSectionsOfSubtree(MyTreeNode iTreeRoot,
-				StringBuffer outputString) {
-			if (iTreeRoot.getSnippetHeadingLine().contains(Defragmenter.PUBLISHING)) {
-				return iTreeRoot;
-			}
-			outputString.append(iTreeRoot.getSnippetText());
-			MyTreeNode forPublishing = null;
-			for (MyTreeNode child : iTreeRoot.getChildNodes()) {
-				MyTreeNode forPublishingChild = printNonPublishedSectionsOfSubtree(child,
-						outputString);
-				if (forPublishingChild != null) {
-					// sanity check
-					if (forPublishing != null) {
-						throw new RuntimeException(
-								"Developer error - we cannot support more than one tree for publishing");
-					}
-					forPublishing = forPublishingChild;
-				}
-			}
-			return forPublishing;
-		}
-
-		static void dumpTreeToFileAndVerify(MyTreeNode iRootTreeNode, String iFileToWritePath,
-				int nonHeadinglinesInOriginalFile) {
-			System.out.println("TextSorter.MyTreeNode.dumpTreeToFileAndVerify() - begin");
-			String outputMwkFilePath = Utils.getDeragmentedFilePath(iFileToWritePath);
-
-			writeTreeToFile2(iRootTreeNode, outputMwkFilePath);
-			verifyFileWasWritten(outputMwkFilePath, nonHeadinglinesInOriginalFile);
-
-			removeRedundantHeadings(outputMwkFilePath, nonHeadinglinesInOriginalFile);
-		}
-
-		private static void verifyFileWasWritten(String outputPath,
-				int nonHeadinglinesInOriginalFile) {
-			System.out.println("TextSorter.MyTreeNode.verifyFileWasWritten() - begin");
-			int after = Utils.countNonHeadingLines(TextSorterControllerUtils.readFile(outputPath));
-			if (nonHeadinglinesInOriginalFile > after) {
-				throw new RuntimeException("Lines lost");
-			} else {
-				System.out.println("TextSorter.MyTreeNode.verifyFileWasWritten() - Before, after: ["
-						+ nonHeadinglinesInOriginalFile + ", " + after + "]");
-			}
-
-		}
-
-		static StringBuffer dumpTree(MyTreeNode root) {
-			StringBuffer rStringBuffer = new StringBuffer();
-
-			// Step 1 - print the non-published sections
-			MyTreeNode forPublishing = MyTreeNode.printNonPublishedSectionsOfSubtree(root,
-					rStringBuffer);
-
-			// Step 2 - print the published section
-			if (forPublishing != null) {
-				printPublishedSubtree(forPublishing, rStringBuffer);
-			}
-
-			return rStringBuffer;
-		}
-
-		private static void removeRedundantHeadings(String uncoagulatedFilePath,
-				int nonHeadinglinesInOriginalFile) {
-			String coagulatedFilePath = getCoagulatedFilePath(uncoagulatedFilePath);
-
-			MyTreeNode inputTreeRootNode = createTreeFromMwkFile(uncoagulatedFilePath);
-
-			MyTreeNode outputTreeRootNode = coagulateChildrenOfRootNode(inputTreeRootNode);
-
-			validateNodeAfterCoagulationOfChildren(inputTreeRootNode, outputTreeRootNode);
-
-			writeTreeToFile(outputTreeRootNode, coagulatedFilePath);
-
-			validateSizeBeforeAndAfterCoagulation(coagulatedFilePath, nonHeadinglinesInOriginalFile);
-		}
-
-		@Deprecated
-		// Use TextSorterWebServer#writeTreeToFile()
-		private static void writeTreeToFile2(MyTreeNode iTreeRootNode, String iMwkFilePath) {
-			StringBuffer theEntireFileString = dumpTree(iTreeRootNode);
-			writeStringToFile(theEntireFileString, iMwkFilePath);
-		}
-
-		private static void writeTreeToFile(MyTreeNode iTreeRootNode, String iMwkFilePath) {
-			StringBuffer theEntireFileString = dumpTree(iTreeRootNode);
-			writeStringToFile(theEntireFileString, iMwkFilePath);
-		}
-
-		private static void writeStringToFile(StringBuffer sb, String iFilePath) {
-			try {
-				FileUtils.write(new File(iFilePath), sb.toString());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		private static MyTreeNode createTreeFromMwkFile(String iMwkFilePath) {
-			try {
-				List<String> lines = FileUtils.readLines(new File(iMwkFilePath));
-
-				MyTreeNode inputTreeRootNode = TreeCreator.createTreeFromLines(lines);
-				return inputTreeRootNode;
-			} catch (IOException e) {
-				throw new RuntimeException();
-			}
-		}
-
-		private static void validateSizeBeforeAndAfterCoagulation(String coagulatedFilePath,
-				int nonHeadinglinesInOriginalFile) {
-
-			int after = Utils.countNonHeadingLines(TextSorterControllerUtils
-					.readFile(coagulatedFilePath));
-			System.out.println("TextSorter.MyTreeNode.validateSizeBeforeAndAfterCoagulation() - Before, after: ["
-					+ nonHeadinglinesInOriginalFile + ", " + after + "]");
-			if (nonHeadinglinesInOriginalFile != after) {
-				throw new RuntimeException("Lines lost or spurious added");
-			} else {
-			}
-		}
-
-		private static void validateNodeAfterCoagulationOfChildren(MyTreeNode inputTreeNode,
-				MyTreeNode outputTreeNode) {
-			if (inputTreeNode.getParentNode() == null && outputTreeNode.getParentNode() == null) {
-				return;
-			}
-			if (inputTreeNode.getParentNode().getHeadingText()
-					.equals(outputTreeNode.getParentNode().getHeadingText())) {
-				return;
-			}
-			if (inputTreeNode.getChildNodes().size() > 0) {
-				if (!(outputTreeNode.getChildNodes().size() > 0)) {
-					return;
-				}
-			}
-			throw new RuntimeException("Something got lost during coagulation");
-		}
-
-		public static String getCoagulatedFilePath(String fragmentedFilePath) {
-			return fragmentedFilePath.replace("sorted", "coagulate");
-		}
-
-		/**
-		 * Creates a mirror of the passed subtree, but with children combined
-		 * into a single node
-		 */
-		private static MyTreeNode coagulateChildrenOfRootNode(MyTreeNode iInputTreeRootNode) {
-
-			MyTreeNode rOutputTreeNode = cloneRootNodeHeader(iInputTreeRootNode);
-			Map<String, List<MyTreeNode>> childNodesGroupedByHeading = getRootChildNodesGrouped(iInputTreeRootNode
-					.getChildNodes());
-			Map<String, MyTreeNode> superChildNodes = createSuperNodesForRootChildren(childNodesGroupedByHeading);
-			// Ideally we should sort these
-			addChildNodesToOutputRootNode(rOutputTreeNode, superChildNodes.values());
-			return rOutputTreeNode;
-		}
-
-		private static MyTreeNode cloneRootNodeHeader(MyTreeNode iInputTreeRootNode) {
-			// TODO: override clone method instead?
-			MyTreeNode clone = new MyTreeNode(iInputTreeRootNode.getSnippet(),
-					iInputTreeRootNode.getParentNode());
-			return clone;
-		}
-
-		private static Map<String, List<MyTreeNode>> getRootChildNodesGrouped(
-				List<MyTreeNode> childNodes2) {
-			return groupByHeading(childNodes2);
-		}
-
-		private static void addChildNodesToOutputRootNode(MyTreeNode rOutputTreeNode,
-				Collection<MyTreeNode> values) {
-			rOutputTreeNode.addChildren(new LinkedList<MyTreeNode>(values));
-
-		}
-
-		private static Map<String, MyTreeNode> createSuperNodesForRootChildren(
-				Map<String, List<MyTreeNode>> nodesGroupedByHeading) {
-			Map<String, MyTreeNode> ret = new HashMap<String, MyTreeNode>();
-			if (nodesGroupedByHeading == null) {
-				return ret;
-			}
-			for (String aHeading : nodesGroupedByHeading.keySet()) {
-				List<MyTreeNode> allNodesForHeading = nodesGroupedByHeading.get(aHeading);
-				MyTreeNode singleNode = squashNodes(allNodesForHeading);
-				ret.put(aHeading, singleNode);
-			}
-			return ret;
-		}
-
-		private static MyTreeNode squashNodes(List<MyTreeNode> allNodesForHeading) {
-
-			MyTreeNode squashedNode = createSuperNodeHeader(allNodesForHeading);
-
-			List<MyTreeNode> roots = getSuperNodes(allNodesForHeading);
-			squashedNode.addChildren(roots);
-
-			return squashedNode;
-		}
 
 		private static List<MyTreeNode> getSuperNodes(List<MyTreeNode> allNodesForHeading) {
 			List<MyTreeNode> children = getAllChildren(allNodesForHeading);
@@ -1230,7 +727,6 @@ public class TextSorter {
 			MyTreeNode first = nodes.get(0);
 			MyTreeNode parent = first.getParentNode();
 			List<String> superSnippetLines = new LinkedList<String>();
-			int i = 0;
 			for (MyTreeNode n : nodes) {
 				// Hmmm we're assuming that a string containing newlines will
 				// have
@@ -1248,7 +744,6 @@ public class TextSorter {
 				// textToAdd = n.getSnippetTextNoHeading();
 				// }
 				superSnippetLines.add(textToAdd2.toString());
-				i++;
 			}
 			Snippet superSnippet = new Snippet(superSnippetLines, first.getHeadingText(), first
 					.getSnippet().getLevelNumber());
@@ -1293,13 +788,6 @@ public class TextSorter {
 			return rHeadingToAllChildrenOfHeading;
 		}
 
-		private static void printPublishedSubtree(MyTreeNode forPublishing, StringBuffer sb) {
-			sb.append(forPublishing.getSnippetText());
-			for (MyTreeNode child : forPublishing.getChildNodes()) {
-				printPublishedSubtree(child, sb);
-			}
-		}
-
 		public static void validateCount(MyTreeNode parentNode) {
 			Preconditions.checkNotNull(parentNode);
 			int countAllNodesInTree = MyTreeNode.countAllNodesInTree(parentNode);
@@ -1308,25 +796,11 @@ public class TextSorter {
 				throw new RuntimeException("Disconnected from parent: " + countAllNodesInTree
 						+ " vs " + totalNodeCount2 + "\n\n" + parentNode.getSnippetText());
 			} else {
-				// System.out.println(countAllNodesInTree + " vs " +
+				// System.err.println(countAllNodesInTree + " vs " +
 				// totalNodeCount2
 				// + "\n\n" + parentNode.getSnippetText());
 			}
 		}
 
-		public static void validateTotalNodeCount(MyTreeNode root) {
-			System.out.println("TextSorter.MyTreeNode.validateTotalNodeCount() - begin");
-			int subtreeNodeCount = root.countNodesInSubtree();
-			if (subtreeNodeCount < MyTreeNode.totalNodeCount) {
-				throw new RuntimeException("Nodes lost: [" + MyTreeNode.totalNodeCount + ", "
-						+ subtreeNodeCount + "]");
-			}
-		}
-
-		public static void resetValidationStats() {
-			totalNodeCount = 0;
-		}
-
 	}
-
 }
