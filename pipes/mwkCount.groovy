@@ -23,15 +23,28 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 
+/**
+Sample output:
+
+	File    	Heading Body    Total
+	new.mwk   	8480    57256   96700
+
+*/
 public class MwkCountNodes {
 
 	public static void main(String[] args) throws IOException {
+		System.err.println("[DEBUG] Begin");
 		InputStreamReader isr = new InputStreamReader(System.in);
+		System.err.println("[DEBUG] 1");
 		BufferedReader br = new BufferedReader(isr);
+		System.err.println("[DEBUG] 2");
 		String filePath = br.readLine();
+		System.err.println("[DEBUG] 3");
 		System.out.println("File\tHeading\tBody\tTotal");
 		while (filePath != null) {
+			System.err.println("[DEBUG] reading lines from " + filePath);
 			List<String> lines = FileUtils.readLines(Paths.get(filePath).toFile());
+			System.err.println("[DEBUG] Degragmenting " + filePath);
 			Defragmenter.defragmentFile(filePath, lines);
 			filePath = br.readLine();
 		}
@@ -174,6 +187,7 @@ public class MwkCountNodes {
 		 * @param filePath
 		 */
 		public static void defragmentFile(String filePath, List<String> lines) {
+			System.err.println("[DEBUG] defragmentFile() - begin");
 			MyTreeNode treeRootNode = TreeCreator.createTreeFromLines(lines);
 			int subtreeNodeCount = treeRootNode.countNodesInSubtree();
 			int nonHeadingLines = Utils.countNonHeadingNonBlankLines(lines);
@@ -220,7 +234,7 @@ public class MwkCountNodes {
 			Stack<MyTreeNode> snippetTreePath = new Stack<MyTreeNode>();
 			MyTreeNode.totalNodeCount = 0;
 			for (Snippet aSnippet : theSnippetList) {
-				// System.err.print(".");
+				System.err.print(".");
 				// Find the parent node
 				MyTreeNode aParentNode = null;
 				findParentForCurrentSnippet: {
