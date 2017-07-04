@@ -1,1 +1,1 @@
- jq -r '.heading + "\n" + .parent + "\n" + .body'
+jq -r '.heading + "\n" + .parent + "\n" + .body'
